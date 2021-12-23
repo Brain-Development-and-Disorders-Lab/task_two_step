@@ -1,0 +1,21 @@
+{
+  "name": "task_twostep",
+  "version": "0.0.1",
+  "description": "Two-step task, an adaptation of the task used by Nussenbaum, K. et. al. (2020).",
+  "main": "dist/index.js",
+  "repository": "https://henry-burgess@github.com/Brain-Development-and-Disorders-Lab/task_twostep.git",
+  "author": "Henry Burgess <henry.burgess@wustl.edu>",
+  "license": "CC-BY-4.0",
+  "private": true,
+  "scripts": {
+    "start": "http-server src/"
+  },
+  "dependencies": {
+    "d3": "^7.2.1",
+    "jquery": "^3.6.0",
+    "jspsych": "6"
+  },
+  "devDependencies": {
+    "http-server": "^14.0.0"
+  }
+}
