@@ -16,6 +16,8 @@
     "jspsych": "6"
   },
   "devDependencies": {
+    "eslint": "^8.6.0",
+    "eslint-config-google": "^0.14.0",
     "http-server": "^14.0.0"
   }
 }
