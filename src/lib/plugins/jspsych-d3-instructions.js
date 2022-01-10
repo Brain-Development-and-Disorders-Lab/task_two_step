@@ -9,6 +9,7 @@ import {select} from 'd3';
 import {
   width,
   height,
+  x_center,
   choice_x_left,
   choice_x_right,
   monster_size,
@@ -16,6 +17,7 @@ import {
   text_start_x,
   instructions_text_start_y,
   font_size,
+  reward_size,
 } from '../instructions';
 
 jsPsych.plugins['d3-instructions'] = (function() {

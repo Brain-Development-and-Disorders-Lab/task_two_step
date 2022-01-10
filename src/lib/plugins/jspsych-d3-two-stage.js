@@ -1,6 +1,7 @@
 /**
  *
- * plugin for displaying a stimulus and then a second image given a keyboard response
+ * plugin for displaying a stimulus and then a second image
+ * given a keyboard response
  *
  * VF 8/2019
  *
