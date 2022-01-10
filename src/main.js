@@ -30,6 +30,9 @@ import './lib/plugins/two-step-end';
 import './lib/plugins/two-step-explicit-choice';
 import './lib/plugins/two-step-fixation';
 
+// Styling
+import './css/styles.css';
+
 const timeline_var = [];
 let trial = 0;
 

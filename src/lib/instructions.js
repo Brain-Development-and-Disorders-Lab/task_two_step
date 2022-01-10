@@ -13,13 +13,11 @@ import 'jspsych/plugins/jspsych-survey-multi-choice';
 import 'jspsych/plugins/jspsych-survey-text';
 
 // Styling
-// import '../css/jspsych.css';
-
 export const block_trials = 50; // total number of trials in each block
 export const transprob = 0.7; // probability of 'correct' transition
 
-export const right_key = 48; // 0 at top of keyboard
-export const left_key = 49; // 1 at top of keyboard
+export const right_key = '0'; // 0 at top of keyboard
+export const left_key = '1'; // 1 at top of keyboard
 
 export const randomize_side = false;
 
@@ -203,29 +201,51 @@ export const text_start_x = x_center - 0.49 * picture_width;
 export const font_size = picture_height * 25 / 758;
 
 /** Texts **/
-var id_prompt = 'Please enter your subject ID';
+const id_prompt = 'Please enter your subject ID';
 export const query_text = 'Which spaceship went mostly to the red planet?';
-var break_text_1 = 'Great job so far! You have completed 1 out of 4 rounds. <br> You may now take a break. <br>  Press the button when you are ready for the next round.';
-var break_text_2 = 'Awesome! You are halfway through the game. <br>  You may now take a break. <br>  Press the button when you are ready for the next round.';
-var break_text_3 = 'Almost done! Just 1 more round to go. <br> You may now take a break. <br>  Press the button when you are ready for the next round.';
+const break_text_1 = `
+    Great job so far!
+    You have completed 1 out of 4 rounds.
+    <br>
+    You may now take a break.
+    <br>
+    Press the button when you are ready for the next round.
+`;
+const break_text_2 = `
+    Awesome! You are halfway through the game.
+    <br>
+    You may now take a break.
+    <br>
+    Press the button when you are ready for the next round.
+`;
+const break_text_3 = `
+    Almost done! Just 1 more round to go.
+    <br>
+    You may now take a break.
+    <br>
+    Press the button when you are ready for the next round.
+`;
 
 export const instructions = [];
 export const audio_instructions = [];
 
-//*** START Text for instruction pages**//
-//**************************************//
-//black background
+// black background
 instructions[0] = [
-    ['Please listen to the instructions and read each page carefully.', 'When you are ready to go to the next page,', 'click on the red circle on the bottom right so that it turns green.', 'Then, press the space bar.']
+  [
+    'Please listen to the instructions and read each page carefully.',
+    'When you are ready to go to the next page,',
+    'click on the red circle on the bottom right so that it turns green.',
+    'Then, press the space bar.',
+  ],
 ];
 
-//rocket background
+// rocket background
 instructions[1] = [
     ['In this game, you will be taking a spaceship from earth', 'to look for space treasure on two different planets.']
 ];
 
 
-//alien background
+// alien background
 instructions[2] = [
     ['Each planet has two aliens on it. ', ' And each alien has its own space treasure mine.'],
     ['On each planet, you will pick one alien to ask for space treasure. ', 'These aliens are nice, so if an alien just brought treasure ', ' up from the mine, it will share it with you.'],
@@ -656,8 +676,8 @@ curr_instructions.splice(27,3)
 // });
 
 // add full screen after audio test
-curr_instructions.splice(5, 0, {
-    type: 'fullscreen', 
-    message: '<p> Press start to enter full-screen mode and start the game. </p>',
-    button_label: 'Start',
-    fullscreen_mode: true});
+// curr_instructions.splice(5, 0, {
+//     type: 'fullscreen', 
+//     message: '<p> Press start to enter full-screen mode and start the game. </p>',
+//     button_label: 'Start',
+//     fullscreen_mode: true});

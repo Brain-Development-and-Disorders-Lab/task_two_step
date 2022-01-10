@@ -5,9 +5,9 @@
  * VF 8/2019
  *
  **/
+import {select} from 'd3';
 
-
-jsPsych.plugins["d3-two-stage"] = (function() {
+jsPsych.plugins['d3-two-stage'] = (function() {
 
   var plugin = {};
 
@@ -56,7 +56,7 @@ jsPsych.plugins["d3-two-stage"] = (function() {
 
     // draw
     display_element.innerHTML = new_html;
-    var svg = d3.select("svg"); // draw and select svg element
+    var svg = select("svg"); // draw and select svg element
 
     // add prompt
     if (trial.prompt !== null){
