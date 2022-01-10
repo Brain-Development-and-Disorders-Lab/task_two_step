@@ -148,14 +148,16 @@ quiz_audio = [
 const height = window.innerHeight;
 const width = window.innerWidth;
 
-// scaling for window sizes;
+// scaling for window sizes
+let picture_height;
+let picture_width;
 // if the participant or researcher resizes things will break!
 if (window.innerWidth / window.innerHeight < 1.34) {
-  let picture_height = window.innerWidth / 1.34;
-  let picture_width = window.innerWidth;
+  picture_height = window.innerWidth / 1.34;
+  picture_width = window.innerWidth;
 } else {
-  let picture_height = window.innerHeight;
-  let picture_width = window.innerHeight * 1.34;
+  picture_height = window.innerHeight;
+  picture_width = window.innerHeight * 1.34;
 }
 
 // scaling from original to picture

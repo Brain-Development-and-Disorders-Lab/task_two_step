@@ -1,5 +1,4 @@
 /** Texts **/
-
 var id_prompt = 'Please enter your subject ID';
 var query_text = 'Which spaceship went mostly to the red planet?';
 var break_text_1 = 'Great job so far! You have completed 1 out of 4 rounds. <br> You may now take a break. <br>  Press the button when you are ready for the next round.';

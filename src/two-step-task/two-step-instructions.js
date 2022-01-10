@@ -1,6 +1,4 @@
 var t_i,
-    i,
-    j,
     curr_page,
     curr_side;
 
@@ -26,15 +24,14 @@ function create_instructions(image, texts, audio_files, sect_right_texts, sect_l
 
 // Create instructions
 var curr_instructions = [];
-for (i = 0; i < instructions.length; i += 1) {
+for (let i = 0; i < instructions.length; i += 1) {
     curr_instructions = curr_instructions.concat(create_instructions(instructions_backgrounds[i], instructions[i], audio_instructions[i], right_images[i], left_images[i], center_images[i], reward_images[i], button_images[i]));
 }
 
 
-// INSERT PRACTICE 
-
+// INSERT PRACTICE
 // insert 4 selection practice trials on instructions page 5 
-for (i = 0; i < (practice_pressing_num - 1); i += 1) {
+for (let i = 0; i < (practice_pressing_num - 1); i += 1) {
     curr_instructions.splice(practice_pressing_idx, 0, {
         type: 'd3-animate-choice',
         timeout: false,
@@ -57,7 +54,7 @@ curr_instructions.splice(practice_pressing_idx, 0, {
 });
 
 // insert 10 treasure asking practice trials
-for (i = 0; i < practice_reward_num; i += 1) {
+for (let i = 0; i < practice_reward_num; i += 1) {
     curr_instructions.splice(practice_reward_idx, 0, {
         type: 'd3-animate-choice',
         timeout: false,
@@ -71,7 +68,7 @@ for (i = 0; i < practice_reward_num; i += 1) {
 }
 
 // insert 10 asking green aliens for reward trials
-for (i = 0; i < practice_stochastic_num; i += 1) {
+for (let i = 0; i < practice_stochastic_num; i += 1) {
     curr_instructions.splice(practice_stochastic_idx, 0, {
         type: 'd3-animate-choice',
         timeout: false,
