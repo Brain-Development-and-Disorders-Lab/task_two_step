@@ -45,39 +45,38 @@ jsPsych.plugins['two-stage'] = (function() {
         default: null,
         description: 'How long to show trial before it ends.',
       },
-    }
-  }
+    },
+  };
 
   plugin.trial = function(display_element, trial) {
-    var new_html = '<img src="'+trial.stimuli[0]+'" id="two-stage"></img>';
+    let new_html = `<img src=''+trial.stimuli[0]+'' id='two-stage'></img>`;
 
     // add prompt
-    if (trial.prompt !== null){
+    if (trial.prompt !== null) {
       new_html += trial.prompt;
     }
 
     // draw
     display_element.innerHTML = new_html;
 
-    var second_html = '<img src="'+trial.stimuli[1]+'" id="two-stage"></img>';
+    let second_html = `<img src=''+trial.stimuli[1]+'' id='two-stage'></img>`;
 
     // add prompt
-    if (trial.prompt !== null){
+    if (trial.prompt !== null) {
       second_html += trial.prompt;
     }
 
 
     // store response
-    var response = {
+    let response = {
       rt: null,
-      key: null 
+      key: null,
     };
 
-    var choice_pressed=0;
+    let choice_pressed = 0;
 
     // function to end trial when it is time
-    var end_trial = function() {
-
+    const end_trial = () => {
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -87,12 +86,12 @@ jsPsych.plugins['two-stage'] = (function() {
       }
 
       // gather the data to store for the trial
-      var trial_data = {
-        "rt": response.rt,
-        "stimulus": trial.stimulus,
-        "key_press": response.key,
-        "duration": trial.trial_duration,
-        "choice_pressed" : choice_pressed
+      const trial_data = {
+        'rt': response.rt,
+        'stimulus': trial.stimulus,
+        'key_press': response.key,
+        'duration': trial.trial_duration,
+        'choice_pressed': choice_pressed,
       };
 
       // clear the display
@@ -103,46 +102,47 @@ jsPsych.plugins['two-stage'] = (function() {
     };
 
     // function to handle responses by the subject
-    var after_response = function(info) {
+    const after_response = (info) => {
       // only record the first response
       if (response.key == null) {
         response = info;
         if (info.key == trial.choices) {
           choice_pressed = 1;
 
-
-         // after a valid response, the stimulus will have the CSS class 'responded'
-        // which can be used to provide visual feedback that a response was recorded
-        display_element.querySelector('#two-stage').className += ' responded';
+          // after a valid response, the stimulus will have the
+          // CSS class 'responded' which can be used to provide
+          // visual feedback that a response was recorded
+          display_element.querySelector('#two-stage').className += ' responded';
 
           // clear the display
           display_element.innerHTML = '';
-            // draw
+          // draw
           display_element.innerHTML = second_html;
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
         }
       } else if (info.key == trial.choices) {
-            response = info;
-            // after a valid response, the stimulus will have the CSS class 'responded'
-            // which can be used to provide visual feedback that a response was recorded
-            display_element.querySelector('#two-stage').className += ' responded';
+        response = info;
+        // after a valid response, the stimulus will have the
+        // CSS class 'responded' which can be used to provide
+        // visual feedback that a response was recorded
+        display_element.querySelector('#two-stage').className += ' responded';
 
-          // clear the display
-          display_element.innerHTML = '';
-            // draw
-          display_element.innerHTML = second_html;
-          jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+        // clear the display
+        display_element.innerHTML = '';
+        // draw
+        display_element.innerHTML = second_html;
+        jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
     };
 
     // start the response listener
-      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: after_response,
-        valid_responses: jsPsych.ALL_KEYS,
-        rt_method: 'date',
-        persist: true,
-        allow_held_key: false
-      });
+    const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+      callback_function: after_response,
+      valid_responses: jsPsych.ALL_KEYS,
+      rt_method: 'date',
+      persist: true,
+      allow_held_key: false,
+    });
 
 
     // hide stimulus if stimulus_duration is set
@@ -158,7 +158,6 @@ jsPsych.plugins['two-stage'] = (function() {
         end_trial();
       }, trial.trial_duration);
     }
-
   };
 
   return plugin;
