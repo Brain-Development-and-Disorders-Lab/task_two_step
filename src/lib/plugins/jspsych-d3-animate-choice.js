@@ -25,6 +25,7 @@ import {
   instructions_text_start_y,
   font_size,
   reward_string,
+  null_string,
   reward_x,
   reward_y,
   reward_size,
@@ -423,14 +424,14 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
       const alien = (chosen_string.slice(-1) % 2);
       const state = +(chosen_string.slice(-1) > 2);
 
-      let reward = undefined;
+      let reward = false;
       if (state == 0) {
-        reward = (Math.random() < trial_row[alien]);
+        reward = (Math.random() < parseFloat(trial_row[alien]));
       } else {
-        reward = (Math.random() < trial_row[2 + alien]);
+        reward = (Math.random() < parseFloat(trial_row[2 + alien]));
       }
 
-      if (typeof reward !== 'undefined') {
+      if (reward) {
         return reward_string;
       } else {
         return null_string;

@@ -1,4 +1,3 @@
-// import {getFormattedTime} from './lib/functions';
 import {
   all_images,
   block_trials,
@@ -15,6 +14,8 @@ import {
   red_planet_first_rocket,
   red_display_order,
   purple_display_order,
+  reward_string,
+  transprob,
 } from './lib/instructions';
 
 import practice_prob_data from './data/masterprobtut.csv';
@@ -35,6 +36,9 @@ import './css/styles.css';
 
 const timeline_var = [];
 let trial = 0;
+
+let practice_reward = 0;
+let real_reward = 0;
 
 // add experiment blocks to timeline
 for (let j = 0; j < num_blocks; j++) {
@@ -86,7 +90,7 @@ let curr_stage_two = [];
  * @param {any} practice ?
  * @return {any} ?
  */
-function create_block(curr_variables, curr_prob_data, practice) {
+const create_block = (curr_variables, curr_prob_data, practice) => {
   const exp_procedure = {
     timeline: [
       { // define stage 1 choice
@@ -199,28 +203,9 @@ function create_block(curr_variables, curr_prob_data, practice) {
     timeline_variables: curr_variables,
   };
   return exp_procedure;
-}
+};
 
-// var break_trial_1 = {
-//     type: 'audio-button-response-2',
-//     prompt: break_text_1,
-//     choices: ['Next round!'],
-//     stimulus: 'audio/instructions/break_1.wav'
-// }
-
-// var break_trial_2 = {
-//     type: 'audio-button-response-2',
-//     prompt: break_text_2,
-//     choices: ['Next round!'],
-//     stimulus: 'audio/instructions/break_2.wav'
-// }
-
-// var break_trial_3 = {
-//     type: 'audio-button-response-2',
-//     prompt: break_text_3,
-//     choices: ['Next round!'],
-//     stimulus: 'audio/instructions/break_3.wav'
-// }
+// Break trials removed from here
 
 const end_experiment = {
   type: 'audio-keyboard-response',
@@ -237,6 +222,8 @@ const end_experiment = {
  */
 function calculate_transition(chosen_string, practice) {
   // uses globals red_planet_first_rocket and transprob to figure out transition
+  let first_planet = '';
+  let second_planet = '';
   if (chosen_string == '') {
     return null;
   } else {
@@ -248,15 +235,7 @@ function calculate_transition(chosen_string, practice) {
       second_planet = 'purple';
     }
     const first_ship_chosen = (chosen_string.slice(-1) == 1);
-    console.log('left selected:');
-    console.log(first_ship_chosen);
-    console.log('green first planet:');
-    console.log(red_planet_first_rocket);
     const good_transition = (Math.random() < transprob);
-    console.log('common transition:');
-    console.log(good_transition);
-    console.log('transition probability:');
-    console.log(transprob);
     let planet = '';
 
     if (first_ship_chosen && red_planet_first_rocket) {
@@ -452,26 +431,18 @@ exp_timeline = curr_instructions;
 
 // run trials with breaks
 exp_timeline.push(create_block(timeline_var[0], prob_data, false));
-// exp_timeline.push(break_trial_1)
 exp_timeline.push(create_block(timeline_var[1], prob_data, false));
-// exp_timeline.push(break_trial_2)
 exp_timeline.push(create_block(timeline_var[2], prob_data, false));
-// exp_timeline.push(break_trial_3)
 exp_timeline.push(create_block(timeline_var[3], prob_data, false));
 exp_timeline.push(real_reward_display);
 exp_timeline.push(final_question);
 exp_timeline.push(end_experiment);
-
-/** GET SUB ID BASED ON URL **/
-const urlvar = jsPsych.data.urlVariables();
-// const file_name = 'mbmf_' + urlvar.participant + '_' + getFormattedTime();
 
 jsPsych.pluginAPI.preloadImages(all_images, () => {
   jsPsych.init({
     timeline: exp_timeline,
     preload_images: all_images,
     on_trial_start: (data) => {
-      jsPsych.data.get().addToAll({subject_id: urlvar.participant});
       jsPsych.data.get().addToAll({rocket_sides: rocket_sides});
       jsPsych.data.get().addToAll({
         red_planet_first_rocket: red_planet_first_rocket,
@@ -536,7 +507,6 @@ jsPsych.pluginAPI.preloadImages(all_images, () => {
       jsPsych.data.get().addToLast({
         fullscreenexit_events: fullscreenexit_events.csv(),
       });
-      jsPsych.data.get().addToAll({subject_id: urlvar.participant});
       jsPsych.data.get().addToAll({rocket_sides: rocket_sides});
       jsPsych.data.get().addToAll({
         red_planet_first_rocket: red_planet_first_rocket,
@@ -565,7 +535,6 @@ jsPsych.pluginAPI.preloadImages(all_images, () => {
       jsPsych.data.get().addToLast({
         fullscreenexit_events: fullscreenexit_events.csv(),
       });
-      jsPsych.data.get().addToAll({subject_id: urlvar.participant});
       jsPsych.data.get().addToAll({rocket_sides: rocket_sides});
       jsPsych.data.get().addToAll({
         red_planet_first_rocket: red_planet_first_rocket,
