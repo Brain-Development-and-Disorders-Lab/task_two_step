@@ -137,14 +137,15 @@ instructions[3] = [
     ' Which looks like this.',
   ],
   [
-    'If an alien has a good mine that means it can easily dig up space ' +
+    'If an alien has a good mine that means it can easily dig up space ',
     'treasure and it will be very likely to have some to share.',
   ],
   [
     'It might not have treasure EVERY time you ask, but it will most ' +
         'of the time.',
     'Another alien might have a bad mine that is hard to dig through ' +
-        'at the moment, and won\'t have treasure to share most times ' +
+        'at the moment,',
+    ' and won\'t have treasure to share most times ' +
         'you ask.',
   ],
 ];
