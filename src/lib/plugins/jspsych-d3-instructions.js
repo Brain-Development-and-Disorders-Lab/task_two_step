@@ -94,13 +94,13 @@ jsPsych.plugins['d3-instructions'] = (function() {
     const svg = select('div#container')
         .append('svg')
         .attr('preserveAspectRatio', 'xMinYMin meet')
-        .attr('viewBox', '0 0 ' + width + ' ' + height)
         .classed('svg-content', true);
 
     if (trial.stimulus !== null) {
       svg.append('svg:image')
           .attr('width', width)
           .attr('height', height)
+          .attr('preserveAspectRatio', 'xMidYMid slice')
           .attr('xlink:href', trial.stimulus);
     }
 

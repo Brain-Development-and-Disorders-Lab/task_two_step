@@ -141,6 +141,7 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
     svg.append('svg:image')
         .attr('width', width)
         .attr('height', height)
+        .attr('preserveAspectRatio', 'xMidYMid slice')
         .attr('xlink:href', trial.planet_text);
 
     if (trial.right_text !== null) {
