@@ -7,6 +7,7 @@
  *
  **/
 import {select} from 'd3';
+import consola from 'consola';
 
 jsPsych.plugins['d3-two-stage'] = (() => {
   const plugin = {};
@@ -51,6 +52,8 @@ jsPsych.plugins['d3-two-stage'] = (() => {
   };
 
   plugin.trial = function(display_element, trial) {
+    consola.debug(`Running trial:`, trial.type);
+
     /** WARNING this is manually made to fit robot images 720×540,
      *  will not work on mobile or very small screens
      **/
@@ -61,7 +64,7 @@ jsPsych.plugins['d3-two-stage'] = (() => {
             height='720'
             width='540'
           >
-            <image xlink:href=''+trial.stimuli+'' height='720' width='540'/>
+            <image xlink:href='${trial.stimuli} height='720' width='540'/>
           </svg>
         </div>
     `;

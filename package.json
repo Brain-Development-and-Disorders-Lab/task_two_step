@@ -8,11 +8,13 @@
   "license": "CC-BY-4.0",
   "private": true,
   "scripts": {
-    "dev": "webpack serve"
+    "build": "webpack && gulp images",
+    "dev": "webpack serve",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
+    "consola": "^2.15.3",
     "d3": "^7.2.1",
-    "jquery": "^3.6.0",
     "jspsych": "6"
   },
   "devDependencies": {
@@ -21,6 +23,7 @@
     "csv-loader": "^3.0.3",
     "eslint": "^8.6.0",
     "eslint-config-google": "^0.14.0",
+    "gulp": "^4.0.2",
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.65.0",

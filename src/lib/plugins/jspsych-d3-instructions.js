@@ -6,6 +6,8 @@
  * KN added audio 4/22/20
  **/
 import {select} from 'd3';
+import consola from 'consola';
+
 import {
   width,
   height,
@@ -83,6 +85,8 @@ jsPsych.plugins['d3-instructions'] = (function() {
   };
 
   plugin.trial = function(display_element, trial) {
+    consola.debug(`Running trial:`, trial.type);
+
     // display stimulus
     const new_html = `<div id='container' class='exp-container'></div>`;
     display_element.innerHTML = new_html;

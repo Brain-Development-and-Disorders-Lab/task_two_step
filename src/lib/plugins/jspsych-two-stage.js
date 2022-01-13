@@ -2,7 +2,7 @@
  * plugin for displaying a stimulus and then a second image given a
  * keyboard response
  **/
-
+import consola from 'consola';
 
 jsPsych.plugins['two-stage'] = (function() {
   const plugin = {};
@@ -49,6 +49,8 @@ jsPsych.plugins['two-stage'] = (function() {
   };
 
   plugin.trial = function(display_element, trial) {
+    consola.debug(`Running trial:`, trial.type);
+
     let new_html = `<img src=''+trial.stimuli[0]+'' id='two-stage'></img>`;
 
     // add prompt

@@ -7,6 +7,7 @@
  * documentation: docs.jspsych.org
  *
  **/
+import consola from 'consola';
 
 jsPsych.plugins['instructions-quiz'] = (function() {
   const plugin = {};
@@ -91,6 +92,8 @@ jsPsych.plugins['instructions-quiz'] = (function() {
   };
 
   plugin.trial = function(display_element, trial) {
+    consola.debug(`Running trial:`, trial.type);
+
     // setup stimulus
     const context = jsPsych.pluginAPI.audioContext();
     if (context !== null) {

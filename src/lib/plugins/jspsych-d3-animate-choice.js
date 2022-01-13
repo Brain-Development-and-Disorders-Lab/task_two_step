@@ -9,6 +9,8 @@
  */
 
 import {interval, select} from 'd3';
+import {experiment} from '../..';
+import consola from 'consola';
 import {
   width,
   height,
@@ -24,8 +26,6 @@ import {
   text_start_x,
   instructions_text_start_y,
   font_size,
-  reward_string,
-  null_string,
   reward_x,
   reward_y,
   reward_size,
@@ -117,6 +117,8 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
   };
 
   plugin.trial = (display_element, trial) => {
+    consola.debug(`Running trial:`, trial.type);
+
     const new_html=`<div id='container' class='exp-container'></div>`;
     display_element.innerHTML = new_html;
 
@@ -432,9 +434,9 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
       }
 
       if (reward) {
-        return reward_string;
+        return experiment.getStimuli().getCollection()['t.png'];
       } else {
-        return null_string;
+        return experiment.getStimuli().getCollection()['nothing.png'];
       }
     }
   };

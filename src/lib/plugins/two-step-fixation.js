@@ -3,6 +3,7 @@
  *
  **/
 import {select} from 'd3';
+import consola from 'consola';
 import {
   width,
   height,
@@ -40,6 +41,8 @@ jsPsych.plugins['two-step-fixation'] = (() => {
   };
 
   plugin.trial = function(display_element, trial) {
+    consola.debug(`Running trial:`, trial.type);
+
     // display stimulus
     const new_html = `<div id='container' class='exp-container'></div>`;
     display_element.innerHTML = new_html;

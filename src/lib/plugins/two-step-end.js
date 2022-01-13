@@ -7,6 +7,7 @@
  * documentation: docs.jspsych.org
  *
  **/
+import consola from 'consola';
 
 jsPsych.plugins['two-step-end'] = (function() {
   const plugin = {};
@@ -78,6 +79,8 @@ jsPsych.plugins['two-step-end'] = (function() {
   };
 
   plugin.trial = function(display_element, trial) {
+    consola.debug(`Running trial:`, trial.type);
+
     // setup stimulus
     const context = jsPsych.pluginAPI.audioContext();
     if (context !== null) {
