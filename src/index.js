@@ -71,6 +71,10 @@ export const experiment = new Experiment({
   allowParticipantContact: false,
   contact: 'henry.burgess@wustl.edu',
   logging: LogLevel.Verbose,
+  state: {
+    practiceReward: 0,
+    realReward: 0,
+  },
 });
 
 experiment.load().then(() => {
@@ -207,9 +211,15 @@ experiment.load().then(() => {
           on_finish: (data) => {
             if (data.reward_text === reward_string) {
               if (practice === false) {
-                real_reward += 1;
+                experiment.setGlobalStateValue(
+                    'realReward',
+                    experiment.getGlobalStateValue('realReward') + 1,
+                );
               } else {
-                practice_reward += 1;
+                experiment.setGlobalStateValue(
+                    'practiceReward',
+                    experiment.getGlobalStateValue('practiceReward') + 1,
+                );
               }
             }
             if (data.key_press == left_key) {

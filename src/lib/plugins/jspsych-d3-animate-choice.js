@@ -186,7 +186,9 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           .attr('width', monster_size)
           .attr('height', monster_size)
           .attr('xlink:href',
-              trial.center_text.replace('.png', '') + '_deact.png');
+              experiment.getStimuli()
+                  .getImage(
+                      trial.center_text.replace('.png', '') + '_deact.png'));
     }
 
     if (trial.query_trial !== null) {
@@ -308,8 +310,8 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
 
             // start the animation by moving the selected image to the center
             center_image.transition().remove().on('end', () => {
-              chosen_image.attr('xlink:href',
-                  chosen_text.replace('.png', '') + '_a2.png')
+              chosen_image.attr('xlink:href', experiment.getStimuli().getImage(
+                  chosen_text.replace('.png', '') + '_a2.png'))
                   .transition().duration(box_moving_time)
                   .attr('y', chosen_y)
                   .attr('x', chosen_x)
@@ -338,8 +340,7 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
                               .attr('y', reward_y)
                               .attr('width', reward_size)
                               .attr('height', reward_size)
-                              .attr('xlink:href', experiment.getStimuli()
-                                  .getImage(trial.reward_text));
+                              .attr('xlink:href', trial.reward_text);
                           interval((elapsed) => {}, moneytime);
                         }
                         t.stop();
@@ -424,8 +425,8 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
               .duration(isitime)
               .attr('xlink:href', experiment.getStimuli()
                   .getImage(trial.right_text + '_sp.png'));
-          left_image.attr('xlink:href',
-              trial.left_text.replace('.png', '') + '_sp.png');
+          left_image.attr('xlink:href', experiment.getStimuli()
+              .getImage(trial.left_text.replace('.png', '') + '_sp.png'));
         }
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
