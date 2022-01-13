@@ -304,7 +304,7 @@ jsPsych.plugins['two-step-explicit-choice'] = (() => {
       if ((valid_pressed == 0) &&
           (valid_choices.indexOf(info.key) > -1) &&
           (move_possible)) {
-        console.log('valid key was pressed');
+        consola.info(`A valid key ('${info.key}') was pressed`);
         valid_pressed = 1;
 
         if (trial.query_trial == null) {
@@ -415,7 +415,7 @@ jsPsych.plugins['two-step-explicit-choice'] = (() => {
                 });
           }
         } else { // this only gets evaluated if query_trial = true
-          console.log('end_trial');
+          consola.info(`'end_trial()' called.`);
           end_trial();
         }
 
@@ -470,9 +470,9 @@ jsPsych.plugins['two-step-explicit-choice'] = (() => {
       }
 
       if (reward) {
-        return experiment.getStimuli().getCollection()['t.png'];
+        return experiment.getStimuli().getImage('t.png');
       } else {
-        return experiment.getStimuli().getCollection()['nothing.png'];
+        return experiment.getStimuli().getImage('nothing.png');
       }
     }
   };

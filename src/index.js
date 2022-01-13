@@ -79,8 +79,8 @@ experiment.load().then(() => {
   const timeline_var = [];
   let trial = 0;
 
-  const reward_string = experiment.getStimuli().getCollection()['t.png'];
-  const null_string = experiment.getStimuli().getCollection()['nothing.png'];
+  const reward_string = experiment.getStimuli().getImage('t.png');
+  const null_string = experiment.getStimuli().getImage('nothing.png');
 
   // add experiment blocks to timeline
   for (let j = 0; j < num_blocks; j++) {
@@ -88,14 +88,14 @@ experiment.load().then(() => {
     for (let i = 0; i < block_trials; i++) {
       if (rocket_sides) { // randomize sides of rockets for each subject
         timeline_var[j].push({
-          right_text: 'images/rocket2',
-          left_text: 'images/rocket1',
+          right_text: 'rocket2',
+          left_text: 'rocket1',
           trial: trial,
         });
       } else {
         timeline_var[j].push({
-          right_text: 'images/rocket1',
-          left_text: 'images/rocket2',
+          right_text: 'rocket1',
+          left_text: 'rocket2',
           trial: trial,
         });
       }
@@ -109,14 +109,14 @@ experiment.load().then(() => {
   for (let i = 0; i < practice_game_num; i++) {
     if (prac_rocket_sides) { // randomize sides of rockets for each subject
       practice_timeline_var.push({
-        right_text: 'images/tutrocket2',
-        left_text: 'images/tutrocket1',
+        right_text: 'tutrocket2',
+        left_text: 'tutrocket1',
         trial: trial,
       });
     } else {
       practice_timeline_var.push({
-        right_text: 'images/tutrocket1',
-        left_text: 'images/tutrocket2',
+        right_text: 'tutrocket1',
+        left_text: 'tutrocket2',
         trial: trial,
       });
     }
@@ -139,7 +139,7 @@ experiment.load().then(() => {
           type: 'd3-animate-choice',
           trial_stage: '1',
           choices: [left_key, right_key],
-          planet_text: experiment.getStimuli().getCollection()['earth.jpg'],
+          planet_text: experiment.getStimuli().getImage('earth.jpg'),
           right_text: jsPsych.timelineVariable('right_text'), // right rocket
           left_text: jsPsych.timelineVariable('left_text'), // left rocket
           practice_trial: function() {
@@ -162,7 +162,7 @@ experiment.load().then(() => {
               curr_stage_two = [
                 data.right_text,
                 data.left_text,
-                experiment.getStimuli().getCollection()['earth.jpg'],
+                experiment.getStimuli().getImage('earth.jpg'),
                 null,
               ];
             }
@@ -225,7 +225,7 @@ experiment.load().then(() => {
               data.transition = 'rare';
             }
             if (data.reward_text ==
-                experiment.getStimuli().getCollection()['t.png']) {
+                experiment.getStimuli().getImage('t.png')) {
               data.reward = 1;
             } else {
               data.reward = 0;
@@ -238,7 +238,7 @@ experiment.load().then(() => {
         },
         { // ITI
           type: 'two-step-fixation',
-          stimulus: experiment.getStimuli().getCollection()['earth.jpg'],
+          stimulus: experiment.getStimuli().getImage('earth.jpg'),
           text: '+',
           trial_duration: 1000, // ITI duration
         },
@@ -306,17 +306,17 @@ experiment.load().then(() => {
 
         if (display_order) {
           return [
-            'images/alien2',
-            'images/alien1',
-            experiment.getStimuli().getCollection()['redplanet1.jpg'],
+            'alien2',
+            'alien1',
+            experiment.getStimuli().getImage('redplanet1.jpg'),
             chosen_string,
             good_transition,
           ];
         } else {
           return [
-            'images/alien1',
-            'images/alien2',
-            experiment.getStimuli().getCollection()['redplanet1.jpg'],
+            'alien1',
+            'alien2',
+            experiment.getStimuli().getImage('redplanet1.jpg'),
             chosen_string,
             good_transition,
           ];
@@ -328,17 +328,17 @@ experiment.load().then(() => {
 
         if (display_order) {
           return [
-            'images/alien4',
-            'images/alien3',
-            experiment.getStimuli().getCollection()['purpleplanet.jpg'],
+            'alien4',
+            'alien3',
+            experiment.getStimuli().getImage('purpleplanet.jpg'),
             chosen_string,
             good_transition,
           ];
         } else {
           return [
-            'images/alien3',
-            'images/alien4',
-            experiment.getStimuli().getCollection()['purpleplanet.jpg'],
+            'alien3',
+            'alien4',
+            experiment.getStimuli().getImage('purpleplanet.jpg'),
             chosen_string,
             good_transition,
           ];
@@ -350,17 +350,17 @@ experiment.load().then(() => {
 
         if (display_order) {
           return [
-            'images/tutalien2',
-            'images/tutalien1',
-            experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
+            'tutalien2',
+            'tutalien1',
+            experiment.getStimuli().getImage('tutgreenplanet.jpg'),
             chosen_string,
             good_transition,
           ];
         } else {
           return [
-            'images/tutalien1',
-            'images/tutalien2',
-            experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
+            'tutalien1',
+            'tutalien2',
+            experiment.getStimuli().getImage('tutgreenplanet.jpg'),
             chosen_string,
             good_transition,
           ];
@@ -372,23 +372,23 @@ experiment.load().then(() => {
 
         if (display_order) {
           return [
-            'images/tutalien4',
-            'images/tutalien3',
-            experiment.getStimuli().getCollection()['tutyellowplanet.jpg'],
+            'tutalien4',
+            'tutalien3',
+            experiment.getStimuli().getImage('tutyellowplanet.jpg'),
             chosen_string,
             good_transition,
           ];
         } else {
           return [
-            'images/tutalien3',
-            'images/tutalien4',
-            experiment.getStimuli().getCollection()['tutyellowplanet.jpg'],
+            'tutalien3',
+            'tutalien4',
+            experiment.getStimuli().getImage('tutyellowplanet.jpg'),
             chosen_string,
             good_transition,
           ];
         }
       } else {
-        console.log('error in transition calculation');
+        consola.error('Error in transition calculation!');
         return null;
       }
     }
@@ -419,7 +419,7 @@ experiment.load().then(() => {
       center_images[i][j] = null;
       reward_images[i][j] = null;
       button_images[i][j] =
-          experiment.getStimuli().getCollection()['button.jpeg'];
+          experiment.getStimuli().getImage('button.jpeg');
     }
   }
 
@@ -427,91 +427,91 @@ experiment.load().then(() => {
   reward_images[3][1] = null_string;
 
   center_images[4][0] =
-      experiment.getStimuli().getCollection()['tutalien3_norm.png'];
+      experiment.getStimuli().getImage('tutalien3_norm.png');
   center_images[4][1] =
-      experiment.getStimuli().getCollection()['tutalien3_norm.png'];
+      experiment.getStimuli().getImage('tutalien3_norm.png');
   center_images[9][0] =
-      experiment.getStimuli().getCollection()['tutalien2_norm.png'];
+      experiment.getStimuli().getImage('tutalien2_norm.png');
 
   right_images[1][0] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
   left_images[1][0] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
 
   right_images[2][0] =
-      experiment.getStimuli().getCollection()['tutalien1_norm.png'];
+      experiment.getStimuli().getImage('tutalien1_norm.png');
   left_images[2][0] =
-      experiment.getStimuli().getCollection()['tutalien2_norm.png'];
+      experiment.getStimuli().getImage('tutalien2_norm.png');
   right_images[2][1] =
-      experiment.getStimuli().getCollection()['tutalien1_norm.png'];
+      experiment.getStimuli().getImage('tutalien1_norm.png');
   left_images[2][1] =
-      experiment.getStimuli().getCollection()['tutalien2_norm.png'];
+      experiment.getStimuli().getImage('tutalien2_norm.png');
   right_images[2][2] =
-      experiment.getStimuli().getCollection()['tutalien1_norm.png'];
+      experiment.getStimuli().getImage('tutalien1_norm.png');
   left_images[2][2] =
-      experiment.getStimuli().getCollection()['tutalien2_norm.png'];
+      experiment.getStimuli().getImage('tutalien2_norm.png');
 
   right_images[6][0] =
-      experiment.getStimuli().getCollection()['tutalien1_norm.png'];
+      experiment.getStimuli().getImage('tutalien1_norm.png');
   right_images[7][0] =
-      experiment.getStimuli().getCollection()['tutalien2_norm.png'];
+      experiment.getStimuli().getImage('tutalien2_norm.png');
 
   left_images[6][0] =
-      experiment.getStimuli().getCollection()['tutalien2_norm.png'];
+      experiment.getStimuli().getImage('tutalien2_norm.png');
   left_images[7][0] =
-      experiment.getStimuli().getCollection()['tutalien1_norm.png'];
+      experiment.getStimuli().getImage('tutalien1_norm.png');
 
   right_images[13][0] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
   right_images[13][1] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
   right_images[14][0] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
   right_images[14][1] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
   right_images[14][2] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
   right_images[14][3] =
-      experiment.getStimuli().getCollection()['tutrocket1_sp.png'];
+      experiment.getStimuli().getImage('tutrocket1_sp.png');
   right_images[14][4] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
   right_images[14][5] =
-      experiment.getStimuli().getCollection()['tutrocket1_norm.png'];
+      experiment.getStimuli().getImage('tutrocket1_norm.png');
 
   left_images[13][0] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
   left_images[13][1] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
   left_images[14][0] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
   left_images[14][1] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
   left_images[14][2] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
   left_images[14][3] =
-      experiment.getStimuli().getCollection()['tutrocket2_sp.png'];
+      experiment.getStimuli().getImage('tutrocket2_sp.png');
   left_images[14][4] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
   left_images[14][5] =
-      experiment.getStimuli().getCollection()['tutrocket2_norm.png'];
+      experiment.getStimuli().getImage('tutrocket2_norm.png');
 
   const instructions_backgrounds = [
-    experiment.getStimuli().getCollection()['blackbackground.jpg'],
-    experiment.getStimuli().getCollection()['earth.jpg'],
-    experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
-    experiment.getStimuli().getCollection()['blackbackground.jpg'],
-    experiment.getStimuli().getCollection()['tutyellowplanet.jpg'],
-    experiment.getStimuli().getCollection()['blackbackground.jpg'],
-    experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
-    experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
-    experiment.getStimuli().getCollection()['blackbackground.jpg'],
-    experiment.getStimuli().getCollection()['blackbackground.jpg'],
-    experiment.getStimuli().getCollection()['earth.jpg'],
-    experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
-    experiment.getStimuli().getCollection()['tutyellowplanet.jpg'],
-    experiment.getStimuli().getCollection()['earth.jpg'],
-    experiment.getStimuli().getCollection()['earth.jpg'],
-    experiment.getStimuli().getCollection()['blackbackground.jpg'],
+    experiment.getStimuli().getImage('blackbackground.jpg'),
+    experiment.getStimuli().getImage('earth.jpg'),
+    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    experiment.getStimuli().getImage('blackbackground.jpg'),
+    experiment.getStimuli().getImage('tutyellowplanet.jpg'),
+    experiment.getStimuli().getImage('blackbackground.jpg'),
+    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    experiment.getStimuli().getImage('blackbackground.jpg'),
+    experiment.getStimuli().getImage('blackbackground.jpg'),
+    experiment.getStimuli().getImage('earth.jpg'),
+    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    experiment.getStimuli().getImage('tutyellowplanet.jpg'),
+    experiment.getStimuli().getImage('earth.jpg'),
+    experiment.getStimuli().getImage('earth.jpg'),
+    experiment.getStimuli().getImage('blackbackground.jpg'),
   ];
 
   let t_i;
@@ -519,7 +519,7 @@ experiment.load().then(() => {
   let curr_side;
 
   const create_instructions = (
-      image, texts, audio_files, sect_right_texts,
+      image, texts, sect_right_texts,
       sect_left_texts, sect_center_texts, sect_reward_texts) => {
     'use strict';
     const instruction_pages = [];
@@ -533,7 +533,6 @@ experiment.load().then(() => {
         reward_string: sect_reward_texts[t_i],
         choices: jsPsych.ALL_KEYS,
         prompt: texts[t_i],
-        audio_stimulus: audio_files[t_i],
       };
       instruction_pages.push(curr_page);
     }
@@ -564,9 +563,9 @@ experiment.load().then(() => {
       timeout: false,
       choices: [left_key, right_key],
       planet_text:
-        experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
-      right_text: 'images/tutalien1',
-      left_text: 'images/tutalien2',
+        experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+      right_text: 'tutalien1',
+      left_text: 'tutalien2',
       prompt: ['Now try another one'],
       trial_duration: choicetime,
     });
@@ -575,9 +574,9 @@ experiment.load().then(() => {
     type: 'd3-animate-choice',
     timeout: false,
     choices: [left_key, right_key],
-    planet_text: experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
-    right_text: 'images/tutalien1',
-    left_text: 'images/tutalien2',
+    planet_text: experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    right_text: 'tutalien1',
+    left_text: 'tutalien2',
     trial_duration: choicetime,
   });
 
@@ -589,10 +588,10 @@ experiment.load().then(() => {
       trial_row: reward_instructions_payoff,
       choices: [left_key, right_key],
       planet_text:
-        experiment.getStimuli().getCollection()['tutyellowplanet.jpg'],
+        experiment.getStimuli().getImage('tutyellowplanet.jpg'),
       right_text: () => {
         if (curr_side === true) {
-          return 'images/tutalien3';
+          return 'tutalien3';
         }
         return null;
       },
@@ -600,7 +599,7 @@ experiment.load().then(() => {
         if (curr_side === true) {
           return null;
         }
-        return 'images/tutalien3';
+        return 'tutalien3';
       },
       trial_duration: choicetime,
     });
@@ -614,9 +613,9 @@ experiment.load().then(() => {
       trial_row: instructions_payoff,
       choices: [left_key, right_key],
       planet_text:
-        experiment.getStimuli().getCollection()['tutgreenplanet.jpg'],
-      right_text: 'images/tutalien1',
-      left_text: 'images/tutalien2',
+        experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+      right_text: 'tutalien1',
+      left_text: 'tutalien2',
       trial_duration: choicetime,
     });
   }

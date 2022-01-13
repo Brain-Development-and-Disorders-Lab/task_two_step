@@ -150,7 +150,10 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           .attr('y', choice_y)
           .attr('width', monster_size)
           .attr('height', monster_size)
-          .attr('xlink:href', trial.right_text + '_norm.png');
+          .attr('xlink:href',
+              experiment.getStimuli()
+                  .getImage(
+                      trial.right_text.replace('.png', '') + '_norm.png'));
     }
 
     if (trial.left_text !== null) {
@@ -159,7 +162,10 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           .attr('y', choice_y)
           .attr('width', monster_size)
           .attr('height', monster_size)
-          .attr('xlink:href', trial.left_text + '_norm.png');
+          .attr('xlink:href',
+              experiment.getStimuli()
+                  .getImage(
+                      trial.left_text.replace('.png', '') + '_norm.png'));
     }
 
     let valid_choices = trial.choices;
@@ -179,7 +185,8 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           .attr('y', chosen_y)
           .attr('width', monster_size)
           .attr('height', monster_size)
-          .attr('xlink:href', trial.center_text + '_deact.png');
+          .attr('xlink:href',
+              trial.center_text.replace('.png', '') + '_deact.png');
     }
 
     if (trial.query_trial !== null) {
@@ -273,7 +280,7 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
 
       if ((valid_pressed == 0) &&
         (valid_choices.indexOf(info.key) > -1) && (move_possible)) {
-        console.log('valid key was pressed');
+        consola.debug(`A valid key ('${info.key}') was pressed.`);
         valid_pressed = 1;
 
         if (trial.query_trial == null) {
@@ -293,12 +300,16 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           if (trial.center_text !== null) {
             if (valid_choices.length > 1) {
               // 'deactivate' the unselected choice if more than one choice
-              unchosen_image.attr('xlink:href', unchosen_text + '_deact.png');
+              unchosen_image.attr('xlink:href',
+                  experiment.getStimuli()
+                      .getImage(
+                          unchosen_text.replace('.png', '') + '_deact.png'));
             }
 
             // start the animation by moving the selected image to the center
             center_image.transition().remove().on('end', () => {
-              chosen_image.attr('xlink:href', chosen_text + '_a2.png')
+              chosen_image.attr('xlink:href',
+                  chosen_text.replace('.png', '') + '_a2.png')
                   .transition().duration(box_moving_time)
                   .attr('y', chosen_y)
                   .attr('x', chosen_x)
@@ -311,11 +322,13 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
                       } else {
                         curr_img = chosen_text + '_a2.png';
                       }
-                      chosen_image.attr('xlink:href', curr_img);
+                      chosen_image.attr('xlink:href', experiment.getStimuli()
+                          .getImage(curr_img));
                       frames++;
                       if (frames == 5) {
                         chosen_image
-                            .attr('xlink:href', chosen_text + '_deact.png');
+                            .attr('xlink:href', experiment.getStimuli()
+                                .getImage(chosen_text + '_deact.png'));
                         if (trial.trial_row !== null) {
                           // determine the reward and add the reward image
                           trial.reward_text =
@@ -325,7 +338,8 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
                               .attr('y', reward_y)
                               .attr('width', reward_size)
                               .attr('height', reward_size)
-                              .attr('xlink:href', trial.reward_text);
+                              .attr('xlink:href', experiment.getStimuli()
+                                  .getImage(trial.reward_text));
                           interval((elapsed) => {}, moneytime);
                         }
                         t.stop();
@@ -336,10 +350,14 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           } else {
             // do the same thing, but without a center image
             if (valid_choices.length > 1) {
-              unchosen_image.attr('xlink:href', unchosen_text + '_deact.png');
+              unchosen_image.attr('xlink:href',
+                  experiment.getStimuli()
+                      .getImage(
+                          unchosen_text.replace('.png', '') + '_deact.png'));
             }
 
-            chosen_image.attr('xlink:href', chosen_text + '_a2.png')
+            chosen_image.attr('xlink:href', experiment.getStimuli()
+                .getImage(chosen_text + '_a2.png'))
                 .transition()
                 .duration(box_moving_time)
                 .attr('y', chosen_y)
@@ -353,10 +371,12 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
                     } else {
                       curr_img = chosen_text+'_a2.png';
                     }
-                    chosen_image.attr('xlink:href', curr_img);
+                    chosen_image.attr('xlink:href', experiment.getStimuli()
+                        .getImage(curr_img));
                     frames++;
                     if (frames == 5) {
-                      chosen_image.attr('xlink:href', chosen_text+'_deact.png');
+                      chosen_image.attr('xlink:href', experiment.getStimuli()
+                          .getImage(chosen_text+'_deact.png'));
                       if (trial.trial_row !== null) {
                         trial.reward_text =
                             calculate_reward(chosen_text, trial.trial_row);
@@ -375,7 +395,7 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           }
         } else {
           // this only gets evaluated if query_trial = true
-          console.log('end_trial');
+          consola.log(`'end_trial()' called.`);
           end_trial();
         }
 
@@ -402,8 +422,10 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           trial.chosen_text = '';
           right_image.transition()
               .duration(isitime)
-              .attr('xlink:href', trial.right_text + '_sp.png');
-          left_image.attr('xlink:href', trial.left_text + '_sp.png');
+              .attr('xlink:href', experiment.getStimuli()
+                  .getImage(trial.right_text + '_sp.png'));
+          left_image.attr('xlink:href',
+              trial.left_text.replace('.png', '') + '_sp.png');
         }
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
@@ -434,9 +456,9 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
       }
 
       if (reward) {
-        return experiment.getStimuli().getCollection()['t.png'];
+        return experiment.getStimuli().getImage('t.png');
       } else {
-        return experiment.getStimuli().getCollection()['nothing.png'];
+        return experiment.getStimuli().getImage('nothing.png');
       }
     }
   };

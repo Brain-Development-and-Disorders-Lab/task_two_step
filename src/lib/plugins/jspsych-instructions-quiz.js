@@ -128,7 +128,7 @@ jsPsych.plugins['instructions-quiz'] = (function() {
       if (trial.button_html.length == trial.choices.length) {
         buttons = trial.button_html;
       } else {
-        console.error('Error in image-button-response plugin. ' +
+        consola.error('Error in image-button-response plugin. ' +
             'The length of the button_html array does not equal ' +
             'the length of the choices array',
         );
@@ -180,7 +180,6 @@ jsPsych.plugins['instructions-quiz'] = (function() {
       const end_time = performance.now();
       const rt = end_time - start_time;
       response.button = choice;
-      console.log(choice);
       response.rt = rt;
 
       // disable all the buttons after a response

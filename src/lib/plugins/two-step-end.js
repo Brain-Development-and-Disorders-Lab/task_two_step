@@ -115,7 +115,7 @@ jsPsych.plugins['two-step-end'] = (function() {
       if (trial.button_html.length == trial.choices.length) {
         buttons = trial.button_html;
       } else {
-        console.error(
+        consola.error(
             'Error in image-button-response plugin. '+
             'The length of the button_html array does not ' +
             'equal the length of the choices array',

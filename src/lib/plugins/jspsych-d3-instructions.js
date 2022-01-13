@@ -149,7 +149,6 @@ jsPsych.plugins['d3-instructions'] = (function() {
         .style('fill', 'red')
         .on('click', () => {
           trial.button_clicked = true;
-          console.log(trial.button_clicked);
           button_image.style('fill', 'green');
           button_image.style('stroke', 'black');
         });
@@ -175,8 +174,6 @@ jsPsych.plugins['d3-instructions'] = (function() {
 
     // function to end trial when it is time
     const end_trial = () => {
-      console.log('end trial initiated');
-
       // set button_clicked back to false
       trial.button_clicked = false;
 
