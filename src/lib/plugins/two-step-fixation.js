@@ -10,7 +10,7 @@ import {
   x_center,
   y_center,
   font_size,
-} from '../instructions';
+} from '../variables';
 
 jsPsych.plugins['two-step-fixation'] = (() => {
   const plugin = {};

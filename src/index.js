@@ -26,7 +26,7 @@ import {
   practice_stochastic_num,
   practice_stochastic_idx,
   instructions_payoff,
-} from './lib/instructions';
+} from './lib/variables';
 
 // General jsPsych imports
 import 'jspsych';

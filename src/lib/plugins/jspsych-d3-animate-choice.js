@@ -29,7 +29,7 @@ import {
   reward_x,
   reward_y,
   reward_size,
-} from '../instructions';
+} from '../variables';
 
 jsPsych.plugins['d3-animate-choice'] = (() => {
   const plugin = {};

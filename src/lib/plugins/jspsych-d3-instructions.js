@@ -20,7 +20,7 @@ import {
   instructions_text_start_y,
   font_size,
   reward_size,
-} from '../instructions';
+} from '../variables';
 
 jsPsych.plugins['d3-instructions'] = (function() {
   const plugin = {};

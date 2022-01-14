@@ -28,7 +28,7 @@ import {
   reward_x,
   reward_y,
   reward_size,
-} from '../instructions';
+} from '../variables';
 
 jsPsych.plugins['two-step-explicit-choice'] = (() => {
   const plugin = {};
