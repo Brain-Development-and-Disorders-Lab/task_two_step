@@ -5,8 +5,8 @@
  * plugin for playing an audio file and getting a keyboard response
  *
  * documentation: docs.jspsych.org
- *
- **/
+ */
+// Logging library
 import consola from 'consola';
 
 jsPsych.plugins['instructions-quiz'] = (function() {

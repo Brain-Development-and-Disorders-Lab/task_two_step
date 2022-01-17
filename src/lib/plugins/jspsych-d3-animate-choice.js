@@ -7,16 +7,23 @@
  *
  * VF 8/2019
  */
-
-import {interval, select} from 'd3';
-import {experiment} from '../..';
+// Logging library
 import consola from 'consola';
+
+// Wrapper instance
+import {experiment} from '../..';
+
+// d3.js imports
+import {interval, select} from 'd3';
+
+// Experiment variables
 import {
   box_moving_time,
   isi_time,
   money_time,
 } from '../variables';
 
+// Display variables
 import {
   width,
   height,

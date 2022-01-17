@@ -1,7 +1,8 @@
 /**
  * plugin for displaying a stimulus and then a second image given a
  * keyboard response
- **/
+ */
+// Logging library
 import consola from 'consola';
 
 jsPsych.plugins['two-stage'] = (function() {

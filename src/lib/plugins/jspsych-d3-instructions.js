@@ -4,10 +4,14 @@
  * global variables
  * VF 8/2019
  * KN added audio 4/22/20
- **/
-import {select} from 'd3';
+ */
+// Logging library
 import consola from 'consola';
 
+// d3.js imports
+import {select} from 'd3';
+
+// Display variables
 import {
   width,
   height,

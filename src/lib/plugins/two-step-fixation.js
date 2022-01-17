@@ -1,9 +1,13 @@
 /**
  * jspsych-two-step-fixation
- *
- **/
-import {select} from 'd3';
+ */
+// Logging library
 import consola from 'consola';
+
+// d3.js imports
+import {select} from 'd3';
+
+// Display variables
 import {width, height, x_center, y_center, font_size} from '../display';
 
 jsPsych.plugins['two-step-fixation'] = (() => {

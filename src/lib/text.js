@@ -1,6 +1,7 @@
+// Generate and export the instructions for the task
 export const instructions = [];
 
-// black background
+// Black (starting) background
 instructions[0] = [
   [
     'Please listen to the instructions and read each page carefully.',
@@ -10,7 +11,7 @@ instructions[0] = [
   ],
 ];
 
-// rocket background
+// Rocket background
 instructions[1] = [
   [
     'In this game, you will be taking a spaceship from earth',
@@ -19,7 +20,7 @@ instructions[1] = [
 ];
 
 
-// alien background
+// Alien background
 instructions[2] = [
   [
     'Each planet has two aliens on it. ',
@@ -39,7 +40,7 @@ instructions[2] = [
   ],
 ];
 
-// black background
+// Black background
 instructions[3] = [
   [
     'After you choose an alien, you will find out whether you got treasure.',
@@ -64,7 +65,7 @@ instructions[3] = [
   ],
 ];
 
-// yellow alien
+// Yellow alien
 instructions[4] = [
   [
     'For example, the alien on the yellow planet has a good mine right now. ',
@@ -77,7 +78,7 @@ instructions[4] = [
   ],
 ];
 
-// black background
+// Black background
 instructions[5] = [
   [
     'Every alien has treasure in its mine, but they can\'t share every time.',
@@ -85,7 +86,7 @@ instructions[5] = [
   ],
 ];
 
-// one right
+// One alien to the right
 instructions[6] = [
   [
     'Next, you can choose between two aliens ',
@@ -93,12 +94,12 @@ instructions[6] = [
   ],
 ];
 
-// one left
+// One alien to the left
 instructions[7] = [
   ['...and sometimes come up on the left.'],
 ];
 
-// black
+// Black background
 instructions[8] = [
   [
     'Which side an alien appears on does not matter.',
@@ -114,7 +115,7 @@ instructions[8] = [
   ],
 ];
 
-// black
+// Black background
 instructions[9] = [
   [
     'Good. You might have learned that this alien had treasure more often. ',
@@ -147,7 +148,7 @@ instructions[9] = [
   ],
 ];
 
-// rocket
+// Rockets
 instructions[10] = [
   [
     'Now that you know how to pick aliens, you can learn to play ' +
@@ -156,17 +157,17 @@ instructions[10] = [
   ],
 ];
 
-// green
+// Green planet
 instructions[11] = [
   ['Here is the green planet'],
 ];
 
-// yellow
+// Yellow planet
 instructions[12] = [
   ['And here is the yellow planet'],
 ];
 
-// rocket
+// Rockets
 instructions[13] = [
   [
     'First you need to choose which spaceship to take.  ',
@@ -181,7 +182,7 @@ instructions[13] = [
   ],
 ];
 
-// rocket
+// Rockets
 instructions[14] = [
   [
     'Let\'s practice before doing the full game.  ',
@@ -208,7 +209,7 @@ instructions[14] = [
   ['Good luck! Remember that 1 selects left and 0 selects right.'],
 ];
 
-// black
+// Black background
 instructions[15] = [
   [
     'That is the end of the practice game.  ',
@@ -216,6 +217,7 @@ instructions[15] = [
   ],
 ];
 
+// Hints
 instructions[16] = [
   [
     'Okay, that is nearly the end of the tutorial!  ',
@@ -253,6 +255,7 @@ instructions[16] = [
   ],
 ];
 
+// Pre-attention-check
 instructions[17] = [
   [
     'Now it\'s time to make sure you know how to play.  ',
@@ -260,6 +263,7 @@ instructions[17] = [
   ],
 ];
 
+// Pre-game
 instructions[18] = [
   [
     'OK! Now you know how to play.  ',

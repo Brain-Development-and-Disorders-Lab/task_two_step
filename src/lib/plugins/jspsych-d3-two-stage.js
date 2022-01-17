@@ -1,13 +1,14 @@
 /**
- *
  * plugin for displaying a stimulus and then a second image
  * given a keyboard response
  *
  * VF 8/2019
- *
- **/
-import {select} from 'd3';
+ */
+// Logging library
 import consola from 'consola';
+
+// d3.js imports
+import {select} from 'd3';
 
 jsPsych.plugins['d3-two-stage'] = (() => {
   const plugin = {};

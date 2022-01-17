@@ -1,3 +1,4 @@
+// Experiment-wide variables
 // Number of trials in a 'block' of trials
 export const block_size = 50;
 export const num_blocks = 4;

@@ -1,6 +1,10 @@
-import {Experiment} from 'crossplatform-jspsych-wrapper';
+// Logging library
 import consola from 'consola';
 
+// Wrapper library
+import {Experiment} from 'crossplatform-jspsych-wrapper';
+
+// Experiment variables
 import {
   block_size,
   choice_time,
@@ -27,6 +31,7 @@ import {
   instructions_payoff,
 } from './lib/variables';
 
+// Import the instructions
 import {instructions} from './lib/text';
 
 // General jsPsych imports
