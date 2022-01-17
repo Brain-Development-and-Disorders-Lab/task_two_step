@@ -2,8 +2,8 @@ import {Experiment} from 'crossplatform-jspsych-wrapper';
 import consola from 'consola';
 
 import {
-  block_trials,
-  choicetime,
+  block_size,
+  choice_time,
   num_blocks,
   rocket_sides,
   practice_game_num,
@@ -16,8 +16,7 @@ import {
   green_display_order,
   yellow_display_order,
   purple_display_order,
-  transprob,
-  instructions,
+  probability,
   practice_pressing_num,
   practice_pressing_idx,
   practice_reward_num,
@@ -27,6 +26,8 @@ import {
   practice_stochastic_idx,
   instructions_payoff,
 } from './lib/variables';
+
+import {instructions} from './lib/text';
 
 // General jsPsych imports
 import 'jspsych';
@@ -89,7 +90,7 @@ experiment.load().then(() => {
   // add experiment blocks to timeline
   for (let j = 0; j < num_blocks; j++) {
     timeline_var.push([]); // push block to timeline
-    for (let i = 0; i < block_trials; i++) {
+    for (let i = 0; i < block_size; i++) {
       if (rocket_sides) { // randomize sides of rockets for each subject
         timeline_var[j].push({
           right_text: 'rocket2',
@@ -171,7 +172,7 @@ experiment.load().then(() => {
               ];
             }
           },
-          trial_duration: choicetime,
+          trial_duration: choice_time,
         },
         // define stage 2 choice
         {
@@ -205,7 +206,7 @@ experiment.load().then(() => {
             if (curr_stage_two[3] == null) {
               return 0;
             } else {
-              return choicetime;
+              return choice_time;
             }
           },
           on_finish: (data) => {
@@ -280,7 +281,7 @@ experiment.load().then(() => {
         second_planet = 'purple';
       }
       const first_ship_chosen = (chosen_string.slice(-1) == 1);
-      const good_transition = (Math.random() < transprob);
+      const good_transition = (Math.random() < probability);
       let planet = '';
       if (first_ship_chosen && red_planet_first_rocket) {
         if (good_transition) {
@@ -577,7 +578,7 @@ experiment.load().then(() => {
       right_text: 'tutalien1',
       left_text: 'tutalien2',
       prompt: ['Now try another one'],
-      trial_duration: choicetime,
+      trial_duration: choice_time,
     });
   }
   curr_instructions.splice(practice_pressing_idx, 0, {
@@ -587,7 +588,7 @@ experiment.load().then(() => {
     planet_text: experiment.getStimuli().getImage('tutgreenplanet.jpg'),
     right_text: 'tutalien1',
     left_text: 'tutalien2',
-    trial_duration: choicetime,
+    trial_duration: choice_time,
   });
 
   // insert 10 treasure asking practice trials
@@ -611,7 +612,7 @@ experiment.load().then(() => {
         }
         return 'tutalien3';
       },
-      trial_duration: choicetime,
+      trial_duration: choice_time,
     });
   }
 
@@ -626,7 +627,7 @@ experiment.load().then(() => {
         experiment.getStimuli().getImage('tutgreenplanet.jpg'),
       right_text: 'tutalien1',
       left_text: 'tutalien2',
-      trial_duration: choicetime,
+      trial_duration: choice_time,
     });
   }
 

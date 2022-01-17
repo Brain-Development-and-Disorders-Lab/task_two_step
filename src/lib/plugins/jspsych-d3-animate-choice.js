@@ -13,8 +13,8 @@ import {experiment} from '../..';
 import consola from 'consola';
 import {
   box_moving_time,
-  isitime,
-  moneytime,
+  isi_time,
+  money_time,
 } from '../variables';
 
 import {
@@ -345,11 +345,11 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
                               .attr('width', reward_size)
                               .attr('height', reward_size)
                               .attr('xlink:href', trial.reward_text);
-                          interval((elapsed) => {}, moneytime);
+                          interval((elapsed) => {}, money_time);
                         }
                         t.stop();
                       }
-                    }, isitime / 5);
+                    }, isi_time / 5);
                   }); // increment 5 times
             });
           } else {
@@ -391,11 +391,11 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
                             .attr('width', reward_size)
                             .attr('height', reward_size)
                             .attr('xlink:href', trial.reward_text);
-                        interval((elapsed) => {}, moneytime);
+                        interval((elapsed) => {}, money_time);
                       }
                       t.stop();
                     }
-                  }, isitime / 5);
+                  }, isi_time / 5);
                 });
           }
         } else {
@@ -407,7 +407,7 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           end_trial();
-        }, (isitime + moneytime));
+        }, (isi_time + money_time));
       }
     }; // This is the end of the after_response function
 
@@ -426,7 +426,7 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
           move_possible = false;
           trial.chosen_text = '';
           right_image.transition()
-              .duration(isitime)
+              .duration(isi_time)
               .attr('xlink:href', experiment.getStimuli()
                   .getImage(trial.right_text + '_sp.png'));
           left_image.attr('xlink:href', experiment.getStimuli()
@@ -435,7 +435,7 @@ jsPsych.plugins['d3-animate-choice'] = (() => {
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           end_trial();
-        }, (isitime));
+        }, (isi_time));
       }, trial.trial_duration);
     }
   };

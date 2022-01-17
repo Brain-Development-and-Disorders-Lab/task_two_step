@@ -12,8 +12,8 @@ import {experiment} from '../..';
 import consola from 'consola';
 import {
   box_moving_time,
-  isitime,
-  moneytime,
+  isi_time,
+  money_time,
 } from '../variables';
 import {
   width,
@@ -365,11 +365,11 @@ jsPsych.plugins['two-step-explicit-choice'] = (() => {
                               .attr('width', reward_size)
                               .attr('height', reward_size)
                               .attr('xlink:href', trial.reward_text);
-                          interval((elapsed) => {}, moneytime);
+                          interval((elapsed) => {}, money_time);
                         }
                         t.stop();
                       }
-                    }, isitime / 5);
+                    }, isi_time / 5);
                   }); // increment 5 times
             });
           } else { // do the same thing, but without a center image
@@ -409,11 +409,11 @@ jsPsych.plugins['two-step-explicit-choice'] = (() => {
                             .attr('width', reward_size)
                             .attr('height', reward_size)
                             .attr('xlink:href', trial.reward_text);
-                        interval((elapsed) => {}, moneytime);
+                        interval((elapsed) => {}, money_time);
                       }
                       t.stop();
                     }
-                  }, isitime / 5);
+                  }, isi_time / 5);
                 });
           }
         } else { // this only gets evaluated if query_trial = true
@@ -424,7 +424,7 @@ jsPsych.plugins['two-step-explicit-choice'] = (() => {
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           end_trial();
-        }, (isitime + moneytime));
+        }, (isi_time + money_time));
       }
     }; // This is the end of the after_response function
 
@@ -445,14 +445,14 @@ jsPsych.plugins['two-step-explicit-choice'] = (() => {
           move_possible = false;
           trial.chosen_text='';
           right_image.transition()
-              .duration(isitime)
+              .duration(isi_time)
               .attr('xlink:href', trial.right_text + '_sp.png');
           left_image.attr('xlink:href', trial.left_text + '_sp.png');
         }
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           end_trial();
-        }, (isitime));
+        }, (isi_time));
       }, trial.trial_duration);
     }
   };
