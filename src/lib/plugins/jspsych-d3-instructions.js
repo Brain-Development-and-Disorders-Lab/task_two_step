@@ -11,16 +11,16 @@ import consola from 'consola';
 import {
   width,
   height,
-  x_center,
-  choice_x_left,
-  choice_x_right,
   monster_size,
-  choice_y,
-  text_start_x,
-  instructions_text_start_y,
-  font_size,
   reward_size,
-} from '../variables';
+  x_center,
+  choice_y,
+  choice_x_right,
+  choice_x_left,
+  instructions_text_start_y,
+  text_start_x,
+  font_size,
+} from '../display';
 
 jsPsych.plugins['d3-instructions'] = (function() {
   const plugin = {};

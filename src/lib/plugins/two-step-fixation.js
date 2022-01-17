@@ -4,13 +4,7 @@
  **/
 import {select} from 'd3';
 import consola from 'consola';
-import {
-  width,
-  height,
-  x_center,
-  y_center,
-  font_size,
-} from '../variables';
+import {width, height, x_center, y_center, font_size} from '../display';
 
 jsPsych.plugins['two-step-fixation'] = (() => {
   const plugin = {};

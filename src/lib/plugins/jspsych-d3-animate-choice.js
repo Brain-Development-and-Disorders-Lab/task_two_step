@@ -12,24 +12,27 @@ import {interval, select} from 'd3';
 import {experiment} from '../..';
 import consola from 'consola';
 import {
-  width,
-  height,
-  chosen_x,
-  chosen_y,
-  choice_y,
-  choice_x_left,
-  choice_x_right,
-  monster_size,
   box_moving_time,
   isitime,
   moneytime,
-  text_start_x,
-  instructions_text_start_y,
-  font_size,
+} from '../variables';
+
+import {
+  width,
+  height,
+  monster_size,
+  reward_size,
+  choice_y,
+  choice_x_right,
+  choice_x_left,
+  chosen_x,
+  chosen_y,
   reward_x,
   reward_y,
-  reward_size,
-} from '../variables';
+  instructions_text_start_y,
+  text_start_x,
+  font_size,
+} from '../display';
 
 jsPsych.plugins['d3-animate-choice'] = (() => {
   const plugin = {};
