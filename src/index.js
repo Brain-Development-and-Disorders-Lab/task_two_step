@@ -1,5 +1,5 @@
 // Logging library
-import consola from 'consola';
+import consola, {LogLevel} from 'consola';
 
 // Wrapper library
 import {Experiment} from 'crossplatform-jspsych-wrapper';
@@ -34,39 +34,24 @@ import {
 // Import the instructions
 import {instructions} from './lib/text';
 
+// Configuration
+import {configuration} from './configuration';
+
 // General jsPsych imports
 import 'jspsych';
-import 'jspsych/plugins/jspsych-audio-button-response';
-import 'jspsych/plugins/jspsych-audio-keyboard-response';
-import 'jspsych/plugins/jspsych-call-function';
-import 'jspsych/plugins/jspsych-fullscreen';
-import 'jspsych/plugins/jspsych-html-button-response';
-import 'jspsych/plugins/jspsych-html-keyboard-response';
-import 'jspsych/plugins/jspsych-image-keyboard-response';
-import 'jspsych/plugins/jspsych-instructions';
-import 'jspsych/plugins/jspsych-survey-likert';
-import 'jspsych/plugins/jspsych-survey-multi-choice';
-import 'jspsych/plugins/jspsych-survey-text';
 import 'jspsych/plugins/jspsych-preload';
 
+// Import all our plugins
+import './lib/plugins/two-step-choice';
+import './lib/plugins/two-step-instructions';
+import './lib/plugins/two-step-fixation';
+
+// Import the data
 import practice_prob_data from './data/masterprobtut.csv';
 import prob_data from './data/masterprob4.csv';
 
-// Import all our plugins
-import './lib/plugins/jspsych-d3-animate-choice';
-import './lib/plugins/jspsych-d3-instructions';
-import './lib/plugins/jspsych-d3-two-stage';
-import './lib/plugins/jspsych-instructions-quiz';
-import './lib/plugins/jspsych-two-stage';
-import './lib/plugins/two-step-end';
-import './lib/plugins/two-step-explicit-choice';
-import './lib/plugins/two-step-fixation';
-
 // Styling
 import './css/styles.css';
-
-import {LogLevel} from 'consola';
-import {configuration} from './configuration';
 
 export const experiment = new Experiment({
   name: 'Two-step game',
@@ -89,14 +74,16 @@ experiment.load().then(() => {
   const timeline_var = [];
   let trial = 0;
 
+  // Reward and no reward stimuli
   const reward_string = experiment.getStimuli().getImage('t.png');
   const null_string = experiment.getStimuli().getImage('nothing.png');
 
-  // add experiment blocks to timeline
+  // Add experiment blocks to timeline
   for (let j = 0; j < num_blocks; j++) {
     timeline_var.push([]); // push block to timeline
     for (let i = 0; i < block_size; i++) {
-      if (rocket_sides) { // randomize sides of rockets for each subject
+      // Randomize sides of rockets for each subject
+      if (rocket_sides) {
         timeline_var[j].push({
           right_text: 'rocket2',
           left_text: 'rocket1',
@@ -117,7 +104,8 @@ experiment.load().then(() => {
   trial = 0;
 
   for (let i = 0; i < practice_game_num; i++) {
-    if (prac_rocket_sides) { // randomize sides of rockets for each subject
+    if (prac_rocket_sides) {
+      // Randomize sides of rockets for each subject
       practice_timeline_var.push({
         right_text: 'tutrocket2',
         left_text: 'tutrocket1',
@@ -146,7 +134,7 @@ experiment.load().then(() => {
     const exp_procedure = {
       timeline: [
         { // define stage 1 choice
-          type: 'd3-animate-choice',
+          type: 'two-step-choice',
           trial_stage: '1',
           choices: [left_key, right_key],
           planet_text: experiment.getStimuli().getImage('earth.jpg'),
@@ -181,7 +169,7 @@ experiment.load().then(() => {
         },
         // define stage 2 choice
         {
-          type: 'd3-animate-choice',
+          type: 'two-step-choice',
           trial_stage: '2',
           choices: [left_key, right_key],
           practice_trial: () => {
@@ -541,7 +529,7 @@ experiment.load().then(() => {
     const instruction_pages = [];
     for (t_i = 0; t_i < texts.length; t_i += 1) {
       curr_page = {
-        type: 'd3-instructions',
+        type: 'two-step-instructions',
         stimulus: image,
         right_text: sect_right_texts[t_i],
         left_text: sect_left_texts[t_i],
@@ -575,7 +563,7 @@ experiment.load().then(() => {
   // insert 4 selection practice trials on instructions page 5
   for (let i = 0; i < (practice_pressing_num - 1); i += 1) {
     curr_instructions.splice(practice_pressing_idx, 0, {
-      type: 'd3-animate-choice',
+      type: 'two-step-choice',
       timeout: false,
       choices: [left_key, right_key],
       planet_text:
@@ -587,7 +575,7 @@ experiment.load().then(() => {
     });
   }
   curr_instructions.splice(practice_pressing_idx, 0, {
-    type: 'd3-animate-choice',
+    type: 'two-step-choice',
     timeout: false,
     choices: [left_key, right_key],
     planet_text: experiment.getStimuli().getImage('tutgreenplanet.jpg'),
@@ -599,7 +587,7 @@ experiment.load().then(() => {
   // insert 10 treasure asking practice trials
   for (let i = 0; i < practice_reward_num; i += 1) {
     curr_instructions.splice(practice_reward_idx, 0, {
-      type: 'd3-animate-choice',
+      type: 'two-step-choice',
       timeout: false,
       trial_row: reward_instructions_payoff,
       choices: [left_key, right_key],
@@ -624,7 +612,7 @@ experiment.load().then(() => {
   // insert 10 asking green aliens for reward trials
   for (let i = 0; i < practice_stochastic_num; i += 1) {
     curr_instructions.splice(practice_stochastic_idx, 0, {
-      type: 'd3-animate-choice',
+      type: 'two-step-choice',
       timeout: false,
       trial_row: instructions_payoff,
       choices: [left_key, right_key],

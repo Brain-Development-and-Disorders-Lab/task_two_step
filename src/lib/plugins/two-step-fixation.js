@@ -56,6 +56,7 @@ jsPsych.plugins['two-step-fixation'] = (() => {
       svg.append('svg:image')
           .attr('width', width)
           .attr('height', height)
+          .attr('preserveAspectRatio', 'xMidYMid slice')
           .attr('xlink:href', trial.stimulus);
     }
 

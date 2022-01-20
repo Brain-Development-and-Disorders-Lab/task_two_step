@@ -1,5 +1,5 @@
 /**
- * d3-instructions
+ * two-step-instructions
  * Similar to other two-step task d3 plugins, sizes of pictures are
  * global variables
  * VF 8/2019
@@ -26,11 +26,11 @@ import {
   font_size,
 } from '../display';
 
-jsPsych.plugins['d3-instructions'] = (function() {
+jsPsych.plugins['two-step-instructions'] = (function() {
   const plugin = {};
 
   plugin.info = {
-    name: 'd3-instructions',
+    name: 'two-step-instructions',
     description: '',
     parameters: {
       stimulus: {
