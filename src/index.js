@@ -6,29 +6,29 @@ import {Experiment} from 'crossplatform-jspsych-wrapper';
 
 // Experiment variables
 import {
-  block_size,
-  choice_time,
-  num_blocks,
+  blockLength,
+  timeChoice,
+  blockCount,
   rocket_sides,
   practice_game_num,
   practice_game_idx,
   prac_rocket_sides,
-  left_key,
-  right_key,
+  keyLeft,
+  keyRight,
   red_planet_first_rocket,
-  red_display_order,
-  green_display_order,
-  yellow_display_order,
-  purple_display_order,
+  displayOrderRed,
+  displayOrderGreen,
+  displayOrderYellow,
+  displayOrderPurple,
   probability,
   practice_pressing_num,
   practice_pressing_idx,
   practice_reward_num,
   practice_reward_idx,
-  reward_instructions_payoff,
+  payoffReward,
   practice_stochastic_num,
   practice_stochastic_idx,
-  instructions_payoff,
+  payoffInstructions,
 } from './lib/variables';
 
 // Import the instructions
@@ -61,7 +61,7 @@ export const experiment = new Experiment({
   seed: '',
   allowParticipantContact: false,
   contact: 'henry.burgess@wustl.edu',
-  logging: LogLevel.Verbose,
+  logging: LogLevel.Warn,
   state: {
     practiceReward: 0,
     realReward: 0,
@@ -79,9 +79,9 @@ experiment.load().then(() => {
   const null_string = experiment.getStimuli().getImage('nothing.png');
 
   // Add experiment blocks to timeline
-  for (let j = 0; j < num_blocks; j++) {
+  for (let j = 0; j < blockCount; j++) {
     timeline_var.push([]); // push block to timeline
-    for (let i = 0; i < block_size; i++) {
+    for (let i = 0; i < blockLength; i++) {
       // Randomize sides of rockets for each subject
       if (rocket_sides) {
         timeline_var[j].push({
@@ -126,8 +126,10 @@ experiment.load().then(() => {
   /**
    * create_block function
    * @param {any} curr_variables variables
-   * @param {any} curr_prob_data data
-   * @param {any} practice ?
+   * @param {any} curr_prob_data probability data related to the
+   * trials of the block
+   * @param {boolean} practice whether or not the block of trials
+   * are practice trials
    * @return {any} ?
    */
   const create_block = (curr_variables, curr_prob_data, practice) => {
@@ -136,7 +138,7 @@ experiment.load().then(() => {
         { // define stage 1 choice
           type: 'two-step-choice',
           trial_stage: '1',
-          choices: [left_key, right_key],
+          choices: [keyLeft, keyRight],
           planet_text: experiment.getStimuli().getImage('earth.jpg'),
           right_text: jsPsych.timelineVariable('right_text'), // right rocket
           left_text: jsPsych.timelineVariable('left_text'), // left rocket
@@ -149,10 +151,10 @@ experiment.load().then(() => {
             curr_stage_two = [];
           },
           on_finish: function(data) {
-            if (data.key_press == left_key) {
+            if (data.key_press == keyLeft) {
               data.choice = 1;
             };
-            if (data.key_press == right_key) {
+            if (data.key_press == keyRight) {
               data.choice = 2;
             };
             curr_stage_two = calculate_transition(data.chosen_text, practice);
@@ -165,13 +167,13 @@ experiment.load().then(() => {
               ];
             }
           },
-          trial_duration: choice_time,
+          trial_duration: timeChoice,
         },
         // define stage 2 choice
         {
           type: 'two-step-choice',
           trial_stage: '2',
-          choices: [left_key, right_key],
+          choices: [keyLeft, keyRight],
           practice_trial: () => {
             if (practice === false) {
               return 'real';
@@ -199,7 +201,7 @@ experiment.load().then(() => {
             if (curr_stage_two[3] == null) {
               return 0;
             } else {
-              return choice_time;
+              return timeChoice;
             }
           },
           on_finish: (data) => {
@@ -216,10 +218,10 @@ experiment.load().then(() => {
                 );
               }
             }
-            if (data.key_press == left_key) {
+            if (data.key_press == keyLeft) {
               data.choice = 1;
             }
-            if (data.key_press == right_key) {
+            if (data.key_press == keyRight) {
               data.choice = 2;
             }
             if (data.transition_type == true) {
@@ -305,7 +307,7 @@ experiment.load().then(() => {
       let display_order = (1);
       if (planet === 'red') {
         if (calculate_transition==false) {
-          display_order = red_display_order;
+          display_order = displayOrderRed;
         }
 
         if (display_order) {
@@ -327,7 +329,7 @@ experiment.load().then(() => {
         }
       } else if (planet === 'purple') {
         if (calculate_transition==false) {
-          display_order = purple_display_order;
+          display_order = displayOrderPurple;
         }
 
         if (display_order) {
@@ -349,7 +351,7 @@ experiment.load().then(() => {
         }
       } else if (planet === 'green') {
         if (calculate_transition==false) {
-          display_order = green_display_order;
+          display_order = displayOrderGreen;
         }
 
         if (display_order) {
@@ -371,7 +373,7 @@ experiment.load().then(() => {
         }
       } else if (planet === 'yellow') {
         if (calculate_transition==false) {
-          display_order = yellow_display_order;
+          display_order = displayOrderYellow;
         }
 
         if (display_order) {
@@ -565,23 +567,23 @@ experiment.load().then(() => {
     curr_instructions.splice(practice_pressing_idx, 0, {
       type: 'two-step-choice',
       timeout: false,
-      choices: [left_key, right_key],
+      choices: [keyLeft, keyRight],
       planet_text:
         experiment.getStimuli().getImage('tutgreenplanet.jpg'),
       right_text: 'tutalien1',
       left_text: 'tutalien2',
       prompt: ['Now try another one'],
-      trial_duration: choice_time,
+      trial_duration: timeChoice,
     });
   }
   curr_instructions.splice(practice_pressing_idx, 0, {
     type: 'two-step-choice',
     timeout: false,
-    choices: [left_key, right_key],
+    choices: [keyLeft, keyRight],
     planet_text: experiment.getStimuli().getImage('tutgreenplanet.jpg'),
     right_text: 'tutalien1',
     left_text: 'tutalien2',
-    trial_duration: choice_time,
+    trial_duration: timeChoice,
   });
 
   // insert 10 treasure asking practice trials
@@ -589,8 +591,8 @@ experiment.load().then(() => {
     curr_instructions.splice(practice_reward_idx, 0, {
       type: 'two-step-choice',
       timeout: false,
-      trial_row: reward_instructions_payoff,
-      choices: [left_key, right_key],
+      trial_row: payoffReward,
+      choices: [keyLeft, keyRight],
       planet_text:
         experiment.getStimuli().getImage('tutyellowplanet.jpg'),
       right_text: () => {
@@ -605,7 +607,7 @@ experiment.load().then(() => {
         }
         return 'tutalien3';
       },
-      trial_duration: choice_time,
+      trial_duration: timeChoice,
     });
   }
 
@@ -614,13 +616,13 @@ experiment.load().then(() => {
     curr_instructions.splice(practice_stochastic_idx, 0, {
       type: 'two-step-choice',
       timeout: false,
-      trial_row: instructions_payoff,
-      choices: [left_key, right_key],
+      trial_row: payoffInstructions,
+      choices: [keyLeft, keyRight],
       planet_text:
         experiment.getStimuli().getImage('tutgreenplanet.jpg'),
       right_text: 'tutalien1',
       left_text: 'tutalien2',
-      trial_duration: choice_time,
+      trial_duration: timeChoice,
     });
   }
 

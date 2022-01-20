@@ -8,7 +8,7 @@ import consola from 'consola';
 import {select} from 'd3';
 
 // Display variables
-import {width, height, x_center, y_center, font_size} from '../display';
+import {width, height, centerX, centerY, sizeFont} from '../display';
 
 jsPsych.plugins['two-step-fixation'] = (() => {
   const plugin = {};
@@ -63,10 +63,10 @@ jsPsych.plugins['two-step-fixation'] = (() => {
     // add text
     if (trial.text !== null) {
       svg.append('text')
-          .attr('x', x_center-3)
-          .attr('y', y_center)
+          .attr('x', centerX-3)
+          .attr('y', centerY)
           .attr('dy', + 'em')
-          .style('font-size', font_size+'px')
+          .style('font-size', sizeFont+'px')
           .style('fill', 'white')
           .text(trial.text);
     }

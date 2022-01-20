@@ -15,15 +15,15 @@ import {select} from 'd3';
 import {
   width,
   height,
-  monster_size,
-  reward_size,
-  x_center,
-  choice_y,
-  choice_x_right,
-  choice_x_left,
-  instructions_text_start_y,
-  text_start_x,
-  font_size,
+  sizeMonster,
+  sizeReward,
+  centerX,
+  choiceY,
+  choiceXRight,
+  choiceXLeft,
+  textInstructionsY,
+  textX,
+  sizeFont,
 } from '../display';
 
 jsPsych.plugins['two-step-instructions'] = (function() {
@@ -111,44 +111,44 @@ jsPsych.plugins['two-step-instructions'] = (function() {
     if (trial.right_text !== null) {
       svg.append('svg:image')
           .attr('class', 'right')
-          .attr('x', choice_x_right)
-          .attr('y', choice_y)
-          .attr('width', monster_size)
-          .attr('height', monster_size)
+          .attr('x', choiceXRight)
+          .attr('y', choiceY)
+          .attr('width', sizeMonster)
+          .attr('height', sizeMonster)
           .attr('xlink:href', trial.right_text);
     }
 
     if (trial.reward_string !== null) {
       svg.append('svg:image')
-          .attr('x', x_center-reward_size / 2)
-          .attr('y', choice_y)
-          .attr('width', reward_size)
-          .attr('height', reward_size)
+          .attr('x', centerX-sizeReward / 2)
+          .attr('y', choiceY)
+          .attr('width', sizeReward)
+          .attr('height', sizeReward)
           .attr('xlink:href', trial.reward_string);
     }
 
     if (trial.left_text !== null) {
       svg.append('svg:image')
-          .attr('x', choice_x_left)
-          .attr('y', choice_y)
-          .attr('width', monster_size)
-          .attr('height', monster_size)
+          .attr('x', choiceXLeft)
+          .attr('y', choiceY)
+          .attr('width', sizeMonster)
+          .attr('height', sizeMonster)
           .attr('xlink:href', trial.left_text);
     }
 
     if (trial.center_text !== null) {
       svg.append('svg:image')
-          .attr('x', x_center-monster_size / 2)
-          .attr('y', choice_y)
-          .attr('width', monster_size)
-          .attr('height', monster_size)
+          .attr('x', centerX-sizeMonster / 2)
+          .attr('y', choiceY)
+          .attr('width', sizeMonster)
+          .attr('height', sizeMonster)
           .attr('xlink:href', trial.center_text);
     }
 
     const button_image = svg.append('svg:circle')
         .attr('r', 25)
-        .attr('cx', choice_x_right + monster_size)
-        .attr('cy', choice_y + monster_size - 100)
+        .attr('cx', choiceXRight + sizeMonster)
+        .attr('cy', choiceY + sizeMonster - 100)
         .style('stroke', 'black')
         .style('fill', 'red')
         .on('click', () => {
@@ -166,10 +166,10 @@ jsPsych.plugins['two-step-instructions'] = (function() {
       const dy = 0;
       for (let i = 0; i < trial.prompt.length; i++) {
         svg.append('text')
-            .attr('x', text_start_x)
-            .attr('y', instructions_text_start_y)
+            .attr('x', textX)
+            .attr('y', textInstructionsY)
             .attr('dy', ++lineNumber * lineHeight + dy + 'em')
-            .style('font-size', font_size+'px')
+            .style('font-size', sizeFont+'px')
             .style('fill', 'white')
             .text(trial.prompt[i]);
         lineNumber++;

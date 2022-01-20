@@ -5,47 +5,47 @@ export const height = window.innerHeight;
 export const width = window.innerWidth;
 
 // Overall scaling and picture sizing
-export let picture_height;
-export let picture_width;
+export let pictureHeight;
+export let pictureWidth;
 if (window.innerWidth / window.innerHeight < 1.34) {
-  picture_height = window.innerWidth / 1.34;
-  picture_width = window.innerWidth;
+  pictureHeight = window.innerWidth / 1.34;
+  pictureWidth = window.innerWidth;
 } else {
-  picture_height = window.innerHeight;
-  picture_width = window.innerHeight * 1.34;
+  pictureHeight = window.innerHeight;
+  pictureWidth = window.innerHeight * 1.34;
 }
 
 // Image scaling
-export const monster_size = picture_height * 300 / 758;
-export const reward_size = picture_height * 75 / 758;
+export const sizeMonster = pictureHeight * 300 / 758;
+export const sizeReward = pictureHeight * 75 / 758;
+
+// Font size
+export const sizeFont = pictureHeight * 25 / 758;
 
 // Coordinate system for placing stimuli
 // Center points
-export const x_center = width / 2;
-export const y_center = height / 2;
+export const centerX = width / 2;
+export const centerY = height / 2;
 
 // Left and right choices
 // y-coordinate
-export const choice_y =
-  y_center + 0.22 * picture_height - monster_size / 2;
+export const choiceY =
+  centerY + 0.22 * pictureHeight - sizeMonster / 2;
 // x-coordinates
-export const choice_x_right =
-  x_center + 0.25 * picture_width - monster_size / 2;
-export const choice_x_left = x_center - 0.25 * picture_width - monster_size / 2;
+export const choiceXRight =
+  centerX + 0.25 * pictureWidth - sizeMonster / 2;
+export const choiceXLeft = centerX - 0.25 * pictureWidth - sizeMonster / 2;
 
 // Chosen stimulus location
-export const chosen_y = y_center - 0.06 * picture_height - monster_size / 2;
-export const chosen_x = x_center - monster_size / 2;
+export const chosenY = centerY - 0.06 * pictureHeight - sizeMonster / 2;
+export const chosenX = centerX - sizeMonster / 2;
 
-export const reward_y =
-  y_center - 0.06 * picture_height - reward_size / 2 - monster_size / 2;
-export const reward_x = x_center - reward_size / 2;
+export const rewardY =
+  centerY - 0.06 * pictureHeight - sizeReward / 2 - sizeMonster / 2;
+export const rewardX = centerX - sizeReward / 2;
 
 // Text positioning
-export const text_start_x = x_center - 0.49 * picture_width;
-export const text_start_y = y_center - 0.2 * picture_height;
+export const textX = centerX - 0.49 * pictureWidth;
+export const textY = centerY - 0.2 * pictureHeight;
 
-export const instructions_text_start_y = y_center - 0.4 * picture_height;
-
-// Font size
-export const font_size = picture_height * 25 / 758;
+export const textInstructionsY = centerY - 0.4 * pictureHeight;

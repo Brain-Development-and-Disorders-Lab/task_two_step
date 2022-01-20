@@ -18,27 +18,27 @@ import {interval, select} from 'd3';
 
 // Experiment variables
 import {
-  box_moving_time,
-  isi_time,
-  money_time,
+  timeTransition,
+  timeFlash,
+  timeMoney,
 } from '../variables';
 
 // Display variables
 import {
   width,
   height,
-  monster_size,
-  reward_size,
-  choice_y,
-  choice_x_right,
-  choice_x_left,
-  chosen_x,
-  chosen_y,
-  reward_x,
-  reward_y,
-  instructions_text_start_y,
-  text_start_x,
-  font_size,
+  sizeMonster,
+  sizeReward,
+  choiceY,
+  choiceXRight,
+  choiceXLeft,
+  chosenX,
+  chosenY,
+  rewardX,
+  rewardY,
+  textInstructionsY,
+  textX,
+  sizeFont,
 } from '../display';
 
 jsPsych.plugins['two-step-choice'] = (() => {
@@ -157,10 +157,10 @@ jsPsych.plugins['two-step-choice'] = (() => {
     if (trial.right_text !== null) {
       right_image = svg.append('svg:image')
           .attr('class', 'right')
-          .attr('x', choice_x_right)
-          .attr('y', choice_y)
-          .attr('width', monster_size)
-          .attr('height', monster_size)
+          .attr('x', choiceXRight)
+          .attr('y', choiceY)
+          .attr('width', sizeMonster)
+          .attr('height', sizeMonster)
           .attr('xlink:href',
               experiment.getStimuli()
                   .getImage(
@@ -169,10 +169,10 @@ jsPsych.plugins['two-step-choice'] = (() => {
 
     if (trial.left_text !== null) {
       left_image = svg.append('svg:image')
-          .attr('x', choice_x_left)
-          .attr('y', choice_y)
-          .attr('width', monster_size)
-          .attr('height', monster_size)
+          .attr('x', choiceXLeft)
+          .attr('y', choiceY)
+          .attr('width', sizeMonster)
+          .attr('height', sizeMonster)
           .attr('xlink:href',
               experiment.getStimuli()
                   .getImage(
@@ -192,10 +192,10 @@ jsPsych.plugins['two-step-choice'] = (() => {
 
     if (trial.center_text !== null) {
       center_image = svg.append('svg:image')
-          .attr('x', chosen_x)
-          .attr('y', chosen_y)
-          .attr('width', monster_size)
-          .attr('height', monster_size)
+          .attr('x', chosenX)
+          .attr('y', chosenY)
+          .attr('width', sizeMonster)
+          .attr('height', sizeMonster)
           .attr('xlink:href',
               experiment.getStimuli()
                   .getImage(
@@ -204,9 +204,9 @@ jsPsych.plugins['two-step-choice'] = (() => {
 
     if (trial.query_trial !== null) {
       svg.append('text')
-          .attr('x', text_start_x)
-          .attr('y', text_start_y)
-          .style('font-size', font_size+'px')
+          .attr('x', textX)
+          .attr('y', textY)
+          .style('font-size', sizeFont+'px')
           .style('fill', 'white')
           .text(trial.query_trial);
     }
@@ -218,10 +218,10 @@ jsPsych.plugins['two-step-choice'] = (() => {
       const dy = 0;
       for (let i = 0; i < trial.prompt.length; i++) {
         svg.append('text')
-            .attr('x', text_start_x)
-            .attr('y', instructions_text_start_y)
+            .attr('x', textX)
+            .attr('y', textInstructionsY)
             .attr('dy', ++lineNumber * lineHeight + dy + 'em')
-            .style('font-size', font_size + 'px')
+            .style('font-size', sizeFont + 'px')
             .style('fill', 'white')
             .text(trial.prompt[i]);
         lineNumber++;
@@ -323,9 +323,9 @@ jsPsych.plugins['two-step-choice'] = (() => {
             center_image.transition().remove().on('end', () => {
               chosen_image.attr('xlink:href', experiment.getStimuli().getImage(
                   chosen_text.replace('.png', '') + '_a2.png'))
-                  .transition().duration(box_moving_time)
-                  .attr('y', chosen_y)
-                  .attr('x', chosen_x)
+                  .transition().duration(timeTransition)
+                  .attr('y', chosenY)
+                  .attr('x', chosenX)
                   .on('end', () => {
                     let frames = 0;
                     let curr_img;
@@ -347,16 +347,16 @@ jsPsych.plugins['two-step-choice'] = (() => {
                           trial.reward_text =
                               calculate_reward(chosen_text, trial.trial_row);
                           svg.append('svg:image')
-                              .attr('x', reward_x)
-                              .attr('y', reward_y)
-                              .attr('width', reward_size)
-                              .attr('height', reward_size)
+                              .attr('x', rewardX)
+                              .attr('y', rewardY)
+                              .attr('width', sizeReward)
+                              .attr('height', sizeReward)
                               .attr('xlink:href', trial.reward_text);
-                          interval((elapsed) => {}, money_time);
+                          interval((elapsed) => {}, timeMoney);
                         }
                         t.stop();
                       }
-                    }, isi_time / 5);
+                    }, timeFlash / 5);
                   }); // increment 5 times
             });
           } else {
@@ -371,9 +371,9 @@ jsPsych.plugins['two-step-choice'] = (() => {
             chosen_image.attr('xlink:href', experiment.getStimuli()
                 .getImage(chosen_text + '_a2.png'))
                 .transition()
-                .duration(box_moving_time)
-                .attr('y', chosen_y)
-                .attr('x', chosen_x)
+                .duration(timeTransition)
+                .attr('y', chosenY)
+                .attr('x', chosenX)
                 .on('end', () => {
                   let frames = 0;
                   let curr_img;
@@ -393,16 +393,16 @@ jsPsych.plugins['two-step-choice'] = (() => {
                         trial.reward_text =
                             calculate_reward(chosen_text, trial.trial_row);
                         svg.append('svg:image')
-                            .attr('x', reward_x)
-                            .attr('y', reward_y)
-                            .attr('width', reward_size)
-                            .attr('height', reward_size)
+                            .attr('x', rewardX)
+                            .attr('y', rewardY)
+                            .attr('width', sizeReward)
+                            .attr('height', sizeReward)
                             .attr('xlink:href', trial.reward_text);
-                        interval((elapsed) => {}, money_time);
+                        interval((elapsed) => {}, timeMoney);
                       }
                       t.stop();
                     }
-                  }, isi_time / 5);
+                  }, timeFlash / 5);
                 });
           }
         } else {
@@ -414,7 +414,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           end_trial();
-        }, (isi_time + money_time));
+        }, (timeFlash + timeMoney));
       }
     }; // This is the end of the after_response function
 
@@ -433,7 +433,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
           move_possible = false;
           trial.chosen_text = '';
           right_image.transition()
-              .duration(isi_time)
+              .duration(timeFlash)
               .attr('xlink:href', experiment.getStimuli()
                   .getImage(trial.right_text + '_sp.png'));
           left_image.attr('xlink:href', experiment.getStimuli()
@@ -442,7 +442,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           end_trial();
-        }, (isi_time));
+        }, (timeFlash));
       }, trial.trial_duration);
     }
   };
