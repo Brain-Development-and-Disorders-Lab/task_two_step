@@ -7,6 +7,7 @@ const copyImages = (cb) => {
   src([
     './src/images/*.png',
     './src/images/*.jpg',
+    './src/images/*.jpeg',
   ]).pipe(dest('./dist/images'));
   cb();
 };

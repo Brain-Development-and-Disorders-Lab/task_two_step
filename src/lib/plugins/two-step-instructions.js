@@ -169,7 +169,11 @@ jsPsych.plugins['two-step-instructions'] = (function() {
             .attr('x', textX)
             .attr('y', textInstructionsY)
             .attr('dy', ++lineNumber * lineHeight + dy + 'em')
-            .style('font-size', sizeFont+'px')
+            .style('text-anchor', 'middle')
+            .style('font-size', sizeFont + 'px')
+            .style('font-family', 'Open Sans')
+            .style('font-weight', 'bold')
+            .style('letter-spacing', '0.2')
             .style('fill', 'white')
             .text(trial.prompt[i]);
         lineNumber++;

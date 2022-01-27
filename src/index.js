@@ -32,7 +32,7 @@ import {
 } from './lib/variables';
 
 // Import the instructions
-import {instructions} from './lib/text';
+import {instructions} from './lib/instructions';
 
 // Configuration
 import {configuration} from './configuration';
@@ -61,7 +61,7 @@ export const experiment = new Experiment({
   seed: '',
   allowParticipantContact: false,
   contact: 'henry.burgess@wustl.edu',
-  logging: LogLevel.Warn,
+  logging: LogLevel.Info,
   state: {
     practiceReward: 0,
     realReward: 0,
@@ -575,7 +575,7 @@ experiment.load().then(() => {
         experiment.getStimuli().getImage('tutgreenplanet.jpg'),
       right_text: 'tutalien1',
       left_text: 'tutalien2',
-      prompt: ['Now try another one'],
+      prompt: ['Now try another one!'],
       trial_duration: timeChoice,
     });
   }

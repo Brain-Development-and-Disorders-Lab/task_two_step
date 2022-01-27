@@ -45,7 +45,7 @@ export const rewardY =
 export const rewardX = centerX - sizeReward / 2;
 
 // Text positioning
-export const textX = centerX - 0.49 * pictureWidth;
-export const textY = centerY - 0.2 * pictureHeight;
+export const textX = window.innerWidth / 2;
+export const textY = window.innerHeight / 5;
 
-export const textInstructionsY = centerY - 0.4 * pictureHeight;
+export const textInstructionsY = window.innerHeight / 5;

@@ -7,7 +7,7 @@ instructions[0] = [
     'Please listen to the instructions and read each page carefully.',
     'When you are ready to go to the next page,',
     'click on the red circle on the bottom right so that it turns green.',
-    'Then, press the space bar.',
+    'Then, press any key to continue.',
   ],
 ];
 
@@ -24,18 +24,18 @@ instructions[1] = [
 instructions[2] = [
   [
     'Each planet has two aliens on it. ',
-    ' And each alien has its own space treasure mine.',
+    'Each alien has its own space treasure mine.',
   ],
   [
     'On each planet, you will pick one alien to ask for space treasure. ',
     'These aliens are nice, so if an alien just brought treasure ',
-    ' up from the mine, it will share it with you.',
+    'up from the mine, it will share it with you.',
   ],
   [
     'For each choice, choose the left alien by pressing the 1 key ',
     ' and the right alien by pressing the 0 key. ',
     'The choice you make will be highlighted.',
-    'Click the red circle and press the space bar to move to the next page.',
+    'Click the red circle and press any key to move to the next page.',
     'Then try practicing a few times by pressing 1 and 0.',
   ],
 ];
@@ -44,12 +44,12 @@ instructions[2] = [
 instructions[3] = [
   [
     'After you choose an alien, you will find out whether you got treasure.',
-    'Which looks like this.',
+    'The treasure looks like this:',
   ],
   [
     'If the alien couldn\'t bring treasure up this time ' +
         'you\'ll see an empty circle.',
-    ' Which looks like this.',
+    'The circle looks like this:',
   ],
   [
     'If an alien has a good mine that means it can easily dig up space ',
@@ -69,7 +69,7 @@ instructions[3] = [
 instructions[4] = [
   [
     'For example, the alien on the yellow planet has a good mine right now. ',
-    'Click the red circle and press the space bar to move to the next page. ',
+    'Click the red circle and press any key to move to the next page. ',
     'Then, try asking it for treasure 10 times by pressing 1.',
   ],
   [
@@ -152,8 +152,8 @@ instructions[9] = [
 instructions[10] = [
   [
     'Now that you know how to pick aliens, you can learn to play ' +
-        'the whole game. ',
-    ' You will travel from earth to one of two planets.',
+    'the whole game. ',
+    'You will travel from earth to one of two planets.',
   ],
 ];
 
@@ -170,95 +170,99 @@ instructions[12] = [
 // Rockets
 instructions[13] = [
   [
-    'First you need to choose which spaceship to take.  ',
-    ' The spaceships can fly to either planet, but one will fly mostly ',
-    ' to the green planet, and the other mostly to the yellow planet.',
+    'First you need to choose which spaceship to take.',
+    'The spaceships can fly to either planet, but one will fly mostly',
+    'to the green planet, and the other mostly to the yellow planet.',
   ],
   [
-    'The planet a spaceship goes to most won\'t change during the game. ',
-    ' Pick the one that you think will take you to the alien ',
-    ' with the best mine, but remember, sometimes you\'ll ' +
-        'go to the other planet!',
+    'The planet a spaceship goes to most won\'t change during the game.',
+    'Pick the one that you think will take you to the alien',
+    'with the best mine, but remember, sometimes you\'ll' +
+    'go to the other planet!',
   ],
 ];
 
 // Rockets
 instructions[14] = [
   [
-    'Let\'s practice before doing the full game.  ',
-    ' Remember, you want to find as much space treasure as you can ',
-    ' by asking an alien to share with you.',
+    'Let\'s practice before doing the full game.',
+    'Remember, you want to find as much space treasure as you can',
+    'by asking an alien to share with you.',
   ],
   [
     'The aliens share somewhat randomly,',
-    ' but you can find the one with the best mine at any point in the game ',
-    ' by asking it to share!  ',
+    'but you can find the one with the best mine at any point in the game',
+    'by asking it to share!  ',
   ],
   [
-    'How much bonus money you make is based on how much space treasure ' +
-        'you find. ',
-    ' This is just a practice round of 20 flights, you\'re not playing ' +
-        'for money now.',
+    'How much bonus money you make is based on how much space treasure' +
+    'you find.',
+    'This is just a practice round of 20 flights, you\'re not playing' +
+    'for money now.',
   ],
   [
-    'You will have three seconds to make each choice.  If you are too slow, ',
-    ' you will see a large X appear on each rocket or alien and that ' +
-        'choice will be over.',
+    'You will have three seconds to make each choice. If you are too slow,',
+    'you will see a large X appear on each rocket or alien and that' +
+    'choice will be over.',
   ],
-  ['Don\'t feel rushed, but please try to make a choice every time.'],
-  ['Good luck! Remember that 1 selects left and 0 selects right.'],
+  [
+    'Don\'t feel rushed, but please try to make a choice every time.',
+  ],
+  [
+    'Good luck! Remember that 1 selects left and 0 selects right.',
+  ],
 ];
 
 // Black background
 instructions[15] = [
   [
-    'That is the end of the practice game.  ',
-    ' Click the red button. Then press any key to see how you did...',
+    'That is the end of the practice game.',
+    'Click the red button. Then press any key to see how you did...',
   ],
 ];
 
 // Hints
 instructions[16] = [
   [
-    'Okay, that is nearly the end of the tutorial!  ',
-    ' In the real game, the planets, aliens, and spaceships will ' +
-        'be new colors, ',
-    ' but the rules will be the same.  ',
-    ' The game is hard, so you will need to concentrate, ',
-    ' but don\'t be afraid to trust your instincts. ',
-    ' Here are three hints on how to play the game.',
+    'Okay, that is nearly the end of the tutorial!',
+    'In the real game, the planets, aliens, and spaceships will' +
+    'be new colors,',
+    'but the rules will be the same.',
+    'The game is hard, so you will need to concentrate,',
+    'but don\'t be afraid to trust your instincts.',
+    'Here are three hints on how to play the game.',
   ],
   [
-    'Hint #1:  ',
-    ' Remember which aliens have treasure. How good a mine is changes slowly, ',
-    ' so an alien that has a lot of treasure to share now, ',
-    ' will probably be able to share a lot in the near future. ',
+    'Hint #1:',
+    'Remember which aliens have treasure. How good a mine is changes slowly,',
+    'so an alien that has a lot of treasure to share now,',
+    'will probably be able to share a lot in the near future.',
   ],
   [
-    'Hint #2:  ',
-    ' Remember, each alien has its own mine.  Just because one ' +
-        'alien has a bad ',
-    ' mine and can\'t share very often, does not mean another ' +
-        'has a good mine.  ',
-    ' Also, there are no funny patterns in how an alien shares, ',
-    ' like every other time you ask, or depending on which spaceship ' +
-        'you took. ',
-    ' The aliens are not trying to trick you.',
+    'Hint #2:',
+    'Remember, each alien has its own mine. Just because one' +
+    'alien has a bad',
+    'mine and can\'t share very often, does not mean another' +
+    'has a good mine.',
+    'Also, there are no funny patterns in how an alien shares,',
+    'like every other time you ask, or depending on which spaceship' +
+    'you took.',
+    'The aliens are not trying to trick you.',
   ],
   [
-    'Hint #3:  ',
-    ' The spaceship you choose is important because often an alien ' +
-        'on one planet ',
-    ' may be better than the ones on another planet. ',
-    ' You can find more treasure by finding the spaceship ',
-    ' that is most likely to take you to right planet.',
+    'Hint #3:',
+    'The spaceship you choose is important because often an alien' +
+    'on one planet ',
+    'may be better than the ones on another planet.',
+    'You can find more treasure by finding the spaceship',
+    'that is most likely to take you to right planet.',
   ],
 ];
 
 // Pre-attention-check
 instructions[17] = [
   [
-    'Now it\'s time to make sure you know how to play.  ',
+    'Now it\'s time to make sure you know how to play.',
     'Please respond TRUE or FALSE to the questions on the next few pages.',
   ],
 ];
@@ -266,9 +270,9 @@ instructions[17] = [
 // Pre-game
 instructions[18] = [
   [
-    'OK! Now you know how to play.  ',
-    ' In the real game we\'ll count how many pieces of space treasure ',
-    ' you find and show you at the end. ',
-    ' Ready?  Now its time to play the game!  Good luck space traveler!',
+    'OK! Now you know how to play.',
+    'In the real game we\'ll count how many pieces of space treasure',
+    'you find and show you at the end.',
+    'Ready?  Now its time to play the game! Good luck space traveler!',
   ],
 ];

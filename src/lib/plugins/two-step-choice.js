@@ -38,6 +38,7 @@ import {
   rewardY,
   textInstructionsY,
   textX,
+  textY,
   sizeFont,
 } from '../display';
 
@@ -132,7 +133,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
     const html=`<div id='container' class='exp-container'></div>`;
     displayElement.innerHTML = html;
 
-    let mostPossible = true;
+    let movePossible = true;
 
     let chosenText;
     let unchosenText;
@@ -206,7 +207,11 @@ jsPsych.plugins['two-step-choice'] = (() => {
       svg.append('text')
           .attr('x', textX)
           .attr('y', textY)
-          .style('font-size', sizeFont+'px')
+          .style('text-anchor', 'middle')
+          .style('font-size', sizeFont + 'px')
+          .style('font-family', 'Open Sans')
+          .style('font-weight', 'bold')
+          .style('letter-spacing', '0.2')
           .style('fill', 'white')
           .text(trial.query_trial);
     }
@@ -221,7 +226,11 @@ jsPsych.plugins['two-step-choice'] = (() => {
             .attr('x', textX)
             .attr('y', textInstructionsY)
             .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+            .style('text-anchor', 'middle')
             .style('font-size', sizeFont + 'px')
+            .style('font-family', 'Open Sans')
+            .style('font-weight', 'bold')
+            .style('letter-spacing', '0.2')
             .style('fill', 'white')
             .text(trial.prompt[i]);
         lineNumber++;
@@ -292,7 +301,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
       }
 
       if ((validPressed == 0) &&
-        (validChoices.indexOf(info.key) > -1) && (mostPossible)) {
+        (validChoices.indexOf(info.key) > -1) && (movePossible)) {
         consola.debug(`A valid key ('${info.key}') was pressed.`);
         validPressed = 1;
 
@@ -430,7 +439,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
     if (trial.trial_duration !== null && trial.timeout == true) {
       jsPsych.pluginAPI.setTimeout(() => {
         if (response.rt == null) {
-          mostPossible = false;
+          movePossible = false;
           trial.chosenText = '';
           imageRight.transition()
               .duration(timeFlash)
