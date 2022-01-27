@@ -78,7 +78,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
         default: null,
         array: false,
       },
-      reward_string: {
+      rewardString: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false,
@@ -102,7 +102,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
         default: null,
         description: 'How long to show trial before it ends.',
       },
-      trial_row: {
+      trialRow: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: true,
@@ -126,21 +126,21 @@ jsPsych.plugins['two-step-choice'] = (() => {
     },
   };
 
-  plugin.trial = (display_element, trial) => {
+  plugin.trial = (displayElement, trial) => {
     consola.debug(`Running trial:`, trial.type);
 
-    const new_html=`<div id='container' class='exp-container'></div>`;
-    display_element.innerHTML = new_html;
+    const html=`<div id='container' class='exp-container'></div>`;
+    displayElement.innerHTML = html;
 
-    let move_possible = true;
+    let mostPossible = true;
 
-    let chosen_text;
-    let unchosen_text;
-    let left_image;
-    let center_image;
-    let right_image;
-    let chosen_image;
-    let unchosen_image;
+    let chosenText;
+    let unchosenText;
+    let imageLeft;
+    let imageCenter;
+    let imageRight;
+    let imageChosen;
+    let imageUnchosen;
 
     const svg = select('div#container')
         .append('svg')
@@ -155,7 +155,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
         .attr('xlink:href', trial.planet_text);
 
     if (trial.right_text !== null) {
-      right_image = svg.append('svg:image')
+      imageRight = svg.append('svg:image')
           .attr('class', 'right')
           .attr('x', choiceXRight)
           .attr('y', choiceY)
@@ -168,7 +168,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
     }
 
     if (trial.left_text !== null) {
-      left_image = svg.append('svg:image')
+      imageLeft = svg.append('svg:image')
           .attr('x', choiceXLeft)
           .attr('y', choiceY)
           .attr('width', sizeMonster)
@@ -179,19 +179,19 @@ jsPsych.plugins['two-step-choice'] = (() => {
                       trial.left_text.replace('.png', '') + '_norm.png'));
     }
 
-    let valid_choices = trial.choices;
+    let validChoices = trial.choices;
     if ((trial.left_text === null) || (trial.right_text === null)) {
       if ((trial.left_text === null) && (trial.right_text === null)) {
-        valid_choices = [];
+        validChoices = [];
       } else if (trial.left_text != null) {
-        valid_choices = [trial.choices[0]];
+        validChoices = [trial.choices[0]];
       } else if (trial.right_text != null) {
-        valid_choices = [trial.choices[1]];
+        validChoices = [trial.choices[1]];
       }
     }
 
     if (trial.center_text !== null) {
-      center_image = svg.append('svg:image')
+      imageCenter = svg.append('svg:image')
           .attr('x', chosenX)
           .attr('y', chosenY)
           .attr('width', sizeMonster)
@@ -239,11 +239,11 @@ jsPsych.plugins['two-step-choice'] = (() => {
       key: [],
     };
 
-    let valid_pressed = 0;
+    let validPressed = 0;
     trial.reward_text = '';
 
     // function to end trial when it is time
-    const end_trial = () => {
+    const endTrial = () => {
       // Kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -253,18 +253,18 @@ jsPsych.plugins['two-step-choice'] = (() => {
       }
 
       // gather the data to store for the trial
-      const trial_data = {
+      const trialData = {
         'rt': response.rt,
         'key_press': response.key,
         'duration': trial.trial_duration,
-        'valid_pressed': valid_pressed,
+        'validPressed': validPressed,
         'rts': responses.rt,
         'keys': responses.key,
         'planet_text': trial.planet_text,
         'right_text': trial.right_text,
         'left_text': trial.left_text,
         'center_text': trial.center_text,
-        'chosen_text': trial.chosen_text,
+        'chosenText': trial.chosenText,
         'reward_text': trial.reward_text,
         'trial_stage': trial.trial_stage,
         'practice_trial': trial.practice_trial,
@@ -272,17 +272,17 @@ jsPsych.plugins['two-step-choice'] = (() => {
       };
 
       // clear the display
-      display_element.innerHTML = '';
+      displayElement.innerHTML = '';
 
       // move on to the next trial
-      jsPsych.finishTrial(trial_data);
+      jsPsych.finishTrial(trialData);
     };
 
     /**
      * function to handle responses by the subject
      * @param {any} info event
      */
-    const after_response = (info) => {
+    const afterResponse = (info) => {
       // only record the first response
       if (response.key == null) {
         response = info;
@@ -291,61 +291,61 @@ jsPsych.plugins['two-step-choice'] = (() => {
         responses.key.push(info.key);
       }
 
-      if ((valid_pressed == 0) &&
-        (valid_choices.indexOf(info.key) > -1) && (move_possible)) {
+      if ((validPressed == 0) &&
+        (validChoices.indexOf(info.key) > -1) && (mostPossible)) {
         consola.debug(`A valid key ('${info.key}') was pressed.`);
-        valid_pressed = 1;
+        validPressed = 1;
 
         if (trial.query_trial == null) {
           if (trial.choices.indexOf(info.key) == 1) {
             // determine what choice was made
-            chosen_text = trial.right_text;
-            unchosen_text = trial.left_text;
-            chosen_image = right_image;
-            unchosen_image = left_image;
+            chosenText = trial.right_text;
+            unchosenText = trial.left_text;
+            imageChosen = imageRight;
+            imageUnchosen = imageLeft;
           } else {
-            chosen_text = trial.left_text;
-            unchosen_text = trial.right_text;
-            chosen_image = left_image;
-            unchosen_image = right_image;
+            chosenText = trial.left_text;
+            unchosenText = trial.right_text;
+            imageChosen = imageLeft;
+            imageUnchosen = imageRight;
           }
-          trial.chosen_text=chosen_text; // set chosen text based on choice made
+          trial.chosenText=chosenText; // set chosen text based on choice made
           if (trial.center_text !== null) {
-            if (valid_choices.length > 1) {
+            if (validChoices.length > 1) {
               // 'deactivate' the unselected choice if more than one choice
-              unchosen_image.attr('xlink:href',
+              imageUnchosen.attr('xlink:href',
                   experiment.getStimuli()
                       .getImage(
-                          unchosen_text.replace('.png', '') + '_deact.png'));
+                          unchosenText.replace('.png', '') + '_deact.png'));
             }
 
             // start the animation by moving the selected image to the center
-            center_image.transition().remove().on('end', () => {
-              chosen_image.attr('xlink:href', experiment.getStimuli().getImage(
-                  chosen_text.replace('.png', '') + '_a2.png'))
+            imageCenter.transition().remove().on('end', () => {
+              imageChosen.attr('xlink:href', experiment.getStimuli().getImage(
+                  chosenText.replace('.png', '') + '_a2.png'))
                   .transition().duration(timeTransition)
                   .attr('y', chosenY)
                   .attr('x', chosenX)
                   .on('end', () => {
                     let frames = 0;
-                    let curr_img;
+                    let currentImage;
                     const t = interval((elapsed) => {
                       if ((frames % 2) === 0) {
-                        curr_img = chosen_text + '_a1.png';
+                        currentImage = chosenText + '_a1.png';
                       } else {
-                        curr_img = chosen_text + '_a2.png';
+                        currentImage = chosenText + '_a2.png';
                       }
-                      chosen_image.attr('xlink:href', experiment.getStimuli()
-                          .getImage(curr_img));
+                      imageChosen.attr('xlink:href', experiment.getStimuli()
+                          .getImage(currentImage));
                       frames++;
                       if (frames == 5) {
-                        chosen_image
+                        imageChosen
                             .attr('xlink:href', experiment.getStimuli()
-                                .getImage(chosen_text + '_deact.png'));
-                        if (trial.trial_row !== null) {
+                                .getImage(chosenText + '_deact.png'));
+                        if (trial.trialRow !== null) {
                           // determine the reward and add the reward image
                           trial.reward_text =
-                              calculate_reward(chosen_text, trial.trial_row);
+                              calculateReward(chosenText, trial.trialRow);
                           svg.append('svg:image')
                               .attr('x', rewardX)
                               .attr('y', rewardY)
@@ -361,37 +361,37 @@ jsPsych.plugins['two-step-choice'] = (() => {
             });
           } else {
             // do the same thing, but without a center image
-            if (valid_choices.length > 1) {
-              unchosen_image.attr('xlink:href',
+            if (validChoices.length > 1) {
+              imageUnchosen.attr('xlink:href',
                   experiment.getStimuli()
                       .getImage(
-                          unchosen_text.replace('.png', '') + '_deact.png'));
+                          unchosenText.replace('.png', '') + '_deact.png'));
             }
 
-            chosen_image.attr('xlink:href', experiment.getStimuli()
-                .getImage(chosen_text + '_a2.png'))
+            imageChosen.attr('xlink:href', experiment.getStimuli()
+                .getImage(chosenText + '_a2.png'))
                 .transition()
                 .duration(timeTransition)
                 .attr('y', chosenY)
                 .attr('x', chosenX)
                 .on('end', () => {
                   let frames = 0;
-                  let curr_img;
+                  let currentImage;
                   const t = interval((elapsed) => {
                     if ((frames % 2) === 0) {
-                      curr_img = chosen_text+'_a1.png';
+                      currentImage = chosenText+'_a1.png';
                     } else {
-                      curr_img = chosen_text+'_a2.png';
+                      currentImage = chosenText+'_a2.png';
                     }
-                    chosen_image.attr('xlink:href', experiment.getStimuli()
-                        .getImage(curr_img));
+                    imageChosen.attr('xlink:href', experiment.getStimuli()
+                        .getImage(currentImage));
                     frames++;
                     if (frames == 5) {
-                      chosen_image.attr('xlink:href', experiment.getStimuli()
-                          .getImage(chosen_text+'_deact.png'));
-                      if (trial.trial_row !== null) {
+                      imageChosen.attr('xlink:href', experiment.getStimuli()
+                          .getImage(chosenText+'_deact.png'));
+                      if (trial.trialRow !== null) {
                         trial.reward_text =
-                            calculate_reward(chosen_text, trial.trial_row);
+                            calculateReward(chosenText, trial.trialRow);
                         svg.append('svg:image')
                             .attr('x', rewardX)
                             .attr('y', rewardY)
@@ -407,20 +407,20 @@ jsPsych.plugins['two-step-choice'] = (() => {
           }
         } else {
           // this only gets evaluated if query_trial = true
-          consola.log(`'end_trial()' called.`);
-          end_trial();
+          consola.log(`'endTrial()' called.`);
+          endTrial();
         }
 
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-          end_trial();
+          endTrial();
         }, (timeFlash + timeMoney));
       }
-    }; // This is the end of the after_response function
+    }; // This is the end of the afterResponse function
 
     // start the response listener
     const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-      callback_function: after_response,
+      callback_function: afterResponse,
       valid_responses: jsPsych.ALL_KEYS,
       persist: true,
       allow_held_key: false,
@@ -430,41 +430,41 @@ jsPsych.plugins['two-step-choice'] = (() => {
     if (trial.trial_duration !== null && trial.timeout == true) {
       jsPsych.pluginAPI.setTimeout(() => {
         if (response.rt == null) {
-          move_possible = false;
-          trial.chosen_text = '';
-          right_image.transition()
+          mostPossible = false;
+          trial.chosenText = '';
+          imageRight.transition()
               .duration(timeFlash)
               .attr('xlink:href', experiment.getStimuli()
                   .getImage(trial.right_text + '_sp.png'));
-          left_image.attr('xlink:href', experiment.getStimuli()
+          imageLeft.attr('xlink:href', experiment.getStimuli()
               .getImage(trial.left_text.replace('.png', '') + '_sp.png'));
         }
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-          end_trial();
+          endTrial();
         }, (timeFlash));
       }, trial.trial_duration);
     }
   };
 
   /**
-   * calculate_reward function
-   * @param {string} chosen_string
-   * @param {any} trial_row
+   * calculateReward function
+   * @param {string} chosenString
+   * @param {any} trialRow
    * @return {any}
    */
-  const calculate_reward = (chosen_string, trial_row) => {
-    if (chosen_string == '') {
+  const calculateReward = (chosenString, trialRow) => {
+    if (chosenString == '') {
       return null;
     } else {
-      const alien = (chosen_string.slice(-1) % 2);
-      const state = +(chosen_string.slice(-1) > 2);
+      const alien = (chosenString.slice(-1) % 2);
+      const state = +(chosenString.slice(-1) > 2);
 
       let reward = false;
       if (state == 0) {
-        reward = (Math.random() < parseFloat(trial_row[alien]));
+        reward = (Math.random() < parseFloat(trialRow[alien]));
       } else {
-        reward = (Math.random() < parseFloat(trial_row[2 + alien]));
+        reward = (Math.random() < parseFloat(trialRow[2 + alien]));
       }
 
       if (reward) {

@@ -4,16 +4,16 @@ export const blockLength = 50;
 export const blockCount = 4;
 
 // Number of trial types
-export const practice_pressing_idx = 5;
-export const practice_pressing_num = 4; // 4 trials to practice selecting alien
-export const practice_reward_idx = 10 + practice_pressing_num;
-export const practice_reward_num = 10; // 10 trials to practice asking alien
-export const practice_stochastic_idx =
-  17 + practice_pressing_num + practice_reward_num;
-export const practice_stochastic_num = 10; // 10 trials practice choosing aliens
-export const practice_game_idx =
-  34 + practice_pressing_num + practice_reward_num + practice_stochastic_num;
-export const practice_game_num = 20; // 20 trials to practice full game
+export const practicePressingIdx = 5;
+export const practicePressingNum = 4; // 4 trials to practice selecting alien
+export const practiceRewardIdx = 10 + practicePressingNum;
+export const practiceRewardNum = 10; // 10 trials to practice asking alien
+export const practiceStochasticIdx =
+  17 + practicePressingNum + practiceRewardNum;
+export const practiceStochasticNum = 10; // 10 trials practice choosing aliens
+export const practiceGameIdx =
+  34 + practicePressingNum + practiceRewardNum + practiceStochasticNum;
+export const practiceGameNum = 20; // 20 trials to practice full game
 
 // Transition probability
 export const probability = 0.7;
@@ -23,13 +23,13 @@ export const keyRight = '0'; // 0 at top of keyboard
 export const keyLeft = '1'; // 1 at top of keyboard
 
 // Random variables
-export const rocket_sides = Math.random() < 0.5;
-export const prac_rocket_sides = Math.random() < 0.5;
+export const rocketSides = Math.random() < 0.5;
+export const pracRocketSides = Math.random() < 0.5;
 export const displayOrderRed = Math.random() < 0.5;
 export const displayOrderPurple = Math.random() < 0.5;
 export const displayOrderGreen = Math.random() < 0.5;
 export const displayOrderYellow = Math.random() < 0.5;
-export const red_planet_first_rocket = Math.random() < 0.5;
+export const redPlanetFirstRocket = Math.random() < 0.5;
 
 // Durations
 export const timeMoney = 1000; // 1000 according to Decker 2016;

@@ -15,7 +15,8 @@
   "dependencies": {
     "consola": "^2.15.3",
     "d3": "^7.2.1",
-    "jspsych": "6"
+    "jspsych": "^6.0.0",
+    "jspsych-wrapper": "file:packages/jspsych-wrapper-v0.1.1.tgz"
   },
   "devDependencies": {
     "babel-loader": "^8.2.3",

@@ -38,12 +38,12 @@ jsPsych.plugins['two-step-fixation'] = (() => {
     },
   };
 
-  plugin.trial = function(display_element, trial) {
+  plugin.trial = function(displayElement, trial) {
     consola.debug(`Running trial:`, trial.type);
 
     // display stimulus
-    const new_html = `<div id='container' class='exp-container'></div>`;
-    display_element.innerHTML = new_html;
+    const html = `<div id='container' class='exp-container'></div>`;
+    displayElement.innerHTML = html;
 
     const svg = select('div#container')
         .append('svg')
@@ -72,27 +72,27 @@ jsPsych.plugins['two-step-fixation'] = (() => {
     }
 
     // function to end trial when it is time
-    const end_trial = () => {
+    const endTrial = () => {
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
       // gather the data to store for the trial
-      const trial_data = {
+      const trialData = {
         'stimulus': trial.stimulus,
         'trial_stage': 'fixation',
       };
 
       // clear the display
-      display_element.innerHTML = '';
+      displayElement.innerHTML = '';
 
       // move on to the next trial
-      jsPsych.finishTrial(trial_data);
+      jsPsych.finishTrial(trialData);
     };
 
     // end trial if trial_duration is set
     if (trial.trial_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function() {
-        end_trial();
+        endTrial();
       }, trial.trial_duration);
     }
   };

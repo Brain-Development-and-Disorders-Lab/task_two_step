@@ -54,7 +54,7 @@ jsPsych.plugins['two-step-instructions'] = (function() {
         default: null,
         array: false,
       },
-      reward_string: {
+      rewardString: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false.valueOf,
@@ -88,12 +88,12 @@ jsPsych.plugins['two-step-instructions'] = (function() {
     },
   };
 
-  plugin.trial = function(display_element, trial) {
+  plugin.trial = function(displayElement, trial) {
     consola.debug(`Running trial:`, trial.type);
 
     // display stimulus
-    const new_html = `<div id='container' class='exp-container'></div>`;
-    display_element.innerHTML = new_html;
+    const html = `<div id='container' class='exp-container'></div>`;
+    displayElement.innerHTML = html;
 
     const svg = select('div#container')
         .append('svg')
@@ -118,13 +118,13 @@ jsPsych.plugins['two-step-instructions'] = (function() {
           .attr('xlink:href', trial.right_text);
     }
 
-    if (trial.reward_string !== null) {
+    if (trial.rewardString !== null) {
       svg.append('svg:image')
           .attr('x', centerX-sizeReward / 2)
           .attr('y', choiceY)
           .attr('width', sizeReward)
           .attr('height', sizeReward)
-          .attr('xlink:href', trial.reward_string);
+          .attr('xlink:href', trial.rewardString);
     }
 
     if (trial.left_text !== null) {
@@ -145,7 +145,7 @@ jsPsych.plugins['two-step-instructions'] = (function() {
           .attr('xlink:href', trial.center_text);
     }
 
-    const button_image = svg.append('svg:circle')
+    const imageButton = svg.append('svg:circle')
         .attr('r', 25)
         .attr('cx', choiceXRight + sizeMonster)
         .attr('cy', choiceY + sizeMonster - 100)
@@ -153,8 +153,8 @@ jsPsych.plugins['two-step-instructions'] = (function() {
         .style('fill', 'red')
         .on('click', () => {
           trial.button_clicked = true;
-          button_image.style('fill', 'green');
-          button_image.style('stroke', 'black');
+          imageButton.style('fill', 'green');
+          imageButton.style('stroke', 'black');
         });
 
     // add prompt
@@ -177,7 +177,7 @@ jsPsych.plugins['two-step-instructions'] = (function() {
     }
 
     // function to end trial when it is time
-    const end_trial = () => {
+    const endTrial = () => {
       // set button_clicked back to false
       trial.button_clicked = false;
 
@@ -190,7 +190,7 @@ jsPsych.plugins['two-step-instructions'] = (function() {
       }
 
       // clear the display
-      display_element.innerHTML = '';
+      displayElement.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial();
@@ -198,16 +198,16 @@ jsPsych.plugins['two-step-instructions'] = (function() {
 
 
     // function to handle responses by the subject
-    const after_response = () => {
+    const afterResponse = () => {
       if (trial.button_clicked == true) {
-        end_trial();
+        endTrial();
       };
     };
 
     // start the response listener
     if (trial.choices != jsPsych.NO_KEYS) {
       jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: after_response,
+        callback_function: afterResponse,
         valid_responses: trial.choices,
         rt_method: 'performance',
         persist: true,
