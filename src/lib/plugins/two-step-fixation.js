@@ -1,5 +1,9 @@
 /**
- * jspsych-two-step-fixation
+ * Plugin:
+ * two-step-fixation
+ *
+ * Changelog:
+ * HB 01/2022
  */
 // Logging library
 import consola from 'consola';
@@ -15,7 +19,7 @@ jsPsych.plugins['two-step-fixation'] = (() => {
 
   plugin.info = {
     name: 'two-step-fixation',
-    description: '',
+    description: 'Fixation cross for the task.',
     parameters: {
       stimulus: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -38,20 +42,23 @@ jsPsych.plugins['two-step-fixation'] = (() => {
     },
   };
 
-  plugin.trial = function(displayElement, trial) {
+  plugin.trial = (displayElement, trial) => {
+    // Debugging information
     consola.debug(`Running trial:`, trial.type);
 
-    // display stimulus
+    // Reset the displayElement contents
     const html = `<div id='container' class='exp-container'></div>`;
     displayElement.innerHTML = html;
 
+    // Render all specified elements to the view
+    // SVG container
     const svg = select('div#container')
         .append('svg')
         .attr('preserveAspectRatio', 'xMinYMin meet')
         .attr('viewBox', '0 0 ' + width + ' ' + height)
         .classed('svg-content', true);
 
-
+    // Append the stimulus image
     if (trial.stimulus !== null) {
       svg.append('svg:image')
           .attr('width', width)
@@ -60,7 +67,7 @@ jsPsych.plugins['two-step-fixation'] = (() => {
           .attr('xlink:href', trial.stimulus);
     }
 
-    // add text
+    // Append text to the center of the view
     if (trial.text !== null) {
       svg.append('text')
           .attr('x', centerX)
@@ -74,25 +81,27 @@ jsPsych.plugins['two-step-fixation'] = (() => {
           .text(trial.text);
     }
 
-    // function to end trial when it is time
+    /**
+     * End the 'two-step-instructions' trial
+     */
     const endTrial = () => {
-      // kill any remaining setTimeout handlers
+      // Clear any existing 'setTimeout' instances
       jsPsych.pluginAPI.clearAllTimeouts();
 
-      // gather the data to store for the trial
+      // Specify the data from the trial
       const trialData = {
         'stimulus': trial.stimulus,
         'trial_stage': 'fixation',
       };
 
-      // clear the display
+      // Clear the contents of 'displayElement'
       displayElement.innerHTML = '';
 
-      // move on to the next trial
+      // Notify jsPsych and pass the trial data
       jsPsych.finishTrial(trialData);
     };
 
-    // end trial if trial_duration is set
+    // Configure a trial timeout and limit the duration
     if (trial.trial_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function() {
         endTrial();

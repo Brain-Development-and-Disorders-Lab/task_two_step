@@ -1,11 +1,17 @@
 /**
+ * Plugin:
+ * two-step-choice
+ *
+ * Overview:
  * Adapted from plugins by Josh de Leeuw
  *
  * The reward pictures and sizes, final prompt and most times are not inputs but
  * global variables in the experiment;
  * this could be adapted to include them as inputs if used in another experiment
  *
- * VF 8/2019
+ * Changelog:
+ * VF 08/2019
+ * HB 01/2022
  */
 // Logging library
 import consola from 'consola';
@@ -47,7 +53,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
 
   plugin.info = {
     name: 'two-step-choice',
-    description: '',
+    description: 'Two-step choice plugin.',
     parameters: {
       planet_text: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -128,13 +134,15 @@ jsPsych.plugins['two-step-choice'] = (() => {
   };
 
   plugin.trial = (displayElement, trial) => {
+    // Debugging information
     consola.debug(`Running trial:`, trial.type);
 
+    // Reset the displayElement contents
     const html=`<div id='container' class='exp-container'></div>`;
     displayElement.innerHTML = html;
 
+    // General plugin variables
     let movePossible = true;
-
     let chosenText;
     let unchosenText;
     let imageLeft;
@@ -143,18 +151,22 @@ jsPsych.plugins['two-step-choice'] = (() => {
     let imageChosen;
     let imageUnchosen;
 
+    // Render all specified elements to the view
+    // SVG container
     const svg = select('div#container')
         .append('svg')
         .attr('preserveAspectRatio', 'xMinYMin meet')
         .attr('viewBox', '0 0 ' + width + ' ' + height)
         .classed('svg-content', true);
 
+    // Append the background image
     svg.append('svg:image')
         .attr('width', width)
         .attr('height', height)
         .attr('preserveAspectRatio', 'xMidYMid slice')
         .attr('xlink:href', trial.planet_text);
 
+    // Append an image to the right side of the view
     if (trial.right_text !== null) {
       imageRight = svg.append('svg:image')
           .attr('class', 'right')
@@ -168,6 +180,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
                       trial.right_text.replace('.png', '') + '_norm.png'));
     }
 
+    // Append text to the left side of the view
     if (trial.left_text !== null) {
       imageLeft = svg.append('svg:image')
           .attr('x', choiceXLeft)
@@ -180,17 +193,23 @@ jsPsych.plugins['two-step-choice'] = (() => {
                       trial.left_text.replace('.png', '') + '_norm.png'));
     }
 
+    // Establish the collection of choices that are available
     let validChoices = trial.choices;
     if ((trial.left_text === null) || (trial.right_text === null)) {
+      // If either left or right text fields are defined
       if ((trial.left_text === null) && (trial.right_text === null)) {
+        // No valid choices
         validChoices = [];
       } else if (trial.left_text != null) {
+        // Valid left choice
         validChoices = [trial.choices[0]];
       } else if (trial.right_text != null) {
+        // Valid right choice
         validChoices = [trial.choices[1]];
       }
     }
 
+    // Append text to the center of the view
     if (trial.center_text !== null) {
       imageCenter = svg.append('svg:image')
           .attr('x', chosenX)
@@ -216,12 +235,15 @@ jsPsych.plugins['two-step-choice'] = (() => {
           .text(trial.query_trial);
     }
 
-    // add prompt
+    // Add the main prompt to the view
     if (trial.prompt !== null) {
+      // Wrap text to fit inside the view
       let lineNumber = 0;
       const lineHeight = 1.1; // ems
       const dy = 0;
+
       for (let i = 0; i < trial.prompt.length; i++) {
+        // Append a line of text
         svg.append('text')
             .attr('x', textX)
             .attr('y', textInstructionsY)
@@ -237,31 +259,35 @@ jsPsych.plugins['two-step-choice'] = (() => {
       }
     }
 
-    // store response
+    // Configure the overall response data
     let response = {
       rt: null,
       key: null,
     };
 
+    // Create a group of responses
     const responses = {
       rt: [],
       key: [],
     };
 
+    // Configure parameters for the input validation
     let validPressed = 0;
     trial.reward_text = '';
 
-    // function to end trial when it is time
+    /**
+     * End the 'two-step-choice' trial
+     */
     const endTrial = () => {
-      // Kill any remaining setTimeout handlers
+      // Clear any existing 'setTimeout' instances
       jsPsych.pluginAPI.clearAllTimeouts();
 
-      // Kill keyboard listeners
+      // Clear any existing keyboard listeners
       if (typeof keyboardListener !== 'undefined') {
         jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
 
-      // gather the data to store for the trial
+      // Collate the data collected throughout the trial
       const trialData = {
         'rt': response.rt,
         'key_press': response.key,
@@ -280,55 +306,69 @@ jsPsych.plugins['two-step-choice'] = (() => {
         'transition_type': trial.transition_type,
       };
 
-      // clear the display
+      // Clear the contents of 'displayElement'
       displayElement.innerHTML = '';
 
-      // move on to the next trial
+      // Notify jsPsych and pass the trial data
       jsPsych.finishTrial(trialData);
     };
 
     /**
-     * function to handle responses by the subject
-     * @param {any} info event
+     * Handle responses by the subject
+     * @param {any} info data object containing the reaction
+     * time (rt) and the key code of the key pressed
      */
     const afterResponse = (info) => {
-      // only record the first response
+      // Record the key response
       if (response.key == null) {
+        // Record the first response
         response = info;
       } else {
+        // If multiple responses have been made already,
+        // store them in a list
         responses.rt.push(info.rt);
         responses.key.push(info.key);
       }
 
+      // Check the response and react accordingly
       if ((validPressed == 0) &&
         (validChoices.indexOf(info.key) > -1) && (movePossible)) {
+        // If a valid key has been pressed and a transition is permitted
         consola.debug(`A valid key ('${info.key}') was pressed.`);
+
+        // Set the 'validPressed' flag
         validPressed = 1;
 
         if (trial.query_trial == null) {
+          // Determine what choice was made
           if (trial.choices.indexOf(info.key) == 1) {
-            // determine what choice was made
+            // Right selection
             chosenText = trial.right_text;
             unchosenText = trial.left_text;
             imageChosen = imageRight;
             imageUnchosen = imageLeft;
           } else {
+            // Left selection
             chosenText = trial.left_text;
             unchosenText = trial.right_text;
             imageChosen = imageLeft;
             imageUnchosen = imageRight;
           }
-          trial.chosenText=chosenText; // set chosen text based on choice made
+
+          // Store the chosen option
+          trial.chosenText = chosenText;
+
           if (trial.center_text !== null) {
+            // Deactivate the choice that was not selected if there was
+            // more than one option
             if (validChoices.length > 1) {
-              // 'deactivate' the unselected choice if more than one choice
               imageUnchosen.attr('xlink:href',
                   experiment.getStimuli()
                       .getImage(
                           unchosenText.replace('.png', '') + '_deact.png'));
             }
 
-            // start the animation by moving the selected image to the center
+            // Start the animation by moving the selected image to the center
             imageCenter.transition().remove().on('end', () => {
               imageChosen.attr('xlink:href', experiment.getStimuli().getImage(
                   chosenText.replace('.png', '') + '_a2.png'))
@@ -338,23 +378,32 @@ jsPsych.plugins['two-step-choice'] = (() => {
                   .on('end', () => {
                     let frames = 0;
                     let currentImage;
-                    const t = interval((elapsed) => {
+
+                    const transition = interval((elapsed) => {
+                      // Update the image every two frames
                       if ((frames % 2) === 0) {
                         currentImage = chosenText + '_a1.png';
                       } else {
                         currentImage = chosenText + '_a2.png';
                       }
+
                       imageChosen.attr('xlink:href', experiment.getStimuli()
                           .getImage(currentImage));
+
                       frames++;
+
+                      // Deactivate the image after 5 frames
                       if (frames == 5) {
                         imageChosen
                             .attr('xlink:href', experiment.getStimuli()
                                 .getImage(chosenText + '_deact.png'));
+
                         if (trial.trialRow !== null) {
-                          // determine the reward and add the reward image
+                          // Determine the reward and add the reward image
                           trial.reward_text =
                               calculateReward(chosenText, trial.trialRow);
+
+                          // Append the reward image
                           svg.append('svg:image')
                               .attr('x', rewardX)
                               .attr('y', rewardY)
@@ -363,13 +412,15 @@ jsPsych.plugins['two-step-choice'] = (() => {
                               .attr('xlink:href', trial.reward_text);
                           interval((elapsed) => {}, timeMoney);
                         }
-                        t.stop();
+
+                        transition.stop();
                       }
                     }, timeFlash / 5);
-                  }); // increment 5 times
+                  });
             });
           } else {
-            // do the same thing, but without a center image
+            // Deactivate the choice that was not selected if there was
+            // more than one option
             if (validChoices.length > 1) {
               imageUnchosen.attr('xlink:href',
                   experiment.getStimuli()
@@ -377,6 +428,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
                           unchosenText.replace('.png', '') + '_deact.png'));
             }
 
+            // Start the animation by moving the selected image to the center
             imageChosen.attr('xlink:href', experiment.getStimuli()
                 .getImage(chosenText + '_a2.png'))
                 .transition()
@@ -386,21 +438,30 @@ jsPsych.plugins['two-step-choice'] = (() => {
                 .on('end', () => {
                   let frames = 0;
                   let currentImage;
-                  const t = interval((elapsed) => {
+
+                  const transition = interval((elapsed) => {
+                    // Update the image every two frames
                     if ((frames % 2) === 0) {
                       currentImage = chosenText+'_a1.png';
                     } else {
                       currentImage = chosenText+'_a2.png';
                     }
+
                     imageChosen.attr('xlink:href', experiment.getStimuli()
                         .getImage(currentImage));
+
                     frames++;
+
+                    // Deactivate the image after 5 frames
                     if (frames == 5) {
                       imageChosen.attr('xlink:href', experiment.getStimuli()
                           .getImage(chosenText+'_deact.png'));
                       if (trial.trialRow !== null) {
+                        // Determine the reward and add the reward image
                         trial.reward_text =
                             calculateReward(chosenText, trial.trialRow);
+
+                        // Append the reward image
                         svg.append('svg:image')
                             .attr('x', rewardX)
                             .attr('y', rewardY)
@@ -409,25 +470,30 @@ jsPsych.plugins['two-step-choice'] = (() => {
                             .attr('xlink:href', trial.reward_text);
                         interval((elapsed) => {}, timeMoney);
                       }
-                      t.stop();
+
+                      transition.stop();
                     }
                   }, timeFlash / 5);
                 });
           }
         } else {
-          // this only gets evaluated if query_trial = true
-          consola.log(`'endTrial()' called.`);
+          // This only gets evaluated if 'query_trial' is 'true'
+          consola.info(`'endTrial()' called.`);
           endTrial();
         }
 
+        // Create a timeout for displaying the trial outcome
         jsPsych.pluginAPI.setTimeout(() => {
+          // Cancel the keyboard listener
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+
+          // End the trial
           endTrial();
         }, (timeFlash + timeMoney));
       }
-    }; // This is the end of the afterResponse function
+    };
 
-    // start the response listener
+    // Create a keyboard listener, listen to all keys
     const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: afterResponse,
       valid_responses: jsPsych.ALL_KEYS,
@@ -435,12 +501,15 @@ jsPsych.plugins['two-step-choice'] = (() => {
       allow_held_key: false,
     });
 
-    // end trial if trial_duration AND trial.timeout == true
+    // If a timeout is configured and a duration is set, create a
+    // timeout to end the trial if no response is recorded
+    // in the specified timeframe
     if (trial.trial_duration !== null && trial.timeout == true) {
       jsPsych.pluginAPI.setTimeout(() => {
         if (response.rt == null) {
           movePossible = false;
           trial.chosenText = '';
+
           imageRight.transition()
               .duration(timeFlash)
               .attr('xlink:href', experiment.getStimuli()
@@ -448,6 +517,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
           imageLeft.attr('xlink:href', experiment.getStimuli()
               .getImage(trial.left_text.replace('.png', '') + '_sp.png'));
         }
+
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           endTrial();
@@ -456,11 +526,13 @@ jsPsych.plugins['two-step-choice'] = (() => {
     }
   };
 
+
   /**
-   * calculateReward function
-   * @param {string} chosenString
-   * @param {any} trialRow
-   * @return {any}
+   * Calcuate if a reward has been obtained or not and return
+   * the path to the image to display
+   * @param {string} chosenString the selected option
+   * @param {any} trialRow data for the trial
+   * @return {string}
    */
   const calculateReward = (chosenString, trialRow) => {
     if (chosenString == '') {

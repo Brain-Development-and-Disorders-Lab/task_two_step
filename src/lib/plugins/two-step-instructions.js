@@ -1,9 +1,15 @@
 /**
+ * Plugin:
  * two-step-instructions
+ *
+ * Overview:
  * Similar to other two-step task d3 plugins, sizes of pictures are
- * global variables
- * VF 8/2019
- * KN added audio 4/22/20
+ * global variables.
+ *
+ * Changelog:
+ * VF 08/2019
+ * KN 04/2020
+ * HB 01/2022
  */
 // Logging library
 import consola from 'consola';
@@ -26,12 +32,12 @@ import {
   sizeFont,
 } from '../display';
 
-jsPsych.plugins['two-step-instructions'] = (function() {
+jsPsych.plugins['two-step-instructions'] = (() => {
   const plugin = {};
 
   plugin.info = {
     name: 'two-step-instructions',
-    description: '',
+    description: 'Instructions for the task.',
     parameters: {
       stimulus: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -57,7 +63,7 @@ jsPsych.plugins['two-step-instructions'] = (function() {
       rewardString: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
-        array: false.valueOf,
+        array: false,
       },
       choices: {
         type: jsPsych.plugins.parameterType.KEYCODE,
@@ -83,23 +89,27 @@ jsPsych.plugins['two-step-instructions'] = (function() {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Button state',
         default: false,
-        description: 'state of button.',
+        description: 'State of the button.',
       },
     },
   };
 
-  plugin.trial = function(displayElement, trial) {
+  plugin.trial = (displayElement, trial) => {
+    // Debugging information
     consola.debug(`Running trial:`, trial.type);
 
-    // display stimulus
+    // Reset the displayElement contents
     const html = `<div id='container' class='exp-container'></div>`;
     displayElement.innerHTML = html;
 
+    // Render all specified elements to the view
+    // SVG container
     const svg = select('div#container')
         .append('svg')
         .attr('preserveAspectRatio', 'xMinYMin meet')
         .classed('svg-content', true);
 
+    // Append the stimulus image
     if (trial.stimulus !== null) {
       svg.append('svg:image')
           .attr('width', width)
@@ -108,6 +118,7 @@ jsPsych.plugins['two-step-instructions'] = (function() {
           .attr('xlink:href', trial.stimulus);
     }
 
+    // Append an image to the right side of the view
     if (trial.right_text !== null) {
       svg.append('svg:image')
           .attr('class', 'right')
@@ -118,15 +129,17 @@ jsPsych.plugins['two-step-instructions'] = (function() {
           .attr('xlink:href', trial.right_text);
     }
 
+    // Append the reward string to the view
     if (trial.rewardString !== null) {
       svg.append('svg:image')
-          .attr('x', centerX-sizeReward / 2)
+          .attr('x', centerX - sizeReward / 2)
           .attr('y', choiceY)
           .attr('width', sizeReward)
           .attr('height', sizeReward)
           .attr('xlink:href', trial.rewardString);
     }
 
+    // Append text to the left side of the view
     if (trial.left_text !== null) {
       svg.append('svg:image')
           .attr('x', choiceXLeft)
@@ -136,15 +149,17 @@ jsPsych.plugins['two-step-instructions'] = (function() {
           .attr('xlink:href', trial.left_text);
     }
 
+    // Append text to the center of the view
     if (trial.center_text !== null) {
       svg.append('svg:image')
-          .attr('x', centerX-sizeMonster / 2)
+          .attr('x', centerX - sizeMonster / 2)
           .attr('y', choiceY)
           .attr('width', sizeMonster)
           .attr('height', sizeMonster)
           .attr('xlink:href', trial.center_text);
     }
 
+    // Append the continue button to the view
     const imageButton = svg.append('svg:circle')
         .attr('r', 25)
         .attr('cx', choiceXRight + sizeMonster)
@@ -157,14 +172,15 @@ jsPsych.plugins['two-step-instructions'] = (function() {
           imageButton.style('stroke', 'black');
         });
 
-    // add prompt
+    // Add the main prompt to the view
     if (trial.prompt !== null) {
-      // inspired by Mike Bostock
-      // https://bl.ocks.org/mbostock/7555321
+      // Wrap text to fit inside the view
       let lineNumber = 0;
-      const lineHeight = 1.1; // ems
+      const lineHeight = 1.1;
       const dy = 0;
+
       for (let i = 0; i < trial.prompt.length; i++) {
+        // Append a line of text
         svg.append('text')
             .attr('x', textX)
             .attr('y', textInstructionsY)
@@ -180,36 +196,42 @@ jsPsych.plugins['two-step-instructions'] = (function() {
       }
     }
 
-    // function to end trial when it is time
+    /**
+     * End the 'two-step-instructions' trial
+     */
     const endTrial = () => {
-      // set button_clicked back to false
+      // Reset the button state
       trial.button_clicked = false;
 
-      // kill any remaining setTimeout handlers
+      // Clear any existing 'setTimeout' instances
       jsPsych.pluginAPI.clearAllTimeouts();
 
-      // kill keyboard listeners
+      // Clear any existing keyboard listeners
       if (typeof keyboardListener !== 'undefined') {
         jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
 
-      // clear the display
+      // Clear the contents of 'displayElement'
       displayElement.innerHTML = '';
 
-      // move on to the next trial
+      // Notify jsPsych
       jsPsych.finishTrial();
     };
 
 
-    // function to handle responses by the subject
+    /**
+     * Handle responses by the subject
+     */
     const afterResponse = () => {
+      // If the participant has clicked the button, end the trial
       if (trial.button_clicked == true) {
         endTrial();
       };
     };
 
-    // start the response listener
+    // Create a keyboard listener, listen to all keys
     if (trial.choices != jsPsych.NO_KEYS) {
+      // Use the jsPsych pluginAPI
       jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: afterResponse,
         valid_responses: trial.choices,
