@@ -1,3 +1,6 @@
+/**
+ * Images used throughout the experiment
+ */
 export const configuration = {
   stimuli: {
     'alien1_a1.png': 'images/alien1_a1.png',

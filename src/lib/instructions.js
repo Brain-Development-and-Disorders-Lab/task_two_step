@@ -1,4 +1,6 @@
-// Generate and export the instructions for the task
+/**
+ * Generate and export the instructions for the task
+ */
 export const instructions = [];
 
 // Black (starting) background

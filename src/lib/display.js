@@ -1,4 +1,6 @@
-// Functions and constants that handle display sizing
+/**
+ * Functions and constants that handle display sizing
+ */
 // Beware: multiple 'magic' numbers in this file
 // Global position variables
 export const height = window.innerHeight;

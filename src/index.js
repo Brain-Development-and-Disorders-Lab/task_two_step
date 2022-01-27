@@ -1,3 +1,6 @@
+/**
+ * Configure the experiment and create the timeline
+ */
 // Logging library
 import consola, {LogLevel} from 'consola';
 
@@ -53,6 +56,7 @@ import probData from './data/masterprob4.csv';
 // Styling
 import './css/styles.css';
 
+// Instantiate the Experiment wrapper class
 export const experiment = new Experiment({
   name: 'Two-step game',
   studyName: 'task_twostep',
@@ -71,6 +75,7 @@ export const experiment = new Experiment({
 experiment.load().then(() => {
   consola.info(`Experiment loaded, continuing...`);
 
+  // Instantiate the timeline variables for the main trials
   const timelineVar = [];
   let trial = 0;
 
@@ -78,9 +83,9 @@ experiment.load().then(() => {
   const rewardString = experiment.getStimuli().getImage('t.png');
   const nullString = experiment.getStimuli().getImage('nothing.png');
 
-  // Add experiment blocks to timeline
+  // Set the rocket configuration in the main trials
   for (let j = 0; j < blockCount; j++) {
-    timelineVar.push([]); // push block to timeline
+    timelineVar.push([]);
     for (let i = 0; i < blockLength; i++) {
       // Randomize sides of rockets for each subject
       if (rocketSides) {
@@ -96,16 +101,18 @@ experiment.load().then(() => {
           trial: trial,
         });
       }
-      trial = trial+1;
+      trial = trial + 1;
     };
   };
 
+  // Instantiate the timeline variables for the practice trials
   const practiceTimelineVar = [];
   trial = 0;
 
+  // Set the rocket configuration in the practice trials
   for (let i = 0; i < practiceGameNum; i++) {
+    // Randomize sides of rockets for each subject
     if (pracRocketSides) {
-      // Randomize sides of rockets for each subject
       practiceTimelineVar.push({
         right_text: 'tutrocket2',
         left_text: 'tutrocket1',
@@ -133,30 +140,42 @@ experiment.load().then(() => {
    * @return {any} ?
    */
   const createBlock = (currVariables, currProbData, practice) => {
+    // Create the generic experimental procedure for a single trial.
+    // Consists of the first and second choices.
     const expProcedure = {
       timeline: [
-        { // define stage 1 choice
+        {
+          // Instantiate the first choice
           type: 'two-step-choice',
           trial_stage: '1',
           choices: [keyLeft, keyRight],
           planet_text: experiment.getStimuli().getImage('earth.jpg'),
-          right_text: jsPsych.timelineVariable('right_text'), // right rocket
-          left_text: jsPsych.timelineVariable('left_text'), // left rocket
+          right_text: jsPsych.timelineVariable('right_text'),
+          left_text: jsPsych.timelineVariable('left_text'),
+
+          // Specify if this is a practice trial or not
           practice_trial: function() {
             if (practice === false) {
               return 'real';
             }
           },
+
+          // Define the 'on_start' callback
           on_start: function() {
             currStageTwo = [];
           },
+
+          // Define the 'on_start' callback
           on_finish: function(data) {
+            // Specify the choice made in the data
             if (data.key_press == keyLeft) {
               data.choice = 1;
             };
             if (data.key_press == keyRight) {
               data.choice = 2;
             };
+
+            // Calcuate the transition and then the second location
             currStageTwo = calculateTransition(data.chosenText, practice);
             if (currStageTwo == null) {
               currStageTwo = [
@@ -167,36 +186,54 @@ experiment.load().then(() => {
               ];
             }
           },
+
+          // Specify a trial duration
           trial_duration: timeChoice,
         },
-        // define stage 2 choice
         {
+          // Instantiate the second choice
           type: 'two-step-choice',
           trial_stage: '2',
           choices: [keyLeft, keyRight],
+
+          // Specify if this is a practice trial or not
           practice_trial: () => {
             if (practice === false) {
               return 'real';
             }
           },
+
+          // Specify the trial data
           trialRow: () => {
             return currProbData[jsPsych.timelineVariable('trial', true)];
           },
+
+          // Specify the second planet
           planet_text: () => {
-            return currStageTwo[2]; // stage 2 planet
+            return currStageTwo[2];
           },
+
+          // Specify the left alien?
           right_text: () => {
-            return currStageTwo[0]; // left alien
+            return currStageTwo[0];
           },
+
+          // Specify the right alien?
           left_text: () => {
-            return currStageTwo[1]; // right alien
+            return currStageTwo[1];
           },
+
+          // Specify the reward outcome
           center_text: () => {
-            return currStageTwo[3]; // reward outcome
+            return currStageTwo[3];
           },
+
+          // Specify the transition type
           transition_type: () => {
-            return currStageTwo[4]; // transition type
+            return currStageTwo[4];
           },
+
+          // Specify a trial duration
           trial_duration: () => {
             if (currStageTwo[3] == null) {
               return 0;
@@ -204,6 +241,8 @@ experiment.load().then(() => {
               return timeChoice;
             }
           },
+
+          // Define the 'on_finish' callback
           on_finish: (data) => {
             if (data.reward_text === rewardString) {
               if (practice === false) {
@@ -218,43 +257,53 @@ experiment.load().then(() => {
                 );
               }
             }
+
+            // Specify the choice made in the data
             if (data.key_press == keyLeft) {
               data.choice = 1;
             }
             if (data.key_press == keyRight) {
               data.choice = 2;
             }
+
+            // Specify the transition type in the data
             if (data.transition_type == true) {
               data.transition = 'common';
             }
             if (data.transition_type == false) {
               data.transition = 'rare';
             }
+
+            // Specify the reward outcome in the data
             if (data.reward_text ==
                 experiment.getStimuli().getImage('t.png')) {
               data.reward = 1;
             } else {
               data.reward = 0;
             }
+
+            // Store the timestamp
             const timestamp = (new Date).toISOString()
                 .replace(/z|t/gi, ' ')
                 .trim();
             jsPsych.data.addDataToLastTrial({timestamp});
           },
         },
-        { // ITI
+        {
+          // Instantiate the fixation stage
           type: 'two-step-fixation',
           stimulus: experiment.getStimuli().getImage('earth.jpg'),
           text: '+',
-          trial_duration: 1000, // ITI duration
+          trial_duration: 1000,
         },
       ],
+
+      // Specify the timeline variables
       timeline_variables: currVariables,
     };
+
     return expProcedure;
   };
-
-  // Break trials removed from here
 
   /**
    * calculateTransition function
@@ -401,9 +450,10 @@ experiment.load().then(() => {
     }
   };
 
-  // initialize experiment timeline
+  // Setup the experiment timeline
   let expTimeline = [];
 
+  // Prepare the resource collections
   const imagesLeft = [];
   const imagesRight = [];
   const imagesCenter = [];
@@ -411,6 +461,8 @@ experiment.load().then(() => {
   const filesAudio = [];
   const imagesButton = [];
 
+  // Instantiate the resource collections that accompany each
+  // page of instructions
   let currInstructs;
   for (let i = 0; i < instructions.length; i += 1) {
     currInstructs = instructions[i];
@@ -430,9 +482,11 @@ experiment.load().then(() => {
     }
   }
 
+  // Reward and no reward images
   imagesReward[3][0] = rewardString;
   imagesReward[3][1] = nullString;
 
+  // Center images
   imagesCenter[4][0] =
       experiment.getStimuli().getImage('tutalien3_norm.png');
   imagesCenter[4][1] =
@@ -440,11 +494,13 @@ experiment.load().then(() => {
   imagesCenter[9][0] =
       experiment.getStimuli().getImage('tutalien2_norm.png');
 
+  // Rockets
   imagesRight[1][0] =
       experiment.getStimuli().getImage('tutrocket1_norm.png');
   imagesLeft[1][0] =
       experiment.getStimuli().getImage('tutrocket2_norm.png');
 
+  // Aliens, both sides
   imagesRight[2][0] =
       experiment.getStimuli().getImage('tutalien1_norm.png');
   imagesLeft[2][0] =
@@ -458,16 +514,19 @@ experiment.load().then(() => {
   imagesLeft[2][2] =
       experiment.getStimuli().getImage('tutalien2_norm.png');
 
+  // Aliens, right side
   imagesRight[6][0] =
       experiment.getStimuli().getImage('tutalien1_norm.png');
   imagesRight[7][0] =
       experiment.getStimuli().getImage('tutalien2_norm.png');
 
+  // Aliens, left side
   imagesLeft[6][0] =
       experiment.getStimuli().getImage('tutalien2_norm.png');
   imagesLeft[7][0] =
       experiment.getStimuli().getImage('tutalien1_norm.png');
 
+  // Rockets, right side
   imagesRight[13][0] =
       experiment.getStimuli().getImage('tutrocket1_norm.png');
   imagesRight[13][1] =
@@ -485,6 +544,7 @@ experiment.load().then(() => {
   imagesRight[14][5] =
       experiment.getStimuli().getImage('tutrocket1_norm.png');
 
+  // Rockets, left side
   imagesLeft[13][0] =
       experiment.getStimuli().getImage('tutrocket2_norm.png');
   imagesLeft[13][1] =
@@ -502,6 +562,7 @@ experiment.load().then(() => {
   imagesLeft[14][5] =
       experiment.getStimuli().getImage('tutrocket2_norm.png');
 
+  // Backgrounds used throughout the instructions
   const instructionsBackgrounds = [
     experiment.getStimuli().getImage('blackbackground.jpg'),
     experiment.getStimuli().getImage('earth.jpg'),
@@ -525,13 +586,27 @@ experiment.load().then(() => {
   let currPage;
   let currSide;
 
+  /**
+   * Utility function to assemble instructions, combining text and images
+   * @param {string} image stimulus
+   * @param {string[]} texts main prompt used
+   * @param {string[]} sectRightTexts right stimulus
+   * @param {string[]} sectLeftTexts left stimulus
+   * @param {string[]} sectCenterTexts center stimulus
+   * @param {string[]} sectRewardTexts reward stimlus
+   * @return {any[]}
+   */
   const createInstructions = (
       image, texts, sectRightTexts,
-      sectLeftTexts, sectCenterTexts, sectRewardTexts) => {
+      sectLeftTexts, sectCenterTexts, sectRewardTexts,
+  ) => {
     'use strict';
 
+    // Instantitate and create the pages of the instructions
     const instructionPages = [];
     for (t = 0; t < texts.length; t += 1) {
+      // Collate the specifict texts and images
+      // for the instruction page
       currPage = {
         type: 'two-step-instructions',
         stimulus: image,
@@ -548,7 +623,7 @@ experiment.load().then(() => {
     return instructionPages;
   };
 
-  // Create instructions
+  // Create all instruction pages
   let currInstructions = [];
   for (let i = 0; i < instructions.length; i += 1) {
     currInstructions = currInstructions.concat(
@@ -564,8 +639,7 @@ experiment.load().then(() => {
     );
   }
 
-  // INSERT PRACTICE
-  // insert 4 selection practice trials on instructions page 5
+  // Create practice trials for selecting between aliens
   for (let i = 0; i < (practicePressingNum - 1); i += 1) {
     currInstructions.splice(practicePressingIdx, 0, {
       type: 'two-step-choice',
@@ -579,6 +653,7 @@ experiment.load().then(() => {
       trial_duration: timeChoice,
     });
   }
+
   currInstructions.splice(practicePressingIdx, 0, {
     type: 'two-step-choice',
     timeout: false,
@@ -589,7 +664,7 @@ experiment.load().then(() => {
     trial_duration: timeChoice,
   });
 
-  // insert 10 treasure asking practice trials
+  // Create practice trials to select a single alien and view reward outcome
   for (let i = 0; i < practiceRewardNum; i += 1) {
     currInstructions.splice(practiceRewardIdx, 0, {
       type: 'two-step-choice',
@@ -598,12 +673,16 @@ experiment.load().then(() => {
       choices: [keyLeft, keyRight],
       planet_text:
         experiment.getStimuli().getImage('tutyellowplanet.jpg'),
+
+      // Right alien image
       right_text: () => {
         if (currSide === true) {
           return 'tutalien3';
         }
         return null;
       },
+
+      // Left alien image
       left_text: () => {
         if (currSide === true) {
           return null;
@@ -614,7 +693,7 @@ experiment.load().then(() => {
     });
   }
 
-  // insert 10 asking green aliens for reward trials
+  // Create practice trials for selecting between aliens
   for (let i = 0; i < practiceStochasticNum; i += 1) {
     currInstructions.splice(practiceStochasticIdx, 0, {
       type: 'two-step-choice',
@@ -629,22 +708,24 @@ experiment.load().then(() => {
     });
   }
 
-  // remove the instructions about aliens on either side
+  // Remove the instructions about aliens on either side
   currInstructions.splice(27, 3);
 
-  // insert practice into instrucitions
+  // Insert practice trials into instrucitions
   currInstructions.splice(practiceGameIdx + 3, 0,
       createBlock(practiceTimelineVar, practiceProbData, true));
 
-  // build experiment timeline
+  // Instantiate the experiment timeline with the instructions and
+  // practice trials
   expTimeline = currInstructions;
 
-  // run trials with breaks
+  // Create the remaining blocks of the timeline
   expTimeline.push(createBlock(timelineVar[0], probData, false));
   expTimeline.push(createBlock(timelineVar[1], probData, false));
   expTimeline.push(createBlock(timelineVar[2], probData, false));
   expTimeline.push(createBlock(timelineVar[3], probData, false));
 
+  // Start the experiment
   experiment.start({
     timeline: expTimeline,
   });
