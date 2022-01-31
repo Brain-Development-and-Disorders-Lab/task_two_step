@@ -143,13 +143,13 @@ jsPsych.plugins['two-step-choice'] = (() => {
 
     // General plugin variables
     let movePossible = true;
-    let chosenText;
-    let unchosenText;
-    let imageLeft;
-    let imageCenter;
-    let imageRight;
-    let imageChosen;
-    let imageUnchosen;
+    let chosenText = '';
+    let unchosenText = '';
+    let imageLeft = '';
+    let imageCenter = '';
+    let imageRight = '';
+    let imageChosen = '';
+    let imageUnchosen = '';
 
     // Render all specified elements to the view
     // SVG container
