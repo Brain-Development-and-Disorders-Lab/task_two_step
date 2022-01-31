@@ -204,7 +204,7 @@ instructions[14] = [
   ],
   [
     'You will have three seconds to make each choice. If you are too slow,',
-    'you will see a large X appear on each rocket or alien and that' +
+    'you will see a large X appear on each rocket or alien and that ' +
     'choice will be over.',
   ],
   [
