@@ -109,7 +109,7 @@ instructions[8] = [
   ],
   [
     'You can practice choosing now.',
-    'You have 20 choices to try to figure out which alien has a good mine.',
+    'You have 10 choices to try to figure out which alien has a good mine.',
   ],
   [
     'Remember, key 1 is for the left alien, and key 0 is for the right alien.',
@@ -227,7 +227,7 @@ instructions[15] = [
 instructions[16] = [
   [
     'Okay, that is nearly the end of the tutorial!',
-    'In the real game, the planets, aliens, and spaceships will' +
+    'In the real game, the planets, aliens, and spaceships will ' +
     'be new colors,',
     'but the rules will be the same.',
     'The game is hard, so you will need to concentrate,',

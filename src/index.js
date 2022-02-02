@@ -48,6 +48,7 @@ import {configuration} from './configuration';
 // General jsPsych imports
 import 'jspsych';
 import 'jspsych/plugins/jspsych-preload';
+import 'jspsych-attention-check';
 
 // Import all our plugins
 import './lib/plugins/two-step-choice';
@@ -718,16 +719,59 @@ experiment.load().then(() => {
       createBlock(practiceTimelineVar, practiceProbData, true));
 
   // Insert the three quizzes before the last element in `currInstructions`
-  // currInstructions.push(createInstructions(
-  //     experiment.getStimuli().getImage('blackbackground.jpg'),
-  //     breakText[0],
-  // ));
+  // Question 1
+  currInstructions.splice(currInstructions.length - 1, 0, {
+    type: 'attention-check',
+    question: 'True or False: Each spaceship always flies to the same planet.',
+    options: [
+      'True',
+      'False',
+    ],
+    options_radio: true,
+    option_correct: 1,
+    confirmation: true,
+  });
+
+  // Question 2
+  currInstructions.splice(currInstructions.length - 1, 0, {
+    type: 'attention-check',
+    question:
+      'True or False: If an alien has a lot of treasure to share now, ' +
+      'then they will probably have a lot of treasure to share in the ' +
+      'near future.',
+    options: [
+      'True',
+      'False',
+    ],
+    options_radio: true,
+    option_correct: 0,
+    confirmation: true,
+  });
+
+  // Question 3
+  currInstructions.splice(currInstructions.length - 1, 0, {
+    type: 'attention-check',
+    question:
+      'True or False: You will have as much time as ' +
+      'you want to make each choice.',
+    options: [
+      'True',
+      'False',
+    ],
+    options_radio: true,
+    option_correct: 1,
+    confirmation: true,
+  });
+
+  // Remove the instructions about the alien locations
+  currInstructions.splice(27, 2);
 
   // Instantiate the experiment timeline with the instructions and
   // practice trials
   expTimeline = currInstructions;
 
   // Create the remaining blocks of the timeline
+  // Main block 1
   expTimeline.push(createBlock(timelineVar[0], probData, false));
 
   // Insert break 1
@@ -737,6 +781,7 @@ experiment.load().then(() => {
       [], [], [], [],
   )[0]);
 
+  // Main block 2
   expTimeline.push(createBlock(timelineVar[1], probData, false));
 
   // Insert break 2
@@ -746,6 +791,7 @@ experiment.load().then(() => {
       [], [], [], [],
   )[0]);
 
+  // Main block 3
   expTimeline.push(createBlock(timelineVar[2], probData, false));
 
   // Insert break 3
@@ -755,6 +801,7 @@ experiment.load().then(() => {
       [], [], [], [],
   )[0]);
 
+  // Main block 4
   expTimeline.push(createBlock(timelineVar[3], probData, false));
   // Question about the rockets
   // Finish
