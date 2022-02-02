@@ -218,8 +218,8 @@ instructions[14] = [
 // Black background
 instructions[15] = [
   [
-    'That is the end of the practice game.',
-    'Click the red button. Then press any key to see how you did...',
+    'That is the end of the practice games.',
+    'Click the red button to continue.',
   ],
 ];
 

@@ -708,12 +708,11 @@ experiment.load().then(() => {
     });
   }
 
-  // Remove the instructions about aliens on either side
-  currInstructions.splice(27, 3);
-
-  // Insert practice trials into instrucitions
-  currInstructions.splice(practiceGameIdx + 3, 0,
+  // Insert practice trials into instructions
+  currInstructions.splice(practiceGameIdx, 0,
       createBlock(practiceTimelineVar, practiceProbData, true));
+
+  // Insert the three quizzes before the last element in `currInstructions`
 
   // Instantiate the experiment timeline with the instructions and
   // practice trials
@@ -721,11 +720,17 @@ experiment.load().then(() => {
 
   // Create the remaining blocks of the timeline
   expTimeline.push(createBlock(timelineVar[0], probData, false));
+  // Insert break 1
   expTimeline.push(createBlock(timelineVar[1], probData, false));
+  // Insert break 2
   expTimeline.push(createBlock(timelineVar[2], probData, false));
+  // Insert break 3
   expTimeline.push(createBlock(timelineVar[3], probData, false));
+  // Question about the rockets
+  // Finish
 
   // Start the experiment
+  consola.info('Experiment timeline:', expTimeline);
   experiment.start({
     timeline: expTimeline,
   });
