@@ -161,11 +161,12 @@ jsPsych.plugins['two-step-instructions'] = (() => {
 
     // Append the continue button to the view
     const imageButton = svg.append('svg:circle')
-        .attr('r', 25)
+        .attr('r', 30)
         .attr('cx', choiceXRight + sizeMonster)
         .attr('cy', choiceY + sizeMonster - 100)
-        .style('stroke', 'black')
         .style('fill', 'red')
+        .style('stroke', 'black')
+        .style('stroke-width', 6)
         .on('click', () => {
           trial.button_clicked = true;
           imageButton.style('fill', 'green');
