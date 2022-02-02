@@ -278,3 +278,27 @@ instructions[18] = [
     'Ready?  Now its time to play the game! Good luck space traveler!',
   ],
 ];
+
+export const firstBreak = [
+  [
+    'Great job so far! You have completed 1 out of 4 rounds.',
+    'You may now take a break.',
+    'Press the button when you are ready for the next round.',
+  ],
+];
+
+export const secondBreak = [
+  [
+    'Awesome! You are halfway through the game.',
+    'You may now take a break.',
+    'Press the button when you are ready for the next round.',
+  ],
+];
+
+export const thirdBreak = [
+  [
+    'Almost done! Just 1 more round to go.',
+    'You may now take a break.',
+    'Press the button when you are ready for the next round.',
+  ],
+];

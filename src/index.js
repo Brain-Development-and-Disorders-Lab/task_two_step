@@ -35,7 +35,12 @@ import {
 } from './lib/variables';
 
 // Import the instructions
-import {instructions} from './lib/instructions';
+import {
+  firstBreak,
+  instructions,
+  secondBreak,
+  thirdBreak,
+} from './lib/instructions';
 
 // Configuration
 import {configuration} from './configuration';
@@ -713,6 +718,10 @@ experiment.load().then(() => {
       createBlock(practiceTimelineVar, practiceProbData, true));
 
   // Insert the three quizzes before the last element in `currInstructions`
+  // currInstructions.push(createInstructions(
+  //     experiment.getStimuli().getImage('blackbackground.jpg'),
+  //     breakText[0],
+  // ));
 
   // Instantiate the experiment timeline with the instructions and
   // practice trials
@@ -720,11 +729,32 @@ experiment.load().then(() => {
 
   // Create the remaining blocks of the timeline
   expTimeline.push(createBlock(timelineVar[0], probData, false));
+
   // Insert break 1
+  expTimeline.push(createInstructions(
+      experiment.getStimuli().getImage('blackbackground.jpg'),
+      firstBreak,
+      [], [], [], [],
+  )[0]);
+
   expTimeline.push(createBlock(timelineVar[1], probData, false));
+
   // Insert break 2
+  expTimeline.push(createInstructions(
+      experiment.getStimuli().getImage('blackbackground.jpg'),
+      secondBreak,
+      [], [], [], [],
+  )[0]);
+
   expTimeline.push(createBlock(timelineVar[2], probData, false));
+
   // Insert break 3
+  expTimeline.push(createInstructions(
+      experiment.getStimuli().getImage('blackbackground.jpg'),
+      thirdBreak,
+      [], [], [], [],
+  )[0]);
+
   expTimeline.push(createBlock(timelineVar[3], probData, false));
   // Question about the rockets
   // Finish
