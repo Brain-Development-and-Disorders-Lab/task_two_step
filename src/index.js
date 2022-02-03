@@ -71,7 +71,7 @@ export const experiment = new Experiment({
   seed: '',
   allowParticipantContact: false,
   contact: 'henry.burgess@wustl.edu',
-  logging: LogLevel.Info,
+  logging: LogLevel.Verbose,
   state: {
     practiceReward: 0,
     realReward: 0,
@@ -155,7 +155,7 @@ experiment.load().then(() => {
           type: 'two-step-choice',
           trial_stage: '1',
           choices: [keyLeft, keyRight],
-          planet_text: experiment.getStimuli().getImage('earth.jpg'),
+          planet_text: experiment.getStimuli().getImage('earth.png'),
           right_text: jsPsych.timelineVariable('right_text'),
           left_text: jsPsych.timelineVariable('left_text'),
 
@@ -187,7 +187,7 @@ experiment.load().then(() => {
               currStageTwo = [
                 data.right_text,
                 data.left_text,
-                experiment.getStimuli().getImage('earth.jpg'),
+                experiment.getStimuli().getImage('earth.png'),
                 null,
               ];
             }
@@ -298,7 +298,7 @@ experiment.load().then(() => {
         {
           // Instantiate the fixation stage
           type: 'two-step-fixation',
-          stimulus: experiment.getStimuli().getImage('earth.jpg'),
+          stimulus: experiment.getStimuli().getImage('earth.png'),
           text: '+',
           trial_duration: 1000,
         },
@@ -321,7 +321,7 @@ experiment.load().then(() => {
     let firstPlanet = '';
     let secondPlanet = '';
 
-    if (chosenString == '') {
+    if (chosenString == '' || typeof chosenString === 'undefined') {
       return null;
     } else {
       if (practice == true) {
@@ -370,7 +370,7 @@ experiment.load().then(() => {
           return [
             'alien2',
             'alien1',
-            experiment.getStimuli().getImage('redplanet1.jpg'),
+            experiment.getStimuli().getImage('redplanet1.png'),
             chosenString,
             goodTransition,
           ];
@@ -378,7 +378,7 @@ experiment.load().then(() => {
           return [
             'alien1',
             'alien2',
-            experiment.getStimuli().getImage('redplanet1.jpg'),
+            experiment.getStimuli().getImage('redplanet1.png'),
             chosenString,
             goodTransition,
           ];
@@ -392,7 +392,7 @@ experiment.load().then(() => {
           return [
             'alien4',
             'alien3',
-            experiment.getStimuli().getImage('purpleplanet.jpg'),
+            experiment.getStimuli().getImage('purpleplanet.png'),
             chosenString,
             goodTransition,
           ];
@@ -400,7 +400,7 @@ experiment.load().then(() => {
           return [
             'alien3',
             'alien4',
-            experiment.getStimuli().getImage('purpleplanet.jpg'),
+            experiment.getStimuli().getImage('purpleplanet.png'),
             chosenString,
             goodTransition,
           ];
@@ -414,7 +414,7 @@ experiment.load().then(() => {
           return [
             'tutalien2',
             'tutalien1',
-            experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+            experiment.getStimuli().getImage('tutgreenplanet.png'),
             chosenString,
             goodTransition,
           ];
@@ -422,7 +422,7 @@ experiment.load().then(() => {
           return [
             'tutalien1',
             'tutalien2',
-            experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+            experiment.getStimuli().getImage('tutgreenplanet.png'),
             chosenString,
             goodTransition,
           ];
@@ -436,7 +436,7 @@ experiment.load().then(() => {
           return [
             'tutalien4',
             'tutalien3',
-            experiment.getStimuli().getImage('tutyellowplanet.jpg'),
+            experiment.getStimuli().getImage('tutyellowplanet.png'),
             chosenString,
             goodTransition,
           ];
@@ -444,7 +444,7 @@ experiment.load().then(() => {
           return [
             'tutalien3',
             'tutalien4',
-            experiment.getStimuli().getImage('tutyellowplanet.jpg'),
+            experiment.getStimuli().getImage('tutyellowplanet.png'),
             chosenString,
             goodTransition,
           ];
@@ -571,20 +571,20 @@ experiment.load().then(() => {
   // Backgrounds used throughout the instructions
   const instructionsBackgrounds = [
     experiment.getStimuli().getImage('blackbackground.jpg'),
-    experiment.getStimuli().getImage('earth.jpg'),
-    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    experiment.getStimuli().getImage('earth.png'),
+    experiment.getStimuli().getImage('tutgreenplanet.png'),
     experiment.getStimuli().getImage('blackbackground.jpg'),
-    experiment.getStimuli().getImage('tutyellowplanet.jpg'),
+    experiment.getStimuli().getImage('tutyellowplanet.png'),
     experiment.getStimuli().getImage('blackbackground.jpg'),
-    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
-    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    experiment.getStimuli().getImage('tutgreenplanet.png'),
+    experiment.getStimuli().getImage('tutgreenplanet.png'),
     experiment.getStimuli().getImage('blackbackground.jpg'),
     experiment.getStimuli().getImage('blackbackground.jpg'),
-    experiment.getStimuli().getImage('earth.jpg'),
-    experiment.getStimuli().getImage('tutgreenplanet.jpg'),
-    experiment.getStimuli().getImage('tutyellowplanet.jpg'),
-    experiment.getStimuli().getImage('earth.jpg'),
-    experiment.getStimuli().getImage('earth.jpg'),
+    experiment.getStimuli().getImage('earth.png'),
+    experiment.getStimuli().getImage('tutgreenplanet.png'),
+    experiment.getStimuli().getImage('tutyellowplanet.png'),
+    experiment.getStimuli().getImage('earth.png'),
+    experiment.getStimuli().getImage('earth.png'),
     experiment.getStimuli().getImage('blackbackground.jpg'),
   ];
 
@@ -631,6 +631,7 @@ experiment.load().then(() => {
 
   // Create all instruction pages
   let currInstructions = [];
+
   for (let i = 0; i < instructions.length; i += 1) {
     currInstructions = currInstructions.concat(
         createInstructions(
@@ -652,7 +653,7 @@ experiment.load().then(() => {
       timeout: false,
       choices: [keyLeft, keyRight],
       planet_text:
-        experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+        experiment.getStimuli().getImage('tutgreenplanet.png'),
       right_text: 'tutalien1',
       left_text: 'tutalien2',
       prompt: ['Now try another one!'],
@@ -664,7 +665,7 @@ experiment.load().then(() => {
     type: 'two-step-choice',
     timeout: false,
     choices: [keyLeft, keyRight],
-    planet_text: experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+    planet_text: experiment.getStimuli().getImage('tutgreenplanet.png'),
     right_text: 'tutalien1',
     left_text: 'tutalien2',
     trial_duration: timeChoice,
@@ -678,7 +679,7 @@ experiment.load().then(() => {
       trialRow: payoffReward,
       choices: [keyLeft, keyRight],
       planet_text:
-        experiment.getStimuli().getImage('tutyellowplanet.jpg'),
+        experiment.getStimuli().getImage('tutyellowplanet.png'),
 
       // Right alien image
       right_text: () => {
@@ -707,7 +708,7 @@ experiment.load().then(() => {
       trialRow: payoffInstructions,
       choices: [keyLeft, keyRight],
       planet_text:
-        experiment.getStimuli().getImage('tutgreenplanet.jpg'),
+        experiment.getStimuli().getImage('tutgreenplanet.png'),
       right_text: 'tutalien1',
       left_text: 'tutalien2',
       trial_duration: timeChoice,
@@ -730,6 +731,10 @@ experiment.load().then(() => {
     options_radio: true,
     option_correct: 1,
     confirmation: true,
+    feedback_correct: 'Correct!',
+    feedback_incorrect:
+        'Incorrect. Spaceships may sometimes fly ' +
+        'to the planet you don\'t expect.',
   });
 
   // Question 2
@@ -746,6 +751,9 @@ experiment.load().then(() => {
     options_radio: true,
     option_correct: 0,
     confirmation: true,
+    feedback_correct: 'Correct!',
+    feedback_incorrect:
+        'Incorrect. Some aliens have more treasure than others.',
   });
 
   // Question 3
@@ -761,6 +769,9 @@ experiment.load().then(() => {
     options_radio: true,
     option_correct: 1,
     confirmation: true,
+    feedback_correct: 'Correct!',
+    feedback_incorrect:
+        'Incorrect. You have a few seconds to make each choice.',
   });
 
   // Remove the instructions about the alien locations
@@ -803,8 +814,55 @@ experiment.load().then(() => {
 
   // Main block 4
   expTimeline.push(createBlock(timelineVar[3], probData, false));
-  // Question about the rockets
+
   // Finish
+  expTimeline.push(createInstructions(
+      experiment.getStimuli().getImage('blackbackground.jpg'),
+      [
+        [
+          'You\'re finished with this part of the experiment!',
+          'Click the red button to answer a final question.',
+        ],
+      ],
+      [], [], [], [],
+  )[0]);
+
+  // Question about the rockets
+  expTimeline.push({
+    type: 'two-step-choice',
+    trial_stage: '1',
+    choices: [keyLeft, keyRight],
+    planet_text:
+      experiment.getStimuli().getImage('earth.png'),
+    right_text: rocketSides === true ? 'rocket1' : 'rocket2',
+    left_text: rocketSides === true ? 'rocket2' : 'rocket1',
+    practice_trial: 'real',
+    prompt: [
+      'Select the rocket you think went to the red planet most frequently.',
+    ],
+    on_finish: (data) => {
+      // Store the keypresses
+      if (data.key_press === keyLeft) {
+        data.choice = 1;
+      };
+      if (data.key_press === keyRight) {
+        data.choice = 2;
+      };
+      consola.info('data', data);
+    },
+  });
+
+  // Finish
+  expTimeline.push(createInstructions(
+      experiment.getStimuli().getImage('blackbackground.jpg'),
+      [
+        [
+          'Thank you for participating in this research!',
+          'Click the red button to be redirected.',
+        ],
+      ],
+      [], [], [], [],
+  )[0]);
 
   // Start the experiment
   consola.info('Experiment timeline:', expTimeline);

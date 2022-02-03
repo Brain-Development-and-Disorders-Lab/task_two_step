@@ -179,7 +179,7 @@ instructions[13] = [
   [
     'The planet a spaceship goes to most won\'t change during the game.',
     'Pick the one that you think will take you to the alien',
-    'with the best mine, but remember, sometimes you\'ll' +
+    'with the best mine, but remember, sometimes you\'ll ' +
     'go to the other planet!',
   ],
 ];
@@ -197,9 +197,9 @@ instructions[14] = [
     'by asking it to share!  ',
   ],
   [
-    'How much bonus money you make is based on how much space treasure' +
+    'How much bonus money you make is based on how much space treasure ' +
     'you find.',
-    'This is just a practice round of 20 flights, you\'re not playing' +
+    'This is just a practice round of 20 flights, you\'re not playing ' +
     'for money now.',
   ],
   [
@@ -242,18 +242,18 @@ instructions[16] = [
   ],
   [
     'Hint #2:',
-    'Remember, each alien has its own mine. Just because one' +
-    'alien has a bad',
-    'mine and can\'t share very often, does not mean another' +
+    'Remember, each alien has its own mine. Just because one ' +
+    'alien has a bad ',
+    'mine and can\'t share very often, does not mean another ' +
     'has a good mine.',
-    'Also, there are no funny patterns in how an alien shares,',
-    'like every other time you ask, or depending on which spaceship' +
+    'Also, there are no funny patterns in how an alien shares, ',
+    'like every other time you ask, or depending on which spaceship ' +
     'you took.',
     'The aliens are not trying to trick you.',
   ],
   [
     'Hint #3:',
-    'The spaceship you choose is important because often an alien' +
+    'The spaceship you choose is important because often an alien ' +
     'on one planet ',
     'may be better than the ones on another planet.',
     'You can find more treasure by finding the spaceship',

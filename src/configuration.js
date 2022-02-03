@@ -74,26 +74,26 @@ export const configuration = {
     'rocket2_sp.png': 'images/rockets/2/rocket2_sp.png',
 
     // Rocket 1, tutorial
-    'tutrocket1_a1.png': 'images/rockets/3/rocket3_a1.png',
-    'tutrocket1_a2.png': 'images/rockets/3/rocket3_a2.png',
-    'tutrocket1_deact.png': 'images/rockets/3/rocket3_deact.png',
-    'tutrocket1_norm.png': 'images/rockets/3/rocket3_norm.png',
-    'tutrocket1_sp.png': 'images/rockets/3/rocket3_sp.png',
+    'tutrocket1_a1.png': 'images/rockets/3/tutrocket1_a1.png',
+    'tutrocket1_a2.png': 'images/rockets/3/tutrocket1_a2.png',
+    'tutrocket1_deact.png': 'images/rockets/3/tutrocket1_deact.png',
+    'tutrocket1_norm.png': 'images/rockets/3/tutrocket1_norm.png',
+    'tutrocket1_sp.png': 'images/rockets/3/tutrocket1_sp.png',
 
     // Rocket 2, tutorial
-    'tutrocket2_a1.png': 'images/rockets/4/rocket4_a1.png',
-    'tutrocket2_a2.png': 'images/rockets/4/rocket4_a2.png',
-    'tutrocket2_deact.png': 'images/rockets/4/rocket4_deact.png',
-    'tutrocket2_norm.png': 'images/rockets/4/rocket4_norm.png',
-    'tutrocket2_sp.png': 'images/rockets/4/rocket4_sp.png',
+    'tutrocket2_a1.png': 'images/rockets/4/tutrocket2_a1.png',
+    'tutrocket2_a2.png': 'images/rockets/4/tutrocket2_a2.png',
+    'tutrocket2_deact.png': 'images/rockets/4/tutrocket2_deact.png',
+    'tutrocket2_norm.png': 'images/rockets/4/tutrocket2_norm.png',
+    'tutrocket2_sp.png': 'images/rockets/4/tutrocket2_sp.png',
 
     // Backgrounds
     'blackbackground.jpg': 'images/blackbackground.jpg',
-    'earth.jpg': 'images/blue_planet.png',
-    'tutgreenplanet.jpg': 'images/green_planet.png',
-    'purpleplanet.jpg': 'images/purple_planet.png',
-    'redplanet1.jpg': 'images/red_planet.png',
-    'tutyellowplanet.jpg': 'images/yellow_planet.png',
+    'earth.png': 'images/earth.png',
+    'tutgreenplanet.png': 'images/tutgreenplanet.png',
+    'purpleplanet.png': 'images/purpleplanet.png',
+    'redplanet1.png': 'images/redplanet1.png',
+    'tutyellowplanet.png': 'images/tutyellowplanet.png',
 
     // Other
     'button.jpeg': 'images/button.jpeg',

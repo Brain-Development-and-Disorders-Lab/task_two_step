@@ -103,25 +103,23 @@
 
 /* Custom styling */
 html, body {
-    height: 100%;
-    background-color: grey;
-    color: orange;
+  height: 100%;
+  background-color: black;
+  color: white;
 }
 
 div {
-    font-size: 50px;
-    color: orange;
-    line-height: normal;
-    font-family: "Lucida Grande";
+  line-height: normal;
+  font-family: 'Lucida Grande';
 }
 
 div.center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
 }
 
 svg {
