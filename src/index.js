@@ -620,7 +620,7 @@ experiment.load().then(() => {
         left_text: sectLeftTexts[t],
         center_text: sectCenterTexts[t],
         rewardString: sectRewardTexts[t],
-        choices: jsPsych.ALL_KEYS,
+        choices: [' '],
         prompt: texts[t],
       };
       instructionPages.push(currPage);

@@ -9,7 +9,7 @@ instructions[0] = [
     'Please listen to the instructions and read each page carefully.',
     'When you are ready to go to the next page,',
     'click on the red circle on the bottom right so that it turns green.',
-    'Then, press any key to continue.',
+    'Then, press the spacebar to continue.',
   ],
 ];
 
@@ -37,7 +37,7 @@ instructions[2] = [
     'For each choice, choose the left alien by pressing the 1 key ',
     ' and the right alien by pressing the 0 key. ',
     'The choice you make will be highlighted.',
-    'Click the red circle and press any key to move to the next page.',
+    'Click the red circle and press the spacebar to move to the next page.',
     'Then try practicing a few times by pressing 1 and 0.',
   ],
 ];
@@ -71,7 +71,7 @@ instructions[3] = [
 instructions[4] = [
   [
     'For example, the alien on the yellow planet has a good mine right now. ',
-    'Click the red circle and press any key to move to the next page. ',
+    'Click the red circle and press the spacebar to move to the next page. ',
     'Then, try asking it for treasure 10 times by pressing 1.',
   ],
   [
@@ -113,7 +113,7 @@ instructions[8] = [
   ],
   [
     'Remember, key 1 is for the left alien, and key 0 is for the right alien.',
-    ' Click the red circle and then press any key to start.',
+    'Click the red circle and then press the spacebar to start.',
   ],
 ];
 
