@@ -26,8 +26,10 @@ For questions about the task used by Nussenbaum et. al., please contact katenuss
 
 [Pavlovia](https://pavlovia.org/) integration was removed from all source code. A general cleanup of JavaScript source code.
 
-Remaining changes include:
+Other changes include:
 
 - Gorilla platform integration
   - Packaging of images, audio and CSV files
+  - Integration of `jspsych-wrapper` library
 - ESLint integration for code quality
+- Rocket images and backgrounds updated
