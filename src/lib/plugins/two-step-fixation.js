@@ -33,11 +33,17 @@ jsPsych.plugins['two-step-fixation'] = (() => {
         default: null,
         description: 'Any content here will be displayed on the background.',
       },
-      trial_duration: {
+      responseWindow: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Trial duration',
         default: null,
         description: 'How long to show trial before it ends.',
+      },
+      trialNumber: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Trial number',
+        default: undefined,
+        description: 'The trial ID associated with this fixation.',
       },
     },
   };
@@ -90,8 +96,9 @@ jsPsych.plugins['two-step-fixation'] = (() => {
 
       // Specify the data from the trial
       const trialData = {
-        'stimulus': trial.stimulus,
-        'trial_stage': 'fixation',
+        planetStimulus: trial.stimulus,
+        trialNumber: trial.trialNumber,
+        trialStage: 'fixation',
       };
 
       // Clear the contents of 'displayElement'
@@ -102,10 +109,10 @@ jsPsych.plugins['two-step-fixation'] = (() => {
     };
 
     // Configure a trial timeout and limit the duration
-    if (trial.trial_duration !== null) {
+    if (trial.responseWindow !== null) {
       jsPsych.pluginAPI.setTimeout(function() {
         endTrial();
-      }, trial.trial_duration);
+      }, trial.responseWindow);
     }
   };
 

@@ -96,15 +96,17 @@ experiment.load().then(() => {
       // Randomize sides of rockets for each subject
       if (rocketSides) {
         timelineVar[j].push({
-          right_text: 'rocket2',
-          left_text: 'rocket1',
+          rightStimulus: 'rocket2',
+          leftStimulus: 'rocket1',
           trial: trial,
+          trialNumber: i + 1,
         });
       } else {
         timelineVar[j].push({
-          right_text: 'rocket1',
-          left_text: 'rocket2',
+          rightStimulus: 'rocket1',
+          leftStimulus: 'rocket2',
           trial: trial,
+          trialNumber: i + 1,
         });
       }
       trial = trial + 1;
@@ -120,15 +122,17 @@ experiment.load().then(() => {
     // Randomize sides of rockets for each subject
     if (pracRocketSides) {
       practiceTimelineVar.push({
-        right_text: 'tutrocket2',
-        left_text: 'tutrocket1',
+        rightStimulus: 'tutrocket2',
+        leftStimulus: 'tutrocket1',
         trial: trial,
+        trialNumber: i + 1,
       });
     } else {
       practiceTimelineVar.push({
-        right_text: 'tutrocket1',
-        left_text: 'tutrocket2',
+        rightStimulus: 'tutrocket1',
+        leftStimulus: 'tutrocket2',
         trial: trial,
+        trialNumber: i + 1,
       });
     }
     trial = trial + 1;
@@ -153,18 +157,15 @@ experiment.load().then(() => {
         {
           // Instantiate the first choice
           type: 'two-step-choice',
-          trial_stage: '1',
+          trialStage: '1',
           choices: [keyLeft, keyRight],
-          planet_text: experiment.getStimuli().getImage('earth.png'),
-          right_text: jsPsych.timelineVariable('right_text'),
-          left_text: jsPsych.timelineVariable('left_text'),
+          planetStimulus: experiment.getStimuli().getImage('earth.png'),
+          rightStimulus: jsPsych.timelineVariable('rightStimulus'),
+          leftStimulus: jsPsych.timelineVariable('leftStimulus'),
+          trialNumber: jsPsych.timelineVariable('trialNumber'),
 
           // Specify if this is a practice trial or not
-          practice_trial: function() {
-            if (practice === false) {
-              return 'real';
-            }
-          },
+          isPractice: practice,
 
           // Define the 'on_start' callback
           on_start: function() {
@@ -182,11 +183,11 @@ experiment.load().then(() => {
             };
 
             // Calcuate the transition and then the second location
-            currStageTwo = calculateTransition(data.chosenText, practice);
+            currStageTwo = calculateTransition(data.chosenStimulus, practice);
             if (currStageTwo == null) {
               currStageTwo = [
-                data.right_text,
-                data.left_text,
+                data.rightStimulus,
+                data.leftStimulus,
                 experiment.getStimuli().getImage('earth.png'),
                 null,
               ];
@@ -194,20 +195,17 @@ experiment.load().then(() => {
           },
 
           // Specify a trial duration
-          trial_duration: timeChoice,
+          responseWindow: timeChoice,
         },
         {
           // Instantiate the second choice
           type: 'two-step-choice',
-          trial_stage: '2',
+          trialStage: '2',
           choices: [keyLeft, keyRight],
+          trialNumber: jsPsych.timelineVariable('trialNumber'),
 
           // Specify if this is a practice trial or not
-          practice_trial: () => {
-            if (practice === false) {
-              return 'real';
-            }
-          },
+          isPractice: practice,
 
           // Specify the trial data
           trialRow: () => {
@@ -215,32 +213,32 @@ experiment.load().then(() => {
           },
 
           // Specify the second planet
-          planet_text: () => {
+          planetStimulus: () => {
             return currStageTwo[2];
           },
 
           // Specify the left alien?
-          right_text: () => {
+          rightStimulus: () => {
             return currStageTwo[0];
           },
 
           // Specify the right alien?
-          left_text: () => {
+          leftStimulus: () => {
             return currStageTwo[1];
           },
 
           // Specify the reward outcome
-          center_text: () => {
+          centerStimulus: () => {
             return currStageTwo[3];
           },
 
           // Specify the transition type
-          transition_type: () => {
+          transitionType: () => {
             return currStageTwo[4];
           },
 
           // Specify a trial duration
-          trial_duration: () => {
+          responseWindow: () => {
             if (currStageTwo[3] == null) {
               return 0;
             } else {
@@ -250,7 +248,7 @@ experiment.load().then(() => {
 
           // Define the 'on_finish' callback
           on_finish: (data) => {
-            if (data.reward_text === rewardString) {
+            if (data.rewardStimulus === rewardString) {
               if (practice === false) {
                 experiment.setGlobalStateValue(
                     'realReward',
@@ -273,19 +271,19 @@ experiment.load().then(() => {
             }
 
             // Specify the transition type in the data
-            if (data.transition_type == true) {
+            if (data.transitionType == true) {
               data.transition = 'common';
             }
-            if (data.transition_type == false) {
+            if (data.transitionType == false) {
               data.transition = 'rare';
             }
 
             // Specify the reward outcome in the data
-            if (data.reward_text ==
+            if (data.rewardStimulus ==
                 experiment.getStimuli().getImage('t.png')) {
-              data.reward = 1;
+              data.wasRewarded = true;
             } else {
-              data.reward = 0;
+              data.wasRewarded = false;
             }
 
             // Store the timestamp
@@ -300,7 +298,8 @@ experiment.load().then(() => {
           type: 'two-step-fixation',
           stimulus: experiment.getStimuli().getImage('earth.png'),
           text: '+',
-          trial_duration: 1000,
+          responseWindow: 1000,
+          trialNumber: jsPsych.timelineVariable('trialNumber'),
         },
       ],
 
@@ -616,9 +615,9 @@ experiment.load().then(() => {
       currPage = {
         type: 'two-step-instructions',
         stimulus: image,
-        right_text: sectRightTexts[t],
-        left_text: sectLeftTexts[t],
-        center_text: sectCenterTexts[t],
+        rightStimulus: sectRightTexts[t],
+        leftStimulus: sectLeftTexts[t],
+        centerStimulus: sectCenterTexts[t],
         rewardString: sectRewardTexts[t],
         choices: [' '],
         prompt: texts[t],
@@ -647,17 +646,19 @@ experiment.load().then(() => {
   }
 
   // Create practice trials for selecting between aliens
-  for (let i = 0; i < (practicePressingNum - 1); i += 1) {
+  for (let i = 0; i < practicePressingNum - 1; i++) {
     currInstructions.splice(practicePressingIdx, 0, {
       type: 'two-step-choice',
       timeout: false,
       choices: [keyLeft, keyRight],
-      planet_text:
+      planetStimulus:
         experiment.getStimuli().getImage('tutgreenplanet.png'),
-      right_text: 'tutalien1',
-      left_text: 'tutalien2',
+      rightStimulus: 'tutalien1',
+      leftStimulus: 'tutalien2',
       prompt: ['Now try another one!'],
-      trial_duration: timeChoice,
+      responseWindow: timeChoice,
+      isPractice: true,
+      trialNumber: practicePressingNum - i,
     });
   }
 
@@ -665,10 +666,12 @@ experiment.load().then(() => {
     type: 'two-step-choice',
     timeout: false,
     choices: [keyLeft, keyRight],
-    planet_text: experiment.getStimuli().getImage('tutgreenplanet.png'),
-    right_text: 'tutalien1',
-    left_text: 'tutalien2',
-    trial_duration: timeChoice,
+    planetStimulus: experiment.getStimuli().getImage('tutgreenplanet.png'),
+    rightStimulus: 'tutalien1',
+    leftStimulus: 'tutalien2',
+    responseWindow: timeChoice,
+    isPractice: true,
+    trialNumber: 1,
   });
 
   // Create practice trials to select a single alien and view reward outcome
@@ -678,11 +681,12 @@ experiment.load().then(() => {
       timeout: false,
       trialRow: payoffReward,
       choices: [keyLeft, keyRight],
-      planet_text:
+      planetStimulus:
         experiment.getStimuli().getImage('tutyellowplanet.png'),
+      trialNumber: practiceRewardNum - i,
 
       // Right alien image
-      right_text: () => {
+      rightStimulus: () => {
         if (currSide === true) {
           return 'tutalien3';
         }
@@ -690,13 +694,14 @@ experiment.load().then(() => {
       },
 
       // Left alien image
-      left_text: () => {
+      leftStimulus: () => {
         if (currSide === true) {
           return null;
         }
         return 'tutalien3';
       },
-      trial_duration: timeChoice,
+      responseWindow: timeChoice,
+      isPractice: true,
     });
   }
 
@@ -707,11 +712,13 @@ experiment.load().then(() => {
       timeout: false,
       trialRow: payoffInstructions,
       choices: [keyLeft, keyRight],
-      planet_text:
+      planetStimulus:
         experiment.getStimuli().getImage('tutgreenplanet.png'),
-      right_text: 'tutalien1',
-      left_text: 'tutalien2',
-      trial_duration: timeChoice,
+      rightStimulus: 'tutalien1',
+      leftStimulus: 'tutalien2',
+      responseWindow: timeChoice,
+      isPractice: true,
+      trialNumber: practiceStochasticNum - i,
     });
   }
 
@@ -830,13 +837,13 @@ experiment.load().then(() => {
   // Question about the rockets
   expTimeline.push({
     type: 'two-step-choice',
-    trial_stage: '1',
+    trialStage: '1',
     choices: [keyLeft, keyRight],
-    planet_text:
+    planetStimulus:
       experiment.getStimuli().getImage('earth.png'),
-    right_text: rocketSides === true ? 'rocket1' : 'rocket2',
-    left_text: rocketSides === true ? 'rocket2' : 'rocket1',
-    practice_trial: 'real',
+    rightStimulus: rocketSides === true ? 'rocket1' : 'rocket2',
+    leftStimulus: rocketSides === true ? 'rocket2' : 'rocket1',
+    isPractice: false,
     prompt: [
       'Select the rocket you think went to the red planet most frequently.',
     ],
@@ -850,6 +857,7 @@ experiment.load().then(() => {
       };
       consola.info('data', data);
     },
+    trialNumber: 0,
   });
 
   // Finish

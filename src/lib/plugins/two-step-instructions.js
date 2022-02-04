@@ -45,17 +45,17 @@ jsPsych.plugins['two-step-instructions'] = (() => {
         default: null,
         description: 'The image to be displayed',
       },
-      right_text: {
+      rightStimulus: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false,
       },
-      left_text: {
+      leftStimulus: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false,
       },
-      center_text: {
+      centerStimulus: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false,
@@ -119,14 +119,14 @@ jsPsych.plugins['two-step-instructions'] = (() => {
     }
 
     // Append an image to the right side of the view
-    if (trial.right_text !== null) {
+    if (trial.rightStimulus !== null) {
       svg.append('svg:image')
           .attr('class', 'right')
           .attr('x', choiceXRight)
           .attr('y', choiceY)
           .attr('width', sizeMonster)
           .attr('height', sizeMonster)
-          .attr('xlink:href', trial.right_text);
+          .attr('xlink:href', trial.rightStimulus);
     }
 
     // Append the reward string to the view
@@ -140,23 +140,23 @@ jsPsych.plugins['two-step-instructions'] = (() => {
     }
 
     // Append text to the left side of the view
-    if (trial.left_text !== null) {
+    if (trial.leftStimulus !== null) {
       svg.append('svg:image')
           .attr('x', choiceXLeft)
           .attr('y', choiceY)
           .attr('width', sizeMonster)
           .attr('height', sizeMonster)
-          .attr('xlink:href', trial.left_text);
+          .attr('xlink:href', trial.leftStimulus);
     }
 
     // Append text to the center of the view
-    if (trial.center_text !== null) {
+    if (trial.centerStimulus !== null) {
       svg.append('svg:image')
           .attr('x', centerX - sizeMonster / 2)
           .attr('y', choiceY)
           .attr('width', sizeMonster)
           .attr('height', sizeMonster)
-          .attr('xlink:href', trial.center_text);
+          .attr('xlink:href', trial.centerStimulus);
     }
 
     // Append the continue button to the view
