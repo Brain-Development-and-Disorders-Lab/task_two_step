@@ -873,7 +873,6 @@ experiment.load().then(() => {
   )[0]);
 
   // Start the experiment
-  consola.info('Experiment timeline:', expTimeline);
   experiment.start({
     timeline: expTimeline,
   });
