@@ -15,7 +15,7 @@ export const practiceStochasticIdx =
 export const practiceStochasticNum = 10; // 10 trials practice choosing aliens
 export const practiceGameIdx =
   34 + practicePressingNum + practiceRewardNum + practiceStochasticNum;
-export const practiceGameNum = 20; // 20 trials to practice full game
+export const practiceGameCount = 20; // 20 trials to practice full game
 
 // Transition probability
 export const probability = 0.7;
@@ -26,7 +26,7 @@ export const keyLeft = '1'; // 1 at top of keyboard
 
 // Random variables
 export const rocketSides = Math.random() < 0.5;
-export const pracRocketSides = Math.random() < 0.5;
+export const practiceRocketSides = Math.random() < 0.5;
 export const displayOrderRed = Math.random() < 0.5;
 export const displayOrderPurple = Math.random() < 0.5;
 export const displayOrderGreen = Math.random() < 0.5;

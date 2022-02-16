@@ -27,6 +27,8 @@ import {
   timeTransition,
   timeFlash,
   timeMoney,
+  keyLeft,
+  keyRight,
 } from '../variables';
 
 // Display variables
@@ -91,7 +93,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
         type: jsPsych.plugins.parameterType.KEYCODE,
         array: true,
         pretty_name: 'Choices',
-        default: ['1', '0'],
+        default: [keyLeft, keyRight],
         description: 'The keys the subject is allowed to ' +
             'press to respond to the stimulus.',
       },
