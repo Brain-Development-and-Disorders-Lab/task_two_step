@@ -2,7 +2,7 @@
  * Configure the experiment and create the timeline
  */
 // Logging library
-import consola, {LogLevel} from 'consola';
+import consola from 'consola';
 
 // Wrapper library
 import {Experiment} from 'jspsych-wrapper';
@@ -63,20 +63,7 @@ import probData from './data/masterprob4.csv';
 import './css/styles.css';
 
 // Instantiate the Experiment wrapper class
-export const experiment = new Experiment({
-  name: 'Two-step game',
-  studyName: 'task_twostep',
-  manipulations: {},
-  stimuli: configuration.stimuli,
-  seed: '',
-  allowParticipantContact: false,
-  contact: 'henry.burgess@wustl.edu',
-  logging: LogLevel.Verbose,
-  state: {
-    practiceReward: 0,
-    realReward: 0,
-  },
-});
+export const experiment = new Experiment(configuration);
 
 consola.info(`Experiment loaded, continuing...`);
 
@@ -144,7 +131,7 @@ let currStageTwo = [];
  * @param {any} currVariables variables
  * @param {any} currProbData probability data related to the
  * trials of the block
- * @param {boolean} practice whether or not the block of trials
+ * @param {Boolean} practice whether or not the block of trials
  * are practice trials
  * @return {any} ?
  */
@@ -312,7 +299,7 @@ const createBlock = (currVariables, currProbData, practice) => {
 /**
  * calculateTransition function
  * @param {string} chosenString chosenString
- * @param {boolean} practice practice
+ * @param {Boolean} practice practice
  * @return {any}
  */
 const calculateTransition = (chosenString, practice) => {

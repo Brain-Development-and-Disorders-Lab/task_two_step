@@ -19,16 +19,10 @@ module.exports = {
         publicPath: '/images',
       },
     ],
-    // Required public path for assets
     hot: true,
   },
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'babel-loader',
-        exclude: /node_modules/,
-      },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
