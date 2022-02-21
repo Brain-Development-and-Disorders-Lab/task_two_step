@@ -1,7 +1,14 @@
 /**
- * Images used throughout the experiment
+ * Configuration for the experiment
  */
+
+// 'LogLevel' attribute to configure logging
+import {LogLevel} from 'consola';
+
 export const configuration = {
+  name: 'Two-step game',
+  studyName: 'task_twostep',
+  manipulations: {},
   stimuli: {
     // Alien 1, main
     'alien1_a1.png': 'images/aliens/1/alien1_a1.png',
@@ -99,5 +106,13 @@ export const configuration = {
     'button.jpeg': 'images/button.jpeg',
     'nothing.png': 'images/nothing.png',
     't.png': 'images/t.png',
+  },
+  seed: '',
+  allowParticipantContact: false,
+  contact: 'henry.burgess@wustl.edu',
+  logging: LogLevel.Verbose,
+  state: {
+    practiceReward: 0,
+    realReward: 0,
   },
 };

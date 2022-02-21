@@ -6,7 +6,7 @@ export const instructions = [];
 // Black (starting) background
 instructions[0] = [
   [
-    'Please listen to the instructions and read each page carefully.',
+    'Please read each page of the instructions carefully.',
     'When you are ready to go to the next page,',
     'click on the red circle on the bottom right so that it turns green.',
     'Then, press the spacebar to continue.',

@@ -17,7 +17,7 @@
     "d3": "^7.2.1",
     "jspsych": "^6.0.0",
     "jspsych-attention-check": "^1.4.2",
-    "jspsych-wrapper": "file:packages/jspsych-wrapper-v0.1.1.tgz"
+    "jspsych-wrapper": "file:packages/jspsych-wrapper-v0.2.3.tgz"
   },
   "devDependencies": {
     "babel-loader": "^8.2.3",
