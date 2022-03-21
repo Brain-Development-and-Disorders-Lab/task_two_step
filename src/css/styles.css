@@ -129,3 +129,9 @@ svg {
   height: 100%;
   width: 100%;
 }
+
+/* Gorilla style overrides */
+h1, h2 {
+  font-weight: bold;
+  letter-spacing: normal;
+}

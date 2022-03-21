@@ -110,7 +110,7 @@ export const configuration = {
   seed: '',
   allowParticipantContact: false,
   contact: 'henry.burgess@wustl.edu',
-  logging: LogLevel.Verbose,
+  logging: LogLevel.Warn,
   state: {
     practiceReward: 0,
     realReward: 0,
