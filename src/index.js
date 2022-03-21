@@ -72,8 +72,8 @@ const timelineVariables = [];
 let trialRow = 0;
 
 // Reward and no reward stimuli
-const rewardString = experiment.getStimuli().getImage('t.png');
-const nullString = experiment.getStimuli().getImage('nothing.png');
+const rewardImage = experiment.getStimuli().getImage('t.png');
+const nullImage = experiment.getStimuli().getImage('nothing.png');
 
 // Set the rocket configuration in the main trials
 for (let j = 0; j < blockCount; j++) {
@@ -235,7 +235,7 @@ const createBlock = (variables, probabilityData, isPractice) => {
 
         // Define the 'on_finish' callback
         on_finish: (data) => {
-          if (data.rewardStimulus === rewardString) {
+          if (data.rewardStimulus === rewardImage) {
             if (isPractice === false) {
               experiment.setGlobalStateValue(
                   'realReward',
@@ -477,8 +477,8 @@ for (let i = 0; i < instructions.length; i += 1) {
 }
 
 // Reward and no reward images
-imagesReward[3][0] = rewardString;
-imagesReward[3][1] = nullString;
+imagesReward[3][0] = rewardImage;
+imagesReward[3][1] = nullImage;
 
 // Center images
 imagesCenter[4][0] =
@@ -605,7 +605,7 @@ const createInstructions = (
       rightStimulus: rightText[t],
       leftStimulus: leftText[t],
       centerStimulus: centerText[t],
-      rewardString: rewardText[t],
+      rewardImage: rewardText[t],
       choices: [' '],
       prompt: prompts[t],
     };
