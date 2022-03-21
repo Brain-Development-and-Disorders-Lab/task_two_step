@@ -19,10 +19,10 @@ import {
   keyLeft,
   keyRight,
   redPlanetFirstRocket,
-  // displayOrderRed,
-  // displayOrderGreen,
-  // displayOrderYellow,
-  // displayOrderPurple,
+  displayOrderRed,
+  displayOrderGreen,
+  displayOrderYellow,
+  displayOrderPurple,
   probability,
   practicePressingNum,
   practicePressingIdx,
@@ -349,11 +349,12 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
       }
     }
 
-    let displayOrder = (1);
+    let displayOrder = true;
     if (planet === 'red') {
-      // if (calculateTransition==false) {
-      //   displayOrder = displayOrderRed;
-      // }
+      // Counter-balancing only enabled in non-practice trials
+      if (practice === false) {
+        displayOrder = displayOrderRed;
+      }
 
       if (displayOrder) {
         return [
@@ -373,9 +374,10 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
         ];
       }
     } else if (planet === 'purple') {
-      // if (calculateTransition==false) {
-      //   displayOrder = displayOrderPurple;
-      // }
+      // Counter-balancing only enabled in non-practice trials
+      if (practice === false) {
+        displayOrder = displayOrderPurple;
+      }
 
       if (displayOrder) {
         return [
@@ -395,9 +397,10 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
         ];
       }
     } else if (planet === 'green') {
-      // if (calculateTransition==false) {
-      //   displayOrder = displayOrderGreen;
-      // }
+      // Counter-balancing only enabled in non-practice trials
+      if (practice === false) {
+        displayOrder = displayOrderGreen;
+      }
 
       if (displayOrder) {
         return [
@@ -417,9 +420,10 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
         ];
       }
     } else if (planet === 'yellow') {
-      // if (calculateTransition==false) {
-      //   displayOrder = displayOrderYellow;
-      // }
+      // Counter-balancing only enabled in non-practice trials
+      if (practice === false) {
+        displayOrder = displayOrderYellow;
+      }
 
       if (displayOrder) {
         return [
@@ -718,7 +722,7 @@ currentInstructions.splice(practiceGameIdx, 0,
 // Question 1
 currentInstructions.splice(currentInstructions.length - 1, 0, {
   type: 'attention-check',
-  question: 'True or False: Each spaceship always flies to the same planet.',
+  prompt: 'True or False: Each spaceship always flies to the same planet.',
   options: [
     'True',
     'False',
@@ -735,7 +739,7 @@ currentInstructions.splice(currentInstructions.length - 1, 0, {
 // Question 2
 currentInstructions.splice(currentInstructions.length - 1, 0, {
   type: 'attention-check',
-  question:
+  prompt:
     'True or False: If an alien has a lot of treasure to share now, ' +
     'then they will probably have a lot of treasure to share in the ' +
     'near future.',
@@ -754,7 +758,7 @@ currentInstructions.splice(currentInstructions.length - 1, 0, {
 // Question 3
 currentInstructions.splice(currentInstructions.length - 1, 0, {
   type: 'attention-check',
-  question:
+  prompt:
     'True or False: You will have as much time as ' +
     'you want to make each choice.',
   options: [
