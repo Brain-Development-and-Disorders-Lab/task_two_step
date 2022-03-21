@@ -14,7 +14,7 @@ instructions[0] = [
     'Please read each page of the instructions carefully.',
     'When you are ready to go to the next page,',
     'click on the red circle on the bottom right so that it turns green.',
-    'Then, press the spacebar to continue.',
+    'Once the circle is green, press the spacebar to continue.',
   ],
 ];
 
@@ -31,57 +31,54 @@ instructions[1] = [
 instructions[2] = [
   [
     'Each planet has two aliens on it. ',
-    'Each alien has its own space treasure mine.',
+    'Each alien runs a space treasure mine.',
   ],
   [
-    'On each planet, you will pick one alien to ask for space treasure. ',
-    'These aliens are nice, so if an alien just brought treasure ',
-    'up from the mine, it will share it with you.',
+    'On each planet, you must ask one alien to share their space treasure with you. ',
+    'These aliens are nice, so if an alien just found treasure ',
+    'in their mine, it will share it with you.',
   ],
   [
-    'For each choice, choose the left alien by pressing the 1 key ',
-    ' and the right alien by pressing the 0 key. ',
+    'Choose the left alien by pressing the \'1\' key ',
+    ' and the right alien by pressing the \'0\' key. ',
     'The choice you make will be highlighted.',
-    'Click the red circle and press the spacebar to move to the next page.',
-    'Then try practicing a few times by pressing 1 and 0.',
+    'You have an opportunity to practice selecting aliens now.',
+    'Click the red circle and press the spacebar to continue.',
   ],
 ];
 
 // Black background
 instructions[3] = [
   [
-    'After you choose an alien, you will find out whether you got treasure.',
+    'After you choose an alien, you will find out if they have treasure to share.',
     'The treasure looks like this:',
   ],
   [
-    'If the alien couldn\'t bring treasure up this time ' +
+    'If the alien doesn\'t have treasure this time ' +
         'you\'ll see an empty circle.',
     'The circle looks like this:',
   ],
   [
-    'If an alien has a good mine that means it can easily dig up space ',
-    'treasure and it will be very likely to have some to share.',
+    'If an alien has a good mine it will often have treasure to share. ',
+    'It might not have treasure EVERY time you ask, but it will have ' +
+        'treasure most of the time.',
   ],
   [
-    'It might not have treasure EVERY time you ask, but it will most ' +
-        'of the time.',
-    'Another alien might have a bad mine that is hard to dig through ' +
-        'at the moment,',
-    ' and won\'t have treasure to share most times ' +
-        'you ask.',
+    'Another alien might have a bad mine at the moment',
+    'and won\'t have treasure to share most times you ask.',
   ],
 ];
 
 // Yellow alien
 instructions[4] = [
   [
-    'For example, the alien on the yellow planet has a good mine right now. ',
-    'Click the red circle and press the spacebar to move to the next page. ',
-    'Then, try asking it for treasure 10 times by pressing 1.',
+    'For example, this alien on the yellow planet has a good mine right now. ',
+    'You can now ask it for treasure 10 times by pressing \'1\'.',
+    'Click the red circle and press the spacebar to continue.',
   ],
   [
-    'See, this alien shared treasure most of the times you asked, ',
-    ' but not every time.  ',
+    'See, this alien shared treasure most of the times you asked,',
+    'but maybe not every time.',
   ],
 ];
 
@@ -89,15 +86,15 @@ instructions[4] = [
 instructions[5] = [
   [
     'Every alien has treasure in its mine, but they can\'t share every time.',
-    ' Some will be more likely to share because it is easier to dig right now.',
+    'Some aliens will share because treasure is easier to dig up right now.',
   ],
 ];
 
 // One alien to the right
 instructions[6] = [
   [
-    'Next, you can choose between two aliens ',
-    ' and try to figure out which one has more treasure to share.',
+    'Now, you can choose between two aliens',
+    'and figure out which alien has more treasure to share.',
   ],
 ];
 
@@ -109,82 +106,79 @@ instructions[7] = [
 // Black background
 instructions[8] = [
   [
-    'Which side an alien appears on does not matter.',
-    'For instance, left is not luckier than right.',
+    'It does not matter which side an alien appears on.',
+    'For example: left is not luckier than right.',
   ],
   [
-    'You can practice choosing now.',
+    'You can practice choosing between the aliens now.',
     'You have 10 choices to try to figure out which alien has a good mine.',
   ],
   [
-    'Remember, key 1 is for the left alien, and key 0 is for the right alien.',
-    'Click the red circle and then press the spacebar to start.',
+    'Remember, press \'1\' to choose the left alien, or press key \'0\' to',
+    'choose the right alien.',
+    'Click the red circle and then press the spacebar to continue.',
   ],
 ];
 
 // Black background
 instructions[9] = [
   [
-    'Good. You might have learned that this alien had treasure more often. ',
-    ' Also, even if this alien had a better mine, ',
-    ' you couldn\'t be sure if it had treasure all the time.',
+    'You may have learned that this alien had treasure more often.',
+    'Even if this alien had a better mine,',
+    'you couldn\'t be sure if it had treasure all the time.',
   ],
   [
-    'Each alien is like a game of chance, you can never be sure but ' +
-        'you can guess.',
-  ],
-  [
+    'Each alien is like a game of chance, you can never be sure but',
+    'you can guess.',
     'The treasure an alien can give will change during the game. ',
   ],
   [
-    'Those with a good mine might get to a part of the mine that is ' +
-        'hard to dig. ',
-    ' Those with little to share might find easier treasure to dig. ',
-    ' Any changes in an alien\'s mine will happen slowly, ',
-    ' so try to focus to get as much treasure as possible.',
+    'An alien with a good mine may dig in a part of their mine that has ' +
+        'little treasure. ',
+    'Another alien with little treasure may find a lot of treasure.',
   ],
   [
-    'While the chance an alien has treasure to share changes over time, ',
-    ' it changes slowly.  ',
+    'Any changes in an alien\'s mine will happen slowly, ',
+    'so try to focus on getting as much treasure as possible.',
   ],
   [
-    'So an alien with a good treasure mine right now will stay good for ' +
-        'a while. ',
-    ' To find the alien with the best mine at each point in time, ',
-    ' you must concentrate. ',
+    'So an alien with a good treasure mine right now will',
+    'continue to stay good for a while.',
+    'To find the alien with the best mine at each point in time,',
+    'you must concentrate.',
   ],
 ];
 
 // Rockets
 instructions[10] = [
   [
-    'Now that you know how to pick aliens, you can learn to play ' +
-    'the whole game. ',
-    'You will travel from earth to one of two planets.',
+    'Now that you know have practiced choosing aliens, you can',
+    'learn to play the entire game.',
+    'In the game, you will travel from earth to one of two planets.',
   ],
 ];
 
 // Green planet
 instructions[11] = [
-  ['Here is the green planet'],
+  ['This is the green planet.'],
 ];
 
 // Yellow planet
 instructions[12] = [
-  ['And here is the yellow planet'],
+  ['This is the yellow planet.'],
 ];
 
 // Rockets
 instructions[13] = [
   [
-    'First you need to choose which spaceship to take.',
+    'First, you need to choose which spaceship to take.',
     'The spaceships can fly to either planet, but one will fly mostly',
     'to the green planet, and the other mostly to the yellow planet.',
   ],
   [
     'The planet a spaceship goes to most won\'t change during the game.',
-    'Pick the one that you think will take you to the alien',
-    'with the best mine, but remember, sometimes you\'ll ' +
+    'Choose the spaceship that you think will take you to the alien',
+    'with the best mine, but remember, sometimes you\'ll',
     'go to the other planet!',
   ],
 ];
@@ -192,14 +186,14 @@ instructions[13] = [
 // Rockets
 instructions[14] = [
   [
-    'Let\'s practice before doing the full game.',
-    'Remember, you want to find as much space treasure as you can',
-    'by asking an alien to share with you.',
+    'Let\'s practice choosing spaceships before doing the full game.',
+    'Remember, you still want to find as much space treasure as you can',
+    'by asking an alien to share their treasure with you.',
   ],
   [
     'The aliens share somewhat randomly,',
-    'but you can find the one with the best mine at any point in the game',
-    'by asking it to share!  ',
+    'but you can find the alien with the best mine at any point',
+    'in the game by asking it to share!',
   ],
   [
     'How much bonus money you make is based on how much space treasure ' +
