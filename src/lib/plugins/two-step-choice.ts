@@ -51,7 +51,14 @@ import {
 } from '../display';
 
 jsPsych.plugins['two-step-choice'] = (() => {
-  const plugin = {};
+  const plugin = {
+    info: {},
+    trial: (displayElement: HTMLElement, trial: any) => {
+      consola.debug(`displayElement:`, displayElement);
+      consola.debug(`trial:`, trial);
+      consola.error(`Plugin trial not defined!`);
+    }
+  };
 
   plugin.info = {
     name: 'two-step-choice',
@@ -142,11 +149,11 @@ jsPsych.plugins['two-step-choice'] = (() => {
     let movePossible = true;
     let chosenStimulus = '';
     let unchosenStimulus = '';
-    let imageLeft = '';
-    let imageCenter = '';
-    let imageRight = '';
-    let imageChosen = '';
-    let imageUnchosen = '';
+    let imageLeft: any;
+    let imageCenter: any;
+    let imageRight: any;
+    let imageChosen: any;
+    let imageUnchosen: any;
 
     // Render all specified elements to the view
     // SVG container
@@ -263,7 +270,10 @@ jsPsych.plugins['two-step-choice'] = (() => {
     };
 
     // Create a group of responses
-    const responses = {
+    const responses: {
+      rt: any[],
+      key: any[]
+    } = {
       rt: [],
       key: [],
     };
@@ -338,7 +348,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
      * @param {any} info data object containing the reaction
      * time (rt) and the key code of the key pressed
      */
-    const afterResponse = (info) => {
+    const afterResponse = (info: any) => {
       // Record the key response, if a valid key has been pressed
       if (trial.choices.includes(info.key)) {
         // Add the first response
@@ -403,7 +413,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
                     let frames = 0;
                     let currentImage;
 
-                    const transition = interval((elapsed) => {
+                    const transition = interval(() => {
                       // Update the image every two frames
                       if ((frames % 2) === 0) {
                         currentImage = chosenStimulus + '_a1.png';
@@ -434,7 +444,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
                               .attr('width', sizeReward)
                               .attr('height', sizeReward)
                               .attr('xlink:href', trial.rewardStimulus);
-                          interval((elapsed) => {}, timeMoney);
+                          interval(() => {}, timeMoney);
                         }
 
                         transition.stop();
@@ -463,7 +473,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
                   let frames = 0;
                   let currentImage;
 
-                  const transition = interval((elapsed) => {
+                  const transition = interval(() => {
                     // Update the image every two frames
                     if ((frames % 2) === 0) {
                       currentImage = chosenStimulus+'_a1.png';
@@ -492,7 +502,7 @@ jsPsych.plugins['two-step-choice'] = (() => {
                             .attr('width', sizeReward)
                             .attr('height', sizeReward)
                             .attr('xlink:href', trial.rewardStimulus);
-                        interval((elapsed) => {}, timeMoney);
+                        interval(() => {}, timeMoney);
                       }
 
                       transition.stop();
@@ -558,12 +568,12 @@ jsPsych.plugins['two-step-choice'] = (() => {
    * @param {any} trialRow data for the trial
    * @return {string}
    */
-  const calculateReward = (chosenString, trialRow) => {
+  const calculateReward = (chosenString: string, trialRow: any) => {
     if (chosenString == '') {
       return null;
     } else {
-      const alien = (chosenString.slice(-1) % 2);
-      const state = +(chosenString.slice(-1) > 2);
+      const alien = parseInt(chosenString.slice(-1)) % 2;
+      const state = +(parseInt(chosenString.slice(-1)) > 2);
 
       let reward = false;
       if (state == 0) {

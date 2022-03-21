@@ -15,7 +15,14 @@ import {select} from 'd3';
 import {width, height, centerX, centerY, sizeFont} from '../display';
 
 jsPsych.plugins['two-step-fixation'] = (() => {
-  const plugin = {};
+  const plugin = {
+    info: {},
+    trial: (displayElement: HTMLElement, trial: any) => {
+      consola.debug(`displayElement:`, displayElement);
+      consola.debug(`trial:`, trial);
+      consola.error(`Plugin trial not defined!`);
+    }
+  };
 
   plugin.info = {
     name: 'two-step-fixation',

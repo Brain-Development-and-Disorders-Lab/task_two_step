@@ -2,11 +2,12 @@
   "name": "task_twostep",
   "version": "0.0.1",
   "description": "Two-step task, an adaptation of the task used by Nussenbaum, K. et. al. (2020).",
-  "main": "dist/index.js",
   "repository": "https://henry-burgess@github.com/Brain-Development-and-Disorders-Lab/task_twostep.git",
   "author": "Henry Burgess <henry.burgess@wustl.edu>",
   "license": "CC-BY-4.0",
   "private": true,
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "build": "webpack && gulp images",
     "dev": "webpack serve",
@@ -31,6 +32,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.8",
+    "typescript": "^4.6.2",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.2"

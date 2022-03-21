@@ -33,7 +33,14 @@ import {
 } from '../display';
 
 jsPsych.plugins['two-step-instructions'] = (() => {
-  const plugin = {};
+  const plugin = {
+    info: {},
+    trial: (displayElement: HTMLElement, trial: any) => {
+      consola.debug(`displayElement:`, displayElement);
+      consola.debug(`trial:`, trial);
+      consola.error(`Plugin trial not defined!`);
+    }
+  };
 
   plugin.info = {
     name: 'two-step-instructions',
@@ -60,7 +67,7 @@ jsPsych.plugins['two-step-instructions'] = (() => {
         default: null,
         array: false,
       },
-      rewardString: {
+      rewardImage: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false,
@@ -130,13 +137,13 @@ jsPsych.plugins['two-step-instructions'] = (() => {
     }
 
     // Append the reward string to the view
-    if (trial.rewardString !== null) {
+    if (trial.rewardImage !== null) {
       svg.append('svg:image')
           .attr('x', centerX - sizeReward / 2)
           .attr('y', choiceY)
           .attr('width', sizeReward)
           .attr('height', sizeReward)
-          .attr('xlink:href', trial.rewardString);
+          .attr('xlink:href', trial.rewardImage);
     }
 
     // Append text to the left side of the view
@@ -206,11 +213,6 @@ jsPsych.plugins['two-step-instructions'] = (() => {
 
       // Clear any existing 'setTimeout' instances
       jsPsych.pluginAPI.clearAllTimeouts();
-
-      // Clear any existing keyboard listeners
-      if (typeof keyboardListener !== 'undefined') {
-        jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-      }
 
       // Clear the contents of 'displayElement'
       displayElement.innerHTML = '';

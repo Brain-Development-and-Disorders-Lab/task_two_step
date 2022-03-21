@@ -7,8 +7,8 @@ export const height = window.innerHeight;
 export const width = window.innerWidth;
 
 // Overall scaling and picture sizing
-export let pictureHeight;
-export let pictureWidth;
+export let pictureHeight: number;
+export let pictureWidth: number;
 if (window.innerWidth / window.innerHeight < 1.34) {
   pictureHeight = window.innerWidth / 1.34;
   pictureWidth = window.innerWidth;

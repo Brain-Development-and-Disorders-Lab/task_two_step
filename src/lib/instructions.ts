@@ -1,7 +1,7 @@
 /**
  * Generate and export the instructions for the task
  */
-export const instructions = [];
+export const instructions: any[][] = [];
 
 // Black (starting) background
 instructions[0] = [

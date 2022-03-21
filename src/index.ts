@@ -19,10 +19,10 @@ import {
   keyLeft,
   keyRight,
   redPlanetFirstRocket,
-  displayOrderRed,
-  displayOrderGreen,
-  displayOrderYellow,
-  displayOrderPurple,
+  // displayOrderRed,
+  // displayOrderGreen,
+  // displayOrderYellow,
+  // displayOrderPurple,
   probability,
   practicePressingNum,
   practicePressingIdx,
@@ -68,7 +68,7 @@ export const experiment = new Experiment(configuration);
 consola.info(`Experiment loaded, continuing...`);
 
 // Instantiate the timeline variables for the main trials
-const timelineVariables = [];
+const timelineVariables: any[][] = [];
 let trialRow = 0;
 
 // Reward and no reward stimuli
@@ -124,7 +124,7 @@ for (let i = 0; i < practiceGameCount; i++) {
   trialRow++;
 };
 
-let currStageTwo = [];
+let currStageTwo: any[] | null = [];
 
 /**
  * createBlock function
@@ -136,7 +136,7 @@ let currStageTwo = [];
  * @return {any} three-stage grouping, including first decision,
  * second decision, and fixation cross
  */
-const createBlock = (variables, probabilityData, isPractice) => {
+const createBlock = (variables: any[], probabilityData: { [x: string]: any; }, isPractice: boolean) => {
   // Create the generic experimental procedure for a single trial.
   // Consists of the first and second choices.
   const procedure = {
@@ -160,7 +160,7 @@ const createBlock = (variables, probabilityData, isPractice) => {
         },
 
         // Define the 'on_start' callback
-        on_finish: function(data) {
+        on_finish: function(data: any) {
           // Specify the choice made in the data
           if (data.key_press == keyLeft) {
             data.choice = 1;
@@ -201,32 +201,32 @@ const createBlock = (variables, probabilityData, isPractice) => {
 
         // Specify the second planet
         planetStimulus: () => {
-          return currStageTwo[2];
+          if (currStageTwo) return currStageTwo[2];
         },
 
         // Specify the left alien?
         rightStimulus: () => {
-          return currStageTwo[0];
+          if (currStageTwo) return currStageTwo[0];
         },
 
         // Specify the right alien?
         leftStimulus: () => {
-          return currStageTwo[1];
+          if (currStageTwo) return currStageTwo[1];
         },
 
         // Specify the reward outcome
         centerStimulus: () => {
-          return currStageTwo[3];
+          if (currStageTwo) return currStageTwo[3];
         },
 
         // Specify the transition type
         transitionType: () => {
-          return currStageTwo[4];
+          if (currStageTwo) return currStageTwo[4];
         },
 
         // Specify a trial duration
         responseWindow: () => {
-          if (currStageTwo[3] == null) {
+          if (currStageTwo && currStageTwo[3] == null) {
             return 0;
           } else {
             return timeChoice;
@@ -234,7 +234,7 @@ const createBlock = (variables, probabilityData, isPractice) => {
         },
 
         // Define the 'on_finish' callback
-        on_finish: (data) => {
+        on_finish: (data: any) => {
           if (data.rewardStimulus === rewardImage) {
             if (isPractice === false) {
               experiment.setGlobalStateValue(
@@ -300,10 +300,10 @@ const createBlock = (variables, probabilityData, isPractice) => {
 /**
  * calculateTransition function
  * @param {string} chosenString chosenString
- * @param {Boolean} practice practice
+ * @param {boolean} practice practice
  * @return {any}
  */
-const calculateTransition = (chosenString, practice) => {
+const calculateTransition = (chosenString: string, practice: boolean) => {
   let firstPlanet = '';
   let secondPlanet = '';
 
@@ -317,7 +317,8 @@ const calculateTransition = (chosenString, practice) => {
       firstPlanet = 'red';
       secondPlanet = 'purple';
     }
-    const firstShipChosen = (chosenString.slice(-1) == 1);
+
+    const firstShipChosen = chosenString.slice(-1) === '1';
     const goodTransition = (Math.random() < probability);
 
     // Determine the resulting planet
@@ -350,9 +351,9 @@ const calculateTransition = (chosenString, practice) => {
 
     let displayOrder = (1);
     if (planet === 'red') {
-      if (calculateTransition==false) {
-        displayOrder = displayOrderRed;
-      }
+      // if (calculateTransition==false) {
+      //   displayOrder = displayOrderRed;
+      // }
 
       if (displayOrder) {
         return [
@@ -372,9 +373,9 @@ const calculateTransition = (chosenString, practice) => {
         ];
       }
     } else if (planet === 'purple') {
-      if (calculateTransition==false) {
-        displayOrder = displayOrderPurple;
-      }
+      // if (calculateTransition==false) {
+      //   displayOrder = displayOrderPurple;
+      // }
 
       if (displayOrder) {
         return [
@@ -394,9 +395,9 @@ const calculateTransition = (chosenString, practice) => {
         ];
       }
     } else if (planet === 'green') {
-      if (calculateTransition==false) {
-        displayOrder = displayOrderGreen;
-      }
+      // if (calculateTransition==false) {
+      //   displayOrder = displayOrderGreen;
+      // }
 
       if (displayOrder) {
         return [
@@ -416,9 +417,9 @@ const calculateTransition = (chosenString, practice) => {
         ];
       }
     } else if (planet === 'yellow') {
-      if (calculateTransition==false) {
-        displayOrder = displayOrderYellow;
-      }
+      // if (calculateTransition==false) {
+      //   displayOrder = displayOrderYellow;
+      // }
 
       if (displayOrder) {
         return [
@@ -448,16 +449,16 @@ const calculateTransition = (chosenString, practice) => {
 let expTimeline = [];
 
 // Prepare the resource collections
-const imagesLeft = [];
-const imagesRight = [];
-const imagesCenter = [];
-const imagesReward = [];
-const filesAudio = [];
-const imagesButton = [];
+const imagesLeft: any[][] = [];
+const imagesRight: any[][] = [];
+const imagesCenter: any[][] = [];
+const imagesReward: any[][] = [];
+const filesAudio: any[][] = [];
+const imagesButton: any[][] = [];
 
 // Instantiate the resource collections that accompany each
 // page of instructions
-let currentInstructions;
+let currentInstructions: any[];
 for (let i = 0; i < instructions.length; i += 1) {
   currentInstructions = instructions[i];
   imagesLeft[i] = [];
@@ -576,14 +577,14 @@ const instructionsBackgrounds = [
   experiment.getStimuli().getImage('blackbackground.jpg'),
 ];
 
-let t;
-let currentPage;
-let currentSide;
+let t: number;
+let currentPage: any;
+let currentSide: boolean;
 
 /**
  * Utility function to assemble instructions, combining text and images
  * @param {string} image stimulus
- * @param {string[]} prompts main prompt used
+ * @param {string[][]} prompts main prompt used
  * @param {string[]} rightText right stimulus
  * @param {string[]} leftText left stimulus
  * @param {string[]} centerText center stimulus
@@ -591,9 +592,9 @@ let currentSide;
  * @return {any[]}
  */
 const createInstructions = (
-    image, prompts, rightText,
-    leftText, centerText, rewardText,
-)=> {
+    image: string, prompts: string[][], rightText: string[],
+    leftText: string[], centerText: string[], rewardText: string[],
+) => {
   // Instantitate and create the pages of the instructions
   const instructionPages = [];
   for (t = 0; t < prompts.length; t += 1) {
@@ -627,7 +628,7 @@ for (let i = 0; i < instructions.length; i++) {
           imagesLeft[i],
           imagesCenter[i],
           imagesReward[i],
-          imagesButton[i],
+          // imagesButton[i],
       ),
   );
 }
@@ -834,7 +835,7 @@ expTimeline.push({
   prompt: [
     'Select the rocket you think went to the red planet most frequently.',
   ],
-  on_finish: (data) => {
+  on_finish: (data: any) => {
     // Store the keypresses
     if (data.key_press === keyLeft) {
       data.choice = 1;
