@@ -1,7 +1,11 @@
 /**
+ * The jsPsych version of the task was originally coded by the Niv Lab (https://nivlab.princeton.edu/)
+ * at Princeton, adapted by the Hartley Lab (https://www.hartleylab.org/) at NYU for use online
+ * with children, adolescents, and adults, and adapted here by the Brain Development and Disorders Lab
+ * (https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
+ * 
  * Functions and constants that handle display sizing
  */
-// Beware: multiple 'magic' numbers in this file
 // Global position variables
 export const height = window.innerHeight;
 export const width = window.innerWidth;
