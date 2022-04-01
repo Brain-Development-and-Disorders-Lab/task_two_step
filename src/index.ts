@@ -3,14 +3,14 @@
  * at Princeton, adapted by the Hartley Lab (https://www.hartleylab.org/) at NYU for use online
  * with children, adolescents, and adults, and adapted here by the Brain Development and Disorders Lab
  * (https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
- * 
+ *
  * Configure the experiment and create the timeline
  */
 // Logging library
-import consola from 'consola';
+import consola from "consola";
 
 // Wrapper library
-import {Experiment} from 'jspsych-wrapper';
+import { Experiment } from "jspsych-wrapper";
 
 // Experiment variables
 import {
@@ -37,7 +37,7 @@ import {
   practiceStochasticNum,
   practiceStochasticIdx,
   payoffInstructions,
-} from './lib/variables';
+} from "./lib/variables";
 
 // Import the instructions
 import {
@@ -45,27 +45,27 @@ import {
   instructions,
   secondBreak,
   thirdBreak,
-} from './lib/instructions';
+} from "./lib/instructions";
 
 // Configuration
-import {configuration} from './configuration';
+import { configuration } from "./configuration";
 
 // General jsPsych imports
-import 'jspsych';
-import 'jspsych/plugins/jspsych-preload';
-import 'jspsych-attention-check';
+import "jspsych";
+import "jspsych/plugins/jspsych-preload";
+import "jspsych-attention-check";
 
 // Import all our plugins
-import './lib/plugins/two-step-choice';
-import './lib/plugins/two-step-instructions';
-import './lib/plugins/two-step-fixation';
+import "./lib/plugins/two-step-choice";
+import "./lib/plugins/two-step-instructions";
+import "./lib/plugins/two-step-fixation";
 
 // Import the data
-import practiceProbabilityData from './data/masterprobtut.csv';
-import probabilityData from './data/masterprob4.csv';
+import practiceProbabilityData from "./data/masterprobtut.csv";
+import probabilityData from "./data/masterprob4.csv";
 
 // Styling
-import './css/styles.css';
+import "./css/styles.css";
 
 // Instantiate the Experiment wrapper class
 export const experiment = new Experiment(configuration);
@@ -77,8 +77,8 @@ const timelineVariables: any[][] = [];
 let trialRow = 0;
 
 // Reward and no reward stimuli
-const rewardImage = experiment.getStimuli().getImage('t.png');
-const nullImage = experiment.getStimuli().getImage('nothing.png');
+const rewardImage = experiment.getStimuli().getImage("t.png");
+const nullImage = experiment.getStimuli().getImage("nothing.png");
 
 // Set the rocket configuration in the main trials
 for (let j = 0; j < blockCount; j++) {
@@ -87,22 +87,22 @@ for (let j = 0; j < blockCount; j++) {
     // Randomize sides of rockets for each subject
     if (rocketSides) {
       timelineVariables[j].push({
-        rightStimulus: 'rocket2',
-        leftStimulus: 'rocket1',
+        rightStimulus: "rocket2",
+        leftStimulus: "rocket1",
         trialRow: trialRow,
         trialNumber: i + 1,
       });
     } else {
       timelineVariables[j].push({
-        rightStimulus: 'rocket1',
-        leftStimulus: 'rocket2',
+        rightStimulus: "rocket1",
+        leftStimulus: "rocket2",
         trialRow: trialRow,
         trialNumber: i + 1,
       });
     }
     trialRow++;
-  };
-};
+  }
+}
 
 // Instantiate the timeline variables for the practice trials
 const practiceTimelineVariables = [];
@@ -113,21 +113,21 @@ for (let i = 0; i < practiceGameCount; i++) {
   // Randomize sides of rockets for each subject
   if (practiceRocketSides) {
     practiceTimelineVariables.push({
-      rightStimulus: 'tutrocket2',
-      leftStimulus: 'tutrocket1',
+      rightStimulus: "tutrocket2",
+      leftStimulus: "tutrocket1",
       trialRow: trialRow,
       trialNumber: i + 1,
     });
   } else {
     practiceTimelineVariables.push({
-      rightStimulus: 'tutrocket1',
-      leftStimulus: 'tutrocket2',
+      rightStimulus: "tutrocket1",
+      leftStimulus: "tutrocket2",
       trialRow: trialRow,
       trialNumber: i + 1,
     });
   }
   trialRow++;
-};
+}
 
 let currStageTwo: any[] | null = [];
 
@@ -141,38 +141,42 @@ let currStageTwo: any[] | null = [];
  * @return {any} three-stage grouping, including first decision,
  * second decision, and fixation cross
  */
-const createBlock = (variables: any[], probabilityData: { [x: string]: any; }, isPractice: boolean) => {
+const createBlock = (
+  variables: any[],
+  probabilityData: { [x: string]: any },
+  isPractice: boolean
+) => {
   // Create the generic experimental procedure for a single trial.
   // Consists of the first and second choices.
   const procedure = {
     timeline: [
       {
         // Instantiate the first choice
-        type: 'two-step-choice',
-        trialStage: '1',
+        type: "two-step-choice",
+        trialStage: "1",
         choices: [keyLeft, keyRight],
-        planetStimulus: experiment.getStimuli().getImage('earth.png'),
-        rightStimulus: jsPsych.timelineVariable('rightStimulus'),
-        leftStimulus: jsPsych.timelineVariable('leftStimulus'),
-        trialNumber: jsPsych.timelineVariable('trialNumber'),
+        planetStimulus: experiment.getStimuli().getImage("earth.png"),
+        rightStimulus: jsPsych.timelineVariable("rightStimulus"),
+        leftStimulus: jsPsych.timelineVariable("leftStimulus"),
+        trialNumber: jsPsych.timelineVariable("trialNumber"),
 
         // Specify if this is a practice trial or not
         isPractice: isPractice,
 
         // Define the 'on_start' callback
-        on_start: function() {
+        on_start: function () {
           currStageTwo = [];
         },
 
         // Define the 'on_start' callback
-        on_finish: function(data: any) {
+        on_finish: function (data: any) {
           // Specify the choice made in the data
           if (data.key_press == keyLeft) {
             data.choice = 1;
-          };
+          }
           if (data.key_press == keyRight) {
             data.choice = 2;
-          };
+          }
 
           // Calcuate the transition and then the second location
           currStageTwo = calculateTransition(data.chosenStimulus, isPractice);
@@ -180,7 +184,7 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any; }, i
             currStageTwo = [
               data.rightStimulus,
               data.leftStimulus,
-              experiment.getStimuli().getImage('earth.png'),
+              experiment.getStimuli().getImage("earth.png"),
               null,
             ];
           }
@@ -191,17 +195,17 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any; }, i
       },
       {
         // Instantiate the second choice
-        type: 'two-step-choice',
-        trialStage: '2',
+        type: "two-step-choice",
+        trialStage: "2",
         choices: [keyLeft, keyRight],
-        trialNumber: jsPsych.timelineVariable('trialNumber'),
+        trialNumber: jsPsych.timelineVariable("trialNumber"),
 
         // Specify if this is a practice trial or not
         isPractice: isPractice,
 
         // Specify the trial data
         trialRow: () => {
-          return probabilityData[jsPsych.timelineVariable('trialRow', true)];
+          return probabilityData[jsPsych.timelineVariable("trialRow", true)];
         },
 
         // Specify the second planet
@@ -243,13 +247,13 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any; }, i
           if (data.rewardStimulus === rewardImage) {
             if (isPractice === false) {
               experiment.setGlobalStateValue(
-                  'realReward',
-                  experiment.getGlobalStateValue('realReward') + 1,
+                "realReward",
+                experiment.getGlobalStateValue("realReward") + 1
               );
             } else {
               experiment.setGlobalStateValue(
-                  'practiceReward',
-                  experiment.getGlobalStateValue('practiceReward') + 1,
+                "practiceReward",
+                experiment.getGlobalStateValue("practiceReward") + 1
               );
             }
           }
@@ -264,34 +268,36 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any; }, i
 
           // Specify the transition type in the data
           if (data.transitionType == true) {
-            data.transition = 'common';
+            data.transition = "common";
           }
           if (data.transitionType == false) {
-            data.transition = 'rare';
+            data.transition = "rare";
           }
 
           // Specify the reward outcome in the data
-          if (data.rewardStimulus ==
-              experiment.getStimuli().getImage('t.png')) {
+          if (
+            data.rewardStimulus == experiment.getStimuli().getImage("t.png")
+          ) {
             data.wasRewarded = true;
           } else {
             data.wasRewarded = false;
           }
 
           // Store the timestamp
-          const timestamp = (new Date).toISOString()
-              .replace(/z|t/gi, ' ')
-              .trim();
-          jsPsych.data.addDataToLastTrial({timestamp});
+          const timestamp = new Date()
+            .toISOString()
+            .replace(/z|t/gi, " ")
+            .trim();
+          jsPsych.data.addDataToLastTrial({ timestamp });
         },
       },
       {
         // Instantiate the fixation stage
-        type: 'two-step-fixation',
-        stimulus: experiment.getStimuli().getImage('earth.png'),
-        text: '+',
+        type: "two-step-fixation",
+        stimulus: experiment.getStimuli().getImage("earth.png"),
+        text: "+",
         responseWindow: 1000,
-        trialNumber: jsPsych.timelineVariable('trialNumber'),
+        trialNumber: jsPsych.timelineVariable("trialNumber"),
       },
     ],
 
@@ -309,25 +315,25 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any; }, i
  * @return {any}
  */
 const calculateTransition = (chosenString: string, practice: boolean) => {
-  let firstPlanet = '';
-  let secondPlanet = '';
+  let firstPlanet = "";
+  let secondPlanet = "";
 
-  if (chosenString == '' || typeof chosenString === 'undefined') {
+  if (chosenString == "" || typeof chosenString === "undefined") {
     return null;
   } else {
     if (practice == true) {
-      firstPlanet = 'green';
-      secondPlanet = 'yellow';
+      firstPlanet = "green";
+      secondPlanet = "yellow";
     } else {
-      firstPlanet = 'red';
-      secondPlanet = 'purple';
+      firstPlanet = "red";
+      secondPlanet = "purple";
     }
 
-    const firstShipChosen = chosenString.slice(-1) === '1';
-    const goodTransition = (Math.random() < probability);
+    const firstShipChosen = chosenString.slice(-1) === "1";
+    const goodTransition = Math.random() < probability;
 
     // Determine the resulting planet
-    let planet = '';
+    let planet = "";
     if (firstShipChosen && redPlanetFirstRocket) {
       if (goodTransition) {
         planet = firstPlanet;
@@ -355,7 +361,7 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
     }
 
     let displayOrder = true;
-    if (planet === 'red') {
+    if (planet === "red") {
       // Counter-balancing only enabled in non-practice trials
       if (practice === false) {
         displayOrder = displayOrderRed;
@@ -363,22 +369,22 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
 
       if (displayOrder) {
         return [
-          'alien2',
-          'alien1',
-          experiment.getStimuli().getImage('redplanet1.png'),
+          "alien2",
+          "alien1",
+          experiment.getStimuli().getImage("redplanet1.png"),
           chosenString,
           goodTransition,
         ];
       } else {
         return [
-          'alien1',
-          'alien2',
-          experiment.getStimuli().getImage('redplanet1.png'),
+          "alien1",
+          "alien2",
+          experiment.getStimuli().getImage("redplanet1.png"),
           chosenString,
           goodTransition,
         ];
       }
-    } else if (planet === 'purple') {
+    } else if (planet === "purple") {
       // Counter-balancing only enabled in non-practice trials
       if (practice === false) {
         displayOrder = displayOrderPurple;
@@ -386,22 +392,22 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
 
       if (displayOrder) {
         return [
-          'alien4',
-          'alien3',
-          experiment.getStimuli().getImage('purpleplanet.png'),
+          "alien4",
+          "alien3",
+          experiment.getStimuli().getImage("purpleplanet.png"),
           chosenString,
           goodTransition,
         ];
       } else {
         return [
-          'alien3',
-          'alien4',
-          experiment.getStimuli().getImage('purpleplanet.png'),
+          "alien3",
+          "alien4",
+          experiment.getStimuli().getImage("purpleplanet.png"),
           chosenString,
           goodTransition,
         ];
       }
-    } else if (planet === 'green') {
+    } else if (planet === "green") {
       // Counter-balancing only enabled in non-practice trials
       if (practice === false) {
         displayOrder = displayOrderGreen;
@@ -409,22 +415,22 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
 
       if (displayOrder) {
         return [
-          'tutalien2',
-          'tutalien1',
-          experiment.getStimuli().getImage('tutgreenplanet.png'),
+          "tutalien2",
+          "tutalien1",
+          experiment.getStimuli().getImage("tutgreenplanet.png"),
           chosenString,
           goodTransition,
         ];
       } else {
         return [
-          'tutalien1',
-          'tutalien2',
-          experiment.getStimuli().getImage('tutgreenplanet.png'),
+          "tutalien1",
+          "tutalien2",
+          experiment.getStimuli().getImage("tutgreenplanet.png"),
           chosenString,
           goodTransition,
         ];
       }
-    } else if (planet === 'yellow') {
+    } else if (planet === "yellow") {
       // Counter-balancing only enabled in non-practice trials
       if (practice === false) {
         displayOrder = displayOrderYellow;
@@ -432,23 +438,23 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
 
       if (displayOrder) {
         return [
-          'tutalien4',
-          'tutalien3',
-          experiment.getStimuli().getImage('tutyellowplanet.png'),
+          "tutalien4",
+          "tutalien3",
+          experiment.getStimuli().getImage("tutyellowplanet.png"),
           chosenString,
           goodTransition,
         ];
       } else {
         return [
-          'tutalien3',
-          'tutalien4',
-          experiment.getStimuli().getImage('tutyellowplanet.png'),
+          "tutalien3",
+          "tutalien4",
+          experiment.getStimuli().getImage("tutyellowplanet.png"),
           chosenString,
           goodTransition,
         ];
       }
     } else {
-      consola.error('Error in transition calculation!');
+      consola.error("Error in transition calculation!");
       return null;
     }
   }
@@ -481,8 +487,7 @@ for (let i = 0; i < instructions.length; i += 1) {
     imagesRight[i][j] = null;
     imagesCenter[i][j] = null;
     imagesReward[i][j] = null;
-    imagesButton[i][j] =
-        experiment.getStimuli().getImage('button.jpeg');
+    imagesButton[i][j] = experiment.getStimuli().getImage("button.jpeg");
   }
 }
 
@@ -491,99 +496,68 @@ imagesReward[3][0] = rewardImage;
 imagesReward[3][1] = nullImage;
 
 // Center images
-imagesCenter[4][0] =
-    experiment.getStimuli().getImage('tutalien3_norm.png');
-imagesCenter[4][1] =
-    experiment.getStimuli().getImage('tutalien3_norm.png');
-imagesCenter[9][0] =
-    experiment.getStimuli().getImage('tutalien2_norm.png');
+imagesCenter[4][0] = experiment.getStimuli().getImage("tutalien3_norm.png");
+imagesCenter[4][1] = experiment.getStimuli().getImage("tutalien3_norm.png");
+imagesCenter[9][0] = experiment.getStimuli().getImage("tutalien2_norm.png");
 
 // Rockets
-imagesRight[1][0] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
-imagesLeft[1][0] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
+imagesRight[1][0] = experiment.getStimuli().getImage("tutrocket1_norm.png");
+imagesLeft[1][0] = experiment.getStimuli().getImage("tutrocket2_norm.png");
 
 // Aliens, both sides
-imagesRight[2][0] =
-    experiment.getStimuli().getImage('tutalien1_norm.png');
-imagesLeft[2][0] =
-    experiment.getStimuli().getImage('tutalien2_norm.png');
-imagesRight[2][1] =
-    experiment.getStimuli().getImage('tutalien1_norm.png');
-imagesLeft[2][1] =
-    experiment.getStimuli().getImage('tutalien2_norm.png');
-imagesRight[2][2] =
-    experiment.getStimuli().getImage('tutalien1_norm.png');
-imagesLeft[2][2] =
-    experiment.getStimuli().getImage('tutalien2_norm.png');
+imagesRight[2][0] = experiment.getStimuli().getImage("tutalien1_norm.png");
+imagesLeft[2][0] = experiment.getStimuli().getImage("tutalien2_norm.png");
+imagesRight[2][1] = experiment.getStimuli().getImage("tutalien1_norm.png");
+imagesLeft[2][1] = experiment.getStimuli().getImage("tutalien2_norm.png");
+imagesRight[2][2] = experiment.getStimuli().getImage("tutalien1_norm.png");
+imagesLeft[2][2] = experiment.getStimuli().getImage("tutalien2_norm.png");
 
 // Aliens, right side
-imagesRight[6][0] =
-    experiment.getStimuli().getImage('tutalien1_norm.png');
-imagesRight[7][0] =
-    experiment.getStimuli().getImage('tutalien2_norm.png');
+imagesRight[6][0] = experiment.getStimuli().getImage("tutalien1_norm.png");
+imagesRight[7][0] = experiment.getStimuli().getImage("tutalien2_norm.png");
 
 // Aliens, left side
-imagesLeft[6][0] =
-    experiment.getStimuli().getImage('tutalien2_norm.png');
-imagesLeft[7][0] =
-    experiment.getStimuli().getImage('tutalien1_norm.png');
+imagesLeft[6][0] = experiment.getStimuli().getImage("tutalien2_norm.png");
+imagesLeft[7][0] = experiment.getStimuli().getImage("tutalien1_norm.png");
 
 // Rockets, right side
-imagesRight[13][0] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
-imagesRight[13][1] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
-imagesRight[14][0] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
-imagesRight[14][1] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
-imagesRight[14][2] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
-imagesRight[14][3] =
-    experiment.getStimuli().getImage('tutrocket1_sp.png');
-imagesRight[14][4] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
-imagesRight[14][5] =
-    experiment.getStimuli().getImage('tutrocket1_norm.png');
+imagesRight[13][0] = experiment.getStimuli().getImage("tutrocket1_norm.png");
+imagesRight[13][1] = experiment.getStimuli().getImage("tutrocket1_norm.png");
+imagesRight[14][0] = experiment.getStimuli().getImage("tutrocket1_norm.png");
+imagesRight[14][1] = experiment.getStimuli().getImage("tutrocket1_norm.png");
+imagesRight[14][2] = experiment.getStimuli().getImage("tutrocket1_norm.png");
+imagesRight[14][3] = experiment.getStimuli().getImage("tutrocket1_sp.png");
+imagesRight[14][4] = experiment.getStimuli().getImage("tutrocket1_norm.png");
+imagesRight[14][5] = experiment.getStimuli().getImage("tutrocket1_norm.png");
 
 // Rockets, left side
-imagesLeft[13][0] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
-imagesLeft[13][1] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
-imagesLeft[14][0] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
-imagesLeft[14][1] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
-imagesLeft[14][2] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
-imagesLeft[14][3] =
-    experiment.getStimuli().getImage('tutrocket2_sp.png');
-imagesLeft[14][4] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
-imagesLeft[14][5] =
-    experiment.getStimuli().getImage('tutrocket2_norm.png');
+imagesLeft[13][0] = experiment.getStimuli().getImage("tutrocket2_norm.png");
+imagesLeft[13][1] = experiment.getStimuli().getImage("tutrocket2_norm.png");
+imagesLeft[14][0] = experiment.getStimuli().getImage("tutrocket2_norm.png");
+imagesLeft[14][1] = experiment.getStimuli().getImage("tutrocket2_norm.png");
+imagesLeft[14][2] = experiment.getStimuli().getImage("tutrocket2_norm.png");
+imagesLeft[14][3] = experiment.getStimuli().getImage("tutrocket2_sp.png");
+imagesLeft[14][4] = experiment.getStimuli().getImage("tutrocket2_norm.png");
+imagesLeft[14][5] = experiment.getStimuli().getImage("tutrocket2_norm.png");
 
 // Backgrounds used throughout the instructions
 const instructionsBackgrounds = [
-  experiment.getStimuli().getImage('blackbackground.jpg'),
-  experiment.getStimuli().getImage('earth.png'),
-  experiment.getStimuli().getImage('tutgreenplanet.png'),
-  experiment.getStimuli().getImage('blackbackground.jpg'),
-  experiment.getStimuli().getImage('tutyellowplanet.png'),
-  experiment.getStimuli().getImage('blackbackground.jpg'),
-  experiment.getStimuli().getImage('tutgreenplanet.png'),
-  experiment.getStimuli().getImage('tutgreenplanet.png'),
-  experiment.getStimuli().getImage('blackbackground.jpg'),
-  experiment.getStimuli().getImage('blackbackground.jpg'),
-  experiment.getStimuli().getImage('earth.png'),
-  experiment.getStimuli().getImage('tutgreenplanet.png'),
-  experiment.getStimuli().getImage('tutyellowplanet.png'),
-  experiment.getStimuli().getImage('earth.png'),
-  experiment.getStimuli().getImage('earth.png'),
-  experiment.getStimuli().getImage('blackbackground.jpg'),
+  experiment.getStimuli().getImage("blackbackground.jpg"),
+  experiment.getStimuli().getImage("earth.png"),
+  experiment.getStimuli().getImage("tutgreenplanet.png"),
+  experiment.getStimuli().getImage("blackbackground.jpg"),
+  experiment.getStimuli().getImage("tutyellowplanet.png"),
+  experiment.getStimuli().getImage("blackbackground.jpg"),
+  experiment.getStimuli().getImage("tutgreenplanet.png"),
+  experiment.getStimuli().getImage("tutgreenplanet.png"),
+  experiment.getStimuli().getImage("blackbackground.jpg"),
+  experiment.getStimuli().getImage("blackbackground.jpg"),
+  experiment.getStimuli().getImage("earth.png"),
+  experiment.getStimuli().getImage("tutgreenplanet.png"),
+  experiment.getStimuli().getImage("tutyellowplanet.png"),
+  experiment.getStimuli().getImage("earth.png"),
+  experiment.getStimuli().getImage("earth.png"),
+  experiment.getStimuli().getImage("blackbackground.jpg"),
 ];
 
 let t: number;
@@ -601,8 +575,12 @@ let currentSide: boolean;
  * @return {any[]}
  */
 const createInstructions = (
-    image: string, prompts: string[][], rightText: string[],
-    leftText: string[], centerText: string[], rewardText: string[],
+  image: string,
+  prompts: string[][],
+  rightText: string[],
+  leftText: string[],
+  centerText: string[],
+  rewardText: string[]
 ) => {
   // Instantitate and create the pages of the instructions
   const instructionPages = [];
@@ -610,13 +588,13 @@ const createInstructions = (
     // Collate the specifict texts and images
     // for the instruction page
     currentPage = {
-      type: 'two-step-instructions',
+      type: "two-step-instructions",
       stimulus: image,
       rightStimulus: rightText[t],
       leftStimulus: leftText[t],
       centerStimulus: centerText[t],
       rewardImage: rewardText[t],
-      choices: [' '],
+      choices: [" "],
       prompt: prompts[t],
     };
     instructionPages.push(currentPage);
@@ -630,29 +608,28 @@ currentInstructions = [];
 
 for (let i = 0; i < instructions.length; i++) {
   currentInstructions = currentInstructions.concat(
-      createInstructions(
-          instructionsBackgrounds[i],
-          instructions[i],
-          imagesRight[i],
-          imagesLeft[i],
-          imagesCenter[i],
-          imagesReward[i],
-          // imagesButton[i],
-      ),
+    createInstructions(
+      instructionsBackgrounds[i],
+      instructions[i],
+      imagesRight[i],
+      imagesLeft[i],
+      imagesCenter[i],
+      imagesReward[i]
+      // imagesButton[i],
+    )
   );
 }
 
 // Create practice trials for selecting between aliens
 for (let i = 0; i < practicePressingNum - 1; i++) {
   currentInstructions.splice(practicePressingIdx, 0, {
-    type: 'two-step-choice',
+    type: "two-step-choice",
     timeout: false,
     choices: [keyLeft, keyRight],
-    planetStimulus:
-      experiment.getStimuli().getImage('tutgreenplanet.png'),
-    rightStimulus: 'tutalien1',
-    leftStimulus: 'tutalien2',
-    prompt: ['Now try another one!'],
+    planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    rightStimulus: "tutalien1",
+    leftStimulus: "tutalien2",
+    prompt: ["Now try another one!"],
     responseWindow: timeChoice,
     isPractice: true,
     trialNumber: practicePressingNum - i,
@@ -660,12 +637,12 @@ for (let i = 0; i < practicePressingNum - 1; i++) {
 }
 
 currentInstructions.splice(practicePressingIdx, 0, {
-  type: 'two-step-choice',
+  type: "two-step-choice",
   timeout: false,
   choices: [keyLeft, keyRight],
-  planetStimulus: experiment.getStimuli().getImage('tutgreenplanet.png'),
-  rightStimulus: 'tutalien1',
-  leftStimulus: 'tutalien2',
+  planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+  rightStimulus: "tutalien1",
+  leftStimulus: "tutalien2",
   responseWindow: timeChoice,
   isPractice: true,
   trialNumber: 1,
@@ -674,18 +651,17 @@ currentInstructions.splice(practicePressingIdx, 0, {
 // Create practice trials to select a single alien and view reward outcome
 for (let i = 0; i < practiceRewardNum; i++) {
   currentInstructions.splice(practiceRewardIdx, 0, {
-    type: 'two-step-choice',
+    type: "two-step-choice",
     timeout: false,
     trialRow: payoffReward,
     choices: [keyLeft, keyRight],
-    planetStimulus:
-      experiment.getStimuli().getImage('tutyellowplanet.png'),
+    planetStimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
     trialNumber: practiceRewardNum - i,
 
     // Right alien image
     rightStimulus: () => {
       if (currentSide === true) {
-        return 'tutalien3';
+        return "tutalien3";
       }
       return null;
     },
@@ -695,7 +671,7 @@ for (let i = 0; i < practiceRewardNum; i++) {
       if (currentSide === true) {
         return null;
       }
-      return 'tutalien3';
+      return "tutalien3";
     },
     responseWindow: timeChoice,
     isPractice: true,
@@ -705,14 +681,13 @@ for (let i = 0; i < practiceRewardNum; i++) {
 // Create practice trials for selecting between aliens
 for (let i = 0; i < practiceStochasticNum; i += 1) {
   currentInstructions.splice(practiceStochasticIdx, 0, {
-    type: 'two-step-choice',
+    type: "two-step-choice",
     timeout: false,
     trialRow: payoffInstructions,
     choices: [keyLeft, keyRight],
-    planetStimulus:
-      experiment.getStimuli().getImage('tutgreenplanet.png'),
-    rightStimulus: 'tutalien1',
-    leftStimulus: 'tutalien2',
+    planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    rightStimulus: "tutalien1",
+    leftStimulus: "tutalien2",
     responseWindow: timeChoice,
     isPractice: true,
     trialNumber: practiceStochasticNum - i,
@@ -720,62 +695,54 @@ for (let i = 0; i < practiceStochasticNum; i += 1) {
 }
 
 // Insert practice trials into instructions
-currentInstructions.splice(practiceGameIdx, 0,
-    createBlock(practiceTimelineVariables, practiceProbabilityData, true));
+currentInstructions.splice(
+  practiceGameIdx,
+  0,
+  createBlock(practiceTimelineVariables, practiceProbabilityData, true)
+);
 
 // Insert the three quizzes before the last element in `currentInstructions`
 // Question 1
 currentInstructions.splice(currentInstructions.length - 1, 0, {
-  type: 'attention-check',
-  prompt: 'True or False: Each spaceship always flies to the same planet.',
-  options: [
-    'True',
-    'False',
-  ],
+  type: "attention-check",
+  prompt: "True or False: Each spaceship always flies to the same planet.",
+  options: ["True", "False"],
   options_radio: true,
   option_correct: 1,
   confirmation: true,
-  feedback_correct: 'Correct!',
+  feedback_correct: "Correct!",
   feedback_incorrect:
-      'Incorrect. Spaceships may sometimes fly ' +
-      'to the planet you don\'t expect.',
+    "Incorrect. Spaceships may sometimes fly " +
+    "to the planet you don't expect.",
 });
 
 // Question 2
 currentInstructions.splice(currentInstructions.length - 1, 0, {
-  type: 'attention-check',
+  type: "attention-check",
   prompt:
-    'True or False: If an alien has a lot of treasure to share now, ' +
-    'then they will probably have a lot of treasure to share in the ' +
-    'near future.',
-  options: [
-    'True',
-    'False',
-  ],
+    "True or False: If an alien has a lot of treasure to share now, " +
+    "then they will probably have a lot of treasure to share in the " +
+    "near future.",
+  options: ["True", "False"],
   options_radio: true,
   option_correct: 0,
   confirmation: true,
-  feedback_correct: 'Correct!',
-  feedback_incorrect:
-      'Incorrect. Some aliens have more treasure than others.',
+  feedback_correct: "Correct!",
+  feedback_incorrect: "Incorrect. Some aliens have more treasure than others.",
 });
 
 // Question 3
 currentInstructions.splice(currentInstructions.length - 1, 0, {
-  type: 'attention-check',
+  type: "attention-check",
   prompt:
-    'True or False: You will have as much time as ' +
-    'you want to make each choice.',
-  options: [
-    'True',
-    'False',
-  ],
+    "True or False: You will have as much time as " +
+    "you want to make each choice.",
+  options: ["True", "False"],
   options_radio: true,
   option_correct: 1,
   confirmation: true,
-  feedback_correct: 'Correct!',
-  feedback_incorrect:
-      'Incorrect. You have a few seconds to make each choice.',
+  feedback_correct: "Correct!",
+  feedback_incorrect: "Incorrect. You have a few seconds to make each choice.",
 });
 
 // Remove the instructions about the alien locations
@@ -790,84 +757,108 @@ expTimeline = currentInstructions;
 expTimeline.push(createBlock(timelineVariables[0], probabilityData, false));
 
 // Insert break 1
-expTimeline.push(createInstructions(
-    experiment.getStimuli().getImage('blackbackground.jpg'),
+expTimeline.push(
+  createInstructions(
+    experiment.getStimuli().getImage("blackbackground.jpg"),
     firstBreak,
-    [], [], [], [],
-)[0]);
+    [],
+    [],
+    [],
+    []
+  )[0]
+);
 
 // Main block 2
 expTimeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
 // Insert break 2
-expTimeline.push(createInstructions(
-    experiment.getStimuli().getImage('blackbackground.jpg'),
+expTimeline.push(
+  createInstructions(
+    experiment.getStimuli().getImage("blackbackground.jpg"),
     secondBreak,
-    [], [], [], [],
-)[0]);
+    [],
+    [],
+    [],
+    []
+  )[0]
+);
 
 // Main block 3
 expTimeline.push(createBlock(timelineVariables[2], probabilityData, false));
 
 // Insert break 3
-expTimeline.push(createInstructions(
-    experiment.getStimuli().getImage('blackbackground.jpg'),
+expTimeline.push(
+  createInstructions(
+    experiment.getStimuli().getImage("blackbackground.jpg"),
     thirdBreak,
-    [], [], [], [],
-)[0]);
+    [],
+    [],
+    [],
+    []
+  )[0]
+);
 
 // Main block 4
 expTimeline.push(createBlock(timelineVariables[3], probabilityData, false));
 
 // Finish
-expTimeline.push(createInstructions(
-    experiment.getStimuli().getImage('blackbackground.jpg'),
+expTimeline.push(
+  createInstructions(
+    experiment.getStimuli().getImage("blackbackground.jpg"),
     [
       [
-        'You\'re finished with this part of the experiment!',
-        'Click the red button to answer a final question.',
+        "You're finished with this part of the experiment!",
+        "Click the red button to answer a final question.",
       ],
     ],
-    [], [], [], [],
-)[0]);
+    [],
+    [],
+    [],
+    []
+  )[0]
+);
 
 // Question about the rockets
 expTimeline.push({
-  type: 'two-step-choice',
-  trialStage: '1',
+  type: "two-step-choice",
+  trialStage: "1",
   choices: [keyLeft, keyRight],
-  planetStimulus:
-    experiment.getStimuli().getImage('earth.png'),
-  rightStimulus: rocketSides === true ? 'rocket1' : 'rocket2',
-  leftStimulus: rocketSides === true ? 'rocket2' : 'rocket1',
+  planetStimulus: experiment.getStimuli().getImage("earth.png"),
+  rightStimulus: rocketSides === true ? "rocket1" : "rocket2",
+  leftStimulus: rocketSides === true ? "rocket2" : "rocket1",
   isPractice: false,
   prompt: [
-    'Select the rocket you think went to the red planet most frequently.',
+    "Select the rocket you think went to the red planet most frequently.",
   ],
   on_finish: (data: any) => {
     // Store the keypresses
     if (data.key_press === keyLeft) {
       data.choice = 1;
-    };
+    }
     if (data.key_press === keyRight) {
       data.choice = 2;
-    };
-    consola.info('data', data);
+    }
+    consola.info("data", data);
   },
   trialNumber: 0,
 });
 
 // Finish
-expTimeline.push(createInstructions(
-    experiment.getStimuli().getImage('blackbackground.jpg'),
+expTimeline.push(
+  createInstructions(
+    experiment.getStimuli().getImage("blackbackground.jpg"),
     [
       [
-        'Thank you for participating in this research!',
-        'Click the red button to be redirected.',
+        "Thank you for participating in this research!",
+        "Click the red button to be redirected.",
       ],
     ],
-    [], [], [], [],
-)[0]);
+    [],
+    [],
+    [],
+    []
+  )[0]
+);
 
 // Start the experiment
 experiment.start({

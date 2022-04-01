@@ -1,13 +1,11 @@
 module.exports = {
-  'env': {
-    'browser': true,
-    'es2021': true,
+  env: {
+    browser: true,
+    es2021: true,
   },
-  'extends': [
-    'google',
-  ],
-  'parserOptions': {
-    'ecmaVersion': 13,
-    'sourceType': 'module',
+  extends: ["google", "prettier"],
+  parserOptions: {
+    ecmaVersion: 13,
+    sourceType: "module",
   },
 };

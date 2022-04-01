@@ -3,7 +3,7 @@
  * at Princeton, adapted by the Hartley Lab (https://www.hartleylab.org/) at NYU for use online
  * with children, adolescents, and adults, and adapted here by the Brain Development and Disorders Lab
  * (https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
- * 
+ *
  * Plugin:
  * two-step-instructions
  *
@@ -17,10 +17,10 @@
  * HB 01/2022
  */
 // Logging library
-import consola from 'consola';
+import consola from "consola";
 
 // d3.js imports
-import {select} from 'd3';
+import { select } from "d3";
 
 // Display variables
 import {
@@ -35,27 +35,27 @@ import {
   textInstructionsY,
   textX,
   sizeFont,
-} from '../display';
+} from "../display";
 
-jsPsych.plugins['two-step-instructions'] = (() => {
+jsPsych.plugins["two-step-instructions"] = (() => {
   const plugin = {
     info: {},
     trial: (displayElement: HTMLElement, trial: any) => {
       consola.debug(`displayElement:`, displayElement);
       consola.debug(`trial:`, trial);
       consola.error(`Plugin trial not defined!`);
-    }
+    },
   };
 
   plugin.info = {
-    name: 'two-step-instructions',
-    description: 'Instructions for the task.',
+    name: "two-step-instructions",
+    description: "Instructions for the task.",
     parameters: {
       stimulus: {
         type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Stimulus',
+        pretty_name: "Stimulus",
         default: null,
-        description: 'The image to be displayed',
+        description: "The image to be displayed",
       },
       rightStimulus: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -80,28 +80,29 @@ jsPsych.plugins['two-step-instructions'] = (() => {
       choices: {
         type: jsPsych.plugins.parameterType.KEYCODE,
         array: true,
-        pretty_name: 'Choices',
+        pretty_name: "Choices",
         default: jsPsych.ALL_KEYS,
-        description: 'The keys the subject is allowed to ' +
-            'press to respond to the stimulus.',
+        description:
+          "The keys the subject is allowed to " +
+          "press to respond to the stimulus.",
       },
       prompt: {
         type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Prompt',
+        pretty_name: "Prompt",
         default: null,
-        description: 'Any content here will be displayed below the stimulus.',
+        description: "Any content here will be displayed below the stimulus.",
       },
       response_ends_trial: {
         type: jsPsych.plugins.parameterType.BOOL,
-        pretty_name: 'Response ends trial',
+        pretty_name: "Response ends trial",
         default: false,
-        description: 'If true, trial will end when subject makes a response.',
+        description: "If true, trial will end when subject makes a response.",
       },
       button_clicked: {
         type: jsPsych.plugins.parameterType.BOOL,
-        pretty_name: 'Button state',
+        pretty_name: "Button state",
         default: false,
-        description: 'State of the button.',
+        description: "State of the button.",
       },
     },
   };
@@ -116,74 +117,80 @@ jsPsych.plugins['two-step-instructions'] = (() => {
 
     // Render all specified elements to the view
     // SVG container
-    const svg = select('div#container')
-        .append('svg')
-        .attr('preserveAspectRatio', 'xMinYMin meet')
-        .classed('svg-content', true);
+    const svg = select("div#container")
+      .append("svg")
+      .attr("preserveAspectRatio", "xMinYMin meet")
+      .classed("svg-content", true);
 
     // Append the stimulus image
     if (trial.stimulus !== null) {
-      svg.append('svg:image')
-          .attr('width', width)
-          .attr('height', height)
-          .attr('preserveAspectRatio', 'xMidYMid slice')
-          .attr('xlink:href', trial.stimulus);
+      svg
+        .append("svg:image")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("preserveAspectRatio", "xMidYMid slice")
+        .attr("xlink:href", trial.stimulus);
     }
 
     // Append an image to the right side of the view
     if (trial.rightStimulus !== null) {
-      svg.append('svg:image')
-          .attr('class', 'right')
-          .attr('x', choiceXRight)
-          .attr('y', choiceY)
-          .attr('width', sizeMonster)
-          .attr('height', sizeMonster)
-          .attr('xlink:href', trial.rightStimulus);
+      svg
+        .append("svg:image")
+        .attr("class", "right")
+        .attr("x", choiceXRight)
+        .attr("y", choiceY)
+        .attr("width", sizeMonster)
+        .attr("height", sizeMonster)
+        .attr("xlink:href", trial.rightStimulus);
     }
 
     // Append the reward string to the view
     if (trial.rewardImage !== null) {
-      svg.append('svg:image')
-          .attr('x', centerX - sizeReward / 2)
-          .attr('y', choiceY)
-          .attr('width', sizeReward)
-          .attr('height', sizeReward)
-          .attr('xlink:href', trial.rewardImage);
+      svg
+        .append("svg:image")
+        .attr("x", centerX - sizeReward / 2)
+        .attr("y", choiceY)
+        .attr("width", sizeReward)
+        .attr("height", sizeReward)
+        .attr("xlink:href", trial.rewardImage);
     }
 
     // Append text to the left side of the view
     if (trial.leftStimulus !== null) {
-      svg.append('svg:image')
-          .attr('x', choiceXLeft)
-          .attr('y', choiceY)
-          .attr('width', sizeMonster)
-          .attr('height', sizeMonster)
-          .attr('xlink:href', trial.leftStimulus);
+      svg
+        .append("svg:image")
+        .attr("x", choiceXLeft)
+        .attr("y", choiceY)
+        .attr("width", sizeMonster)
+        .attr("height", sizeMonster)
+        .attr("xlink:href", trial.leftStimulus);
     }
 
     // Append text to the center of the view
     if (trial.centerStimulus !== null) {
-      svg.append('svg:image')
-          .attr('x', centerX - sizeMonster / 2)
-          .attr('y', choiceY)
-          .attr('width', sizeMonster)
-          .attr('height', sizeMonster)
-          .attr('xlink:href', trial.centerStimulus);
+      svg
+        .append("svg:image")
+        .attr("x", centerX - sizeMonster / 2)
+        .attr("y", choiceY)
+        .attr("width", sizeMonster)
+        .attr("height", sizeMonster)
+        .attr("xlink:href", trial.centerStimulus);
     }
 
     // Append the continue button to the view
-    const imageButton = svg.append('svg:circle')
-        .attr('r', 30)
-        .attr('cx', choiceXRight + sizeMonster)
-        .attr('cy', choiceY + sizeMonster - 100)
-        .style('fill', 'red')
-        .style('stroke', 'black')
-        .style('stroke-width', 6)
-        .on('click', () => {
-          trial.button_clicked = true;
-          imageButton.style('fill', 'green');
-          imageButton.style('stroke', 'black');
-        });
+    const imageButton = svg
+      .append("svg:circle")
+      .attr("r", 30)
+      .attr("cx", choiceXRight + sizeMonster)
+      .attr("cy", choiceY + sizeMonster - 100)
+      .style("fill", "red")
+      .style("stroke", "black")
+      .style("stroke-width", 6)
+      .on("click", () => {
+        trial.button_clicked = true;
+        imageButton.style("fill", "green");
+        imageButton.style("stroke", "black");
+      });
 
     // Add the main prompt to the view
     if (trial.prompt !== null) {
@@ -194,17 +201,18 @@ jsPsych.plugins['two-step-instructions'] = (() => {
 
       for (let i = 0; i < trial.prompt.length; i++) {
         // Append a line of text
-        svg.append('text')
-            .attr('x', textX)
-            .attr('y', textInstructionsY)
-            .attr('dy', ++lineNumber * lineHeight + dy + 'em')
-            .style('text-anchor', 'middle')
-            .style('font-size', sizeFont + 'px')
-            .style('font-family', 'Open Sans')
-            .style('font-weight', 'bold')
-            .style('letter-spacing', '0.2')
-            .style('fill', 'white')
-            .text(trial.prompt[i]);
+        svg
+          .append("text")
+          .attr("x", textX)
+          .attr("y", textInstructionsY)
+          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+          .style("text-anchor", "middle")
+          .style("font-size", sizeFont + "px")
+          .style("font-family", "Open Sans")
+          .style("font-weight", "bold")
+          .style("letter-spacing", "0.2")
+          .style("fill", "white")
+          .text(trial.prompt[i]);
         lineNumber++;
       }
     }
@@ -220,12 +228,11 @@ jsPsych.plugins['two-step-instructions'] = (() => {
       jsPsych.pluginAPI.clearAllTimeouts();
 
       // Clear the contents of 'displayElement'
-      displayElement.innerHTML = '';
+      displayElement.innerHTML = "";
 
       // Notify jsPsych
       jsPsych.finishTrial();
     };
-
 
     /**
      * Handle responses by the subject
@@ -234,7 +241,7 @@ jsPsych.plugins['two-step-instructions'] = (() => {
       // If the participant has clicked the button, end the trial
       if (trial.button_clicked == true) {
         endTrial();
-      };
+      }
     };
 
     // Create a keyboard listener, listen to all keys
@@ -243,7 +250,7 @@ jsPsych.plugins['two-step-instructions'] = (() => {
       jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: afterResponse,
         valid_responses: trial.choices,
-        rt_method: 'performance',
+        rt_method: "performance",
         persist: true,
         allow_held_key: false,
       });
