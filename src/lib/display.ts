@@ -1,14 +1,18 @@
 /**
+ * The jsPsych version of the task was originally coded by the Niv Lab (https://nivlab.princeton.edu/)
+ * at Princeton, adapted by the Hartley Lab (https://www.hartleylab.org/) at NYU for use online
+ * with children, adolescents, and adults, and adapted here by the Brain Development and Disorders Lab
+ * (https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
+ *
  * Functions and constants that handle display sizing
  */
-// Beware: multiple 'magic' numbers in this file
 // Global position variables
 export const height = window.innerHeight;
 export const width = window.innerWidth;
 
 // Overall scaling and picture sizing
-export let pictureHeight;
-export let pictureWidth;
+export let pictureHeight: number;
+export let pictureWidth: number;
 if (window.innerWidth / window.innerHeight < 1.34) {
   pictureHeight = window.innerWidth / 1.34;
   pictureWidth = window.innerWidth;
@@ -18,11 +22,11 @@ if (window.innerWidth / window.innerHeight < 1.34) {
 }
 
 // Image scaling
-export const sizeMonster = pictureHeight * 300 / 758;
-export const sizeReward = pictureHeight * 75 / 758;
+export const sizeMonster = (pictureHeight * 300) / 758;
+export const sizeReward = (pictureHeight * 75) / 758;
 
 // Font size
-export const sizeFont = pictureHeight * 25 / 758;
+export const sizeFont = (pictureHeight * 25) / 758;
 
 // Coordinate system for placing stimuli
 // Center points
@@ -31,11 +35,9 @@ export const centerY = height / 2;
 
 // Left and right choices
 // y-coordinate
-export const choiceY =
-  centerY + 0.22 * pictureHeight - sizeMonster / 2;
+export const choiceY = centerY + 0.22 * pictureHeight - sizeMonster / 2;
 // x-coordinates
-export const choiceXRight =
-  centerX + 0.25 * pictureWidth - sizeMonster / 2;
+export const choiceXRight = centerX + 0.25 * pictureWidth - sizeMonster / 2;
 export const choiceXLeft = centerX - 0.25 * pictureWidth - sizeMonster / 2;
 
 // Chosen stimulus location

@@ -2,22 +2,24 @@
   "name": "task_twostep",
   "version": "0.0.1",
   "description": "Two-step task, an adaptation of the task used by Nussenbaum, K. et. al. (2020).",
-  "main": "dist/index.js",
   "repository": "https://henry-burgess@github.com/Brain-Development-and-Disorders-Lab/task_twostep.git",
   "author": "Henry Burgess <henry.burgess@wustl.edu>",
   "license": "CC-BY-4.0",
   "private": true,
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "build": "webpack && gulp images",
     "dev": "webpack serve",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "lint": "prettier --write ."
   },
   "dependencies": {
     "consola": "^2.15.3",
     "d3": "^7.2.1",
     "jspsych": "^6.0.0",
     "jspsych-attention-check": "^1.4.2",
-    "jspsych-wrapper": "file:packages/jspsych-wrapper-v0.2.3.tgz"
+    "jspsych-wrapper": "file:packages/jspsych-wrapper-v0.2.7.tgz"
   },
   "devDependencies": {
     "babel-loader": "^8.2.3",
@@ -25,10 +27,16 @@
     "csv-loader": "^3.0.3",
     "eslint": "^8.6.0",
     "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
     "gulp": "^4.0.2",
     "gulp-rename": "^2.0.0",
     "html-webpack-plugin": "^5.5.0",
+    "prettier": "2.6.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.8",
+    "typescript": "^4.6.2",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.2"
