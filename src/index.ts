@@ -580,7 +580,8 @@ const createInstructions = (
   rightText: string[],
   leftText: string[],
   centerText: string[],
-  rewardText: string[]
+  rewardText: string[],
+  includeScore = false,
 ) => {
   // Instantitate and create the pages of the instructions
   const instructionPages = [];
@@ -596,6 +597,7 @@ const createInstructions = (
       rewardImage: rewardText[t],
       choices: [" "],
       prompt: prompts[t],
+      include_score: includeScore,
     };
     instructionPages.push(currentPage);
   }
@@ -615,7 +617,6 @@ for (let i = 0; i < instructions.length; i++) {
       imagesLeft[i],
       imagesCenter[i],
       imagesReward[i]
-      // imagesButton[i],
     )
   );
 }
@@ -809,12 +810,14 @@ expTimeline.push(
       [
         "You're finished with this part of the experiment!",
         "Click the red button to answer a final question.",
+        "You found:",
       ],
     ],
     [],
     [],
     [],
-    []
+    [],
+    true
   )[0]
 );
 
@@ -850,7 +853,7 @@ expTimeline.push(
     [
       [
         "Thank you for participating in this research!",
-        "Click the red button to be redirected.",
+        "Click the red button and press the spacebar to be redirected.",
       ],
     ],
     [],

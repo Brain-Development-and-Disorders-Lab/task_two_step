@@ -29,17 +29,17 @@ instructions[1] = [
 // Alien background
 instructions[2] = [
   [
-    "Each planet has two aliens on it. ",
+    "Each planet has two aliens on it.",
     "Each alien runs a space treasure mine.",
   ],
   [
-    "On each planet, you must ask one alien to share their space treasure with you. ",
-    "These aliens are nice, so if an alien just found treasure ",
+    "On each planet, you must ask one alien to share their space treasure with you.",
+    "These aliens are nice, so if an alien just found treasure",
     "in their mine, it will share it with you.",
   ],
   [
-    "Choose the left alien by pressing the '1' key ",
-    " and the right alien by pressing the '0' key. ",
+    "Choose the left alien by pressing the '1' key",
+    "and the right alien by pressing the '0' key.",
     "The choice you make will be highlighted.",
     "You have an opportunity to practice selecting aliens now.",
     "Click the red circle and press the spacebar to continue.",
@@ -53,14 +53,12 @@ instructions[3] = [
     "The treasure looks like this:",
   ],
   [
-    "If the alien doesn't have treasure this time " +
-      "you'll see an empty circle.",
+    "If the alien doesn't have treasure this time you'll see an empty circle.",
     "The circle looks like this:",
   ],
   [
-    "If an alien has a good mine it will often have treasure to share. ",
-    "It might not have treasure EVERY time you ask, but it will have " +
-      "treasure most of the time.",
+    "If an alien has a good mine it will often have treasure to share.",
+    "It might not have treasure EVERY time you ask, but it will have treasure most of the time.",
   ],
   [
     "Another alien might have a bad mine at the moment",
@@ -71,7 +69,7 @@ instructions[3] = [
 // Yellow alien
 instructions[4] = [
   [
-    "For example, this alien on the yellow planet has a good mine right now. ",
+    "For example, this alien on the yellow planet has a good mine right now.",
     "You can now ask it for treasure 10 times by pressing '1'.",
     "Click the red circle and press the spacebar to continue.",
   ],
@@ -104,7 +102,7 @@ instructions[7] = [["...and sometimes come up on the left."]];
 instructions[8] = [
   [
     "It does not matter which side an alien appears on.",
-    "For example: left is not luckier than right.",
+    "For example: the left side is not luckier than the right side.",
   ],
   [
     "You can practice choosing between the aliens now.",
@@ -113,7 +111,7 @@ instructions[8] = [
   [
     "Remember, press '1' to choose the left alien, or press key '0' to",
     "choose the right alien.",
-    "Click the red circle and then press the spacebar to continue.",
+    "Click the red circle and press the spacebar to continue.",
   ],
 ];
 
@@ -127,15 +125,14 @@ instructions[9] = [
   [
     "Each alien is like a game of chance, you can never be sure but",
     "you can guess.",
-    "The treasure an alien can give will change during the game. ",
+    "The treasure an alien can give will change during the game.",
   ],
   [
-    "An alien with a good mine may dig in a part of their mine that has " +
-      "little treasure. ",
+    "An alien with a good mine may dig in a part of their mine that has little treasure.",
     "Another alien with little treasure may find a lot of treasure.",
   ],
   [
-    "Any changes in an alien's mine will happen slowly, ",
+    "Any changes in an alien's mine will happen slowly,",
     "so try to focus on getting as much treasure as possible.",
   ],
   [
@@ -169,8 +166,8 @@ instructions[13] = [
     "to the green planet, and the other mostly to the yellow planet.",
   ],
   [
-    "The planet a spaceship goes to most won't change during the game.",
-    "Choose the spaceship that you think will take you to the alien",
+    "The planet a spaceship flies to most often won't change during the game.",
+    "You should choose the spaceship that you think will take you to the alien",
     "with the best mine, but remember, sometimes you'll",
     "go to the other planet!",
   ],
@@ -189,18 +186,15 @@ instructions[14] = [
     "in the game by asking it to share!",
   ],
   [
-    "How much bonus money you make is based on how much space treasure " +
-      "you find.",
-    "This is just a practice round of 20 flights, you're not playing " +
-      "for money now.",
+    "How much bonus money you make is based on how much space treasure you find.",
+    "This is just a practice round of 20 flights, you're not playing for money now.",
   ],
   [
     "You will have three seconds to make each choice. If you are too slow,",
-    "you will see a large X appear on each rocket or alien and that " +
-      "choice will be over.",
+    "you will see a large X appear on each rocket or alien and that choice will be over.",
   ],
   ["Don't feel rushed, but please try to make a choice every time."],
-  ["Good luck! Remember that 1 selects left and 0 selects right."],
+  ["Good luck! Remember that '1' selects left and '0' selects right."],
 ];
 
 // Black background
@@ -214,9 +208,8 @@ instructions[15] = [
 // Hints
 instructions[16] = [
   [
-    "Okay, that is nearly the end of the tutorial!",
-    "In the real game, the planets, aliens, and spaceships will " +
-      "be new colors,",
+    "This is nearly the end of the tutorial!",
+    "In the real game, the planets, aliens, and spaceships will be new colors,",
     "but the rules will be the same.",
     "The game is hard, so you will need to concentrate,",
     "but don't be afraid to trust your instincts.",
@@ -230,19 +223,15 @@ instructions[16] = [
   ],
   [
     "Hint #2:",
-    "Remember, each alien has its own mine. Just because one " +
-      "alien has a bad ",
-    "mine and can't share very often, does not mean another " +
-      "has a good mine.",
-    "Also, there are no funny patterns in how an alien shares, ",
-    "like every other time you ask, or depending on which spaceship " +
-      "you took.",
-    "The aliens are not trying to trick you.",
+    "Remember, each alien has its own mine. Just because one alien has a bad ",
+    "mine and can't share very often, does not mean another has a good mine.",
+    "There are no funny patterns in how an alien shares,",
+    "like every other time you ask, or depending on which spaceship you took.",
+    "The aliens are not trying to trick you!",
   ],
   [
     "Hint #3:",
-    "The spaceship you choose is important because often an alien " +
-      "on one planet ",
+    "The spaceship you choose is important because often an alien on one planet ",
     "may be better than the ones on another planet.",
     "You can find more treasure by finding the spaceship",
     "that is most likely to take you to right planet.",
@@ -253,7 +242,7 @@ instructions[16] = [
 instructions[17] = [
   [
     "Now it's time to make sure you know how to play.",
-    "Please respond TRUE or FALSE to the questions on the next few pages.",
+    "Please respond 'True' or 'False' to the questions on the next few pages.",
   ],
 ];
 
@@ -263,7 +252,7 @@ instructions[18] = [
     "OK! Now you know how to play.",
     "In the real game we'll count how many pieces of space treasure",
     "you find and show you at the end.",
-    "Ready?  Now its time to play the game! Good luck space traveler!",
+    "Ready? Now its time to play the game! Good luck space traveler!",
   ],
 ];
 
@@ -271,7 +260,7 @@ export const firstBreak = [
   [
     "Great job so far! You have completed 1 out of 4 rounds.",
     "You may now take a break.",
-    "Press the button when you are ready for the next round.",
+    "Click the red circle and press the spacebar when you are ready to continue.",
   ],
 ];
 
@@ -279,7 +268,7 @@ export const secondBreak = [
   [
     "Awesome! You are halfway through the game.",
     "You may now take a break.",
-    "Press the button when you are ready for the next round.",
+    "Click the red circle and press the spacebar when you are ready to continue.",
   ],
 ];
 
@@ -287,6 +276,6 @@ export const thirdBreak = [
   [
     "Almost done! Just 1 more round to go.",
     "You may now take a break.",
-    "Press the button when you are ready for the next round.",
+    "Click the red circle and press the spacebar when you are ready to continue.",
   ],
 ];

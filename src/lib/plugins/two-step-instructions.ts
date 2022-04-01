@@ -57,12 +57,12 @@ jsPsych.plugins["two-step-instructions"] = (() => {
         default: null,
         description: "The image to be displayed",
       },
-      rightStimulus: {
+      leftStimulus: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false,
       },
-      leftStimulus: {
+      rightStimulus: {
         type: jsPsych.plugins.parameterType.STRING,
         default: null,
         array: false,
@@ -104,6 +104,12 @@ jsPsych.plugins["two-step-instructions"] = (() => {
         default: false,
         description: "State of the button.",
       },
+      include_score: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: "Include score as stimulus",
+        default: false,
+        description: "Substitute a stimulus for the total score of the participant"
+      }
     },
   };
 
@@ -214,6 +220,25 @@ jsPsych.plugins["two-step-instructions"] = (() => {
           .style("fill", "white")
           .text(trial.prompt[i]);
         lineNumber++;
+      }
+
+      if (trial.include_score === true) {
+        const realScore = window.Experiment.getGlobalStateValue("realReward");
+        const scoreText = `${realScore} pieces of space treasure`;
+
+        // Include the score if required
+        svg
+          .append("text")
+          .attr("x", textX)
+          .attr("y", textInstructionsY)
+          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+          .style("text-anchor", "middle")
+          .style("font-size", sizeFont + "px")
+          .style("font-family", "Open Sans")
+          .style("font-weight", "bold")
+          .style("letter-spacing", "0.2")
+          .style("fill", "white")
+          .text(scoreText);
       }
     }
 
