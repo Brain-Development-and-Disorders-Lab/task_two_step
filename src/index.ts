@@ -246,15 +246,16 @@ const createBlock = (
         on_finish: (data: any) => {
           if (data.rewardStimulus === rewardImage) {
             if (isPractice === false) {
-              experiment.getState().set(
-                "realReward",
-                experiment.getState().get("realReward") + 1
-              );
+              experiment
+                .getState()
+                .set("realReward", experiment.getState().get("realReward") + 1);
             } else {
-              experiment.getState().set(
-                "practiceReward",
-                experiment.getState().get("practiceReward") + 1
-              );
+              experiment
+                .getState()
+                .set(
+                  "practiceReward",
+                  experiment.getState().get("practiceReward") + 1
+                );
             }
           }
 
@@ -581,7 +582,7 @@ const createInstructions = (
   leftText: string[],
   centerText: string[],
   rewardText: string[],
-  includeScore = false,
+  includeScore = false
 ) => {
   // Instantitate and create the pages of the instructions
   const instructionPages = [];
@@ -773,7 +774,7 @@ expTimeline.push(
 expTimeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
 // Exclude the second half of the game if testing mode is enabled
-if (!configuration.manipulations.testing) {
+if (configuration.manipulations.testing == false) {
   // Insert break 2
   expTimeline.push(
     createInstructions(

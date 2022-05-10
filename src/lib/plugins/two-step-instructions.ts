@@ -109,8 +109,9 @@ jsPsych.plugins["two-step-instructions"] = (() => {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: "Include score as stimulus",
         default: false,
-        description: "Substitute a stimulus for the total score of the participant"
-      }
+        description:
+          "Substitute a stimulus for the total score of the participant",
+      },
     },
   };
 

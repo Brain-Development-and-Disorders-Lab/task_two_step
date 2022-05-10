@@ -292,7 +292,9 @@ instructions[18] = [
 
 export const firstBreak = [
   [
-    `Great job so far! You have completed 1 out of ${configuration.manipulations.testing ? "2" : "4"} rounds.`,
+    `Great job so far! You have completed 1 out of ${
+      configuration.manipulations.testing === true ? "2" : "4"
+    } rounds.`,
     "You may now take a break.",
     "",
     "Click the red button and press the spacebar when you are ready to continue.",
