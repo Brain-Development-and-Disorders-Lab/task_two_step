@@ -21,9 +21,6 @@
 // Logging library
 import consola from "consola";
 
-// Wrapper instance
-import { experiment } from "../..";
-
 // d3.js imports
 import { interval, select } from "d3";
 
@@ -146,6 +143,9 @@ jsPsych.plugins["two-step-choice"] = (() => {
   plugin.trial = (displayElement, trial) => {
     // Debugging information
     consola.debug(`Running trial:`, trial.type);
+
+    // 'Experiment' instance
+    const experiment = window.Experiment;
 
     // Reset the displayElement contents
     const html = `<div id='container' class='exp-container'></div>`;
@@ -626,6 +626,9 @@ jsPsych.plugins["two-step-choice"] = (() => {
    * @return {string}
    */
   const calculateReward = (chosenString: string, trialRow: any) => {
+    // 'Experiment' instance
+    const experiment = window.Experiment;
+
     if (chosenString == "") {
       return null;
     } else {

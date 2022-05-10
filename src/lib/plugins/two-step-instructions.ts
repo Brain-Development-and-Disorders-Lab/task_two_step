@@ -35,6 +35,7 @@ import {
   textInstructionsY,
   textX,
   sizeFont,
+  sizeButton,
 } from "../display";
 
 jsPsych.plugins["two-step-instructions"] = (() => {
@@ -117,6 +118,9 @@ jsPsych.plugins["two-step-instructions"] = (() => {
     // Debugging information
     consola.debug(`Running trial:`, trial.type);
 
+    // Experiment instance
+    const experiment = window.Experiment;
+
     // Reset the displayElement contents
     const html = `<div id='container' class='exp-container'></div>`;
     displayElement.innerHTML = html;
@@ -186,9 +190,9 @@ jsPsych.plugins["two-step-instructions"] = (() => {
     // Append the continue button to the view
     const imageButton = svg
       .append("svg:circle")
-      .attr("r", 30)
+      .attr("r", sizeButton)
       .attr("cx", choiceXRight + sizeMonster)
-      .attr("cy", choiceY + sizeMonster - 100)
+      .attr("cy", choiceY + sizeMonster - 50)
       .style("fill", "red")
       .style("stroke", "black")
       .style("stroke-width", 6)
@@ -223,7 +227,7 @@ jsPsych.plugins["two-step-instructions"] = (() => {
       }
 
       if (trial.include_score === true) {
-        const realScore = window.Experiment.getGlobalStateValue("realReward");
+        const realScore = experiment.getState().get("realReward");
         const scoreText = `${realScore} pieces of space treasure`;
 
         // Include the score if required

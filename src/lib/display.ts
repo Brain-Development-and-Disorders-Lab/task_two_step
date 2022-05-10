@@ -24,6 +24,7 @@ if (window.innerWidth / window.innerHeight < 1.34) {
 // Image scaling
 export const sizeMonster = (pictureHeight * 300) / 758;
 export const sizeReward = (pictureHeight * 75) / 758;
+export const sizeButton = (pictureHeight * 25) / 758;
 
 // Font size
 export const sizeFont = (pictureHeight * 25) / 758;

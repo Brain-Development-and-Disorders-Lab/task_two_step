@@ -10,7 +10,7 @@
 import consola from "consola";
 
 // Wrapper library
-import { Experiment } from "jspsych-wrapper";
+import { Experiment } from "neurocog";
 
 // Experiment variables
 import {
@@ -246,14 +246,14 @@ const createBlock = (
         on_finish: (data: any) => {
           if (data.rewardStimulus === rewardImage) {
             if (isPractice === false) {
-              experiment.setGlobalStateValue(
+              experiment.getState().set(
                 "realReward",
-                experiment.getGlobalStateValue("realReward") + 1
+                experiment.getState().get("realReward") + 1
               );
             } else {
-              experiment.setGlobalStateValue(
+              experiment.getState().set(
                 "practiceReward",
-                experiment.getGlobalStateValue("practiceReward") + 1
+                experiment.getState().get("practiceReward") + 1
               );
             }
           }
@@ -772,35 +772,38 @@ expTimeline.push(
 // Main block 2
 expTimeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
-// Insert break 2
-expTimeline.push(
-  createInstructions(
-    experiment.getStimuli().getImage("blackbackground.jpg"),
-    secondBreak,
-    [],
-    [],
-    [],
-    []
-  )[0]
-);
+// Exclude the second half of the game if testing mode is enabled
+if (!configuration.manipulations.testing) {
+  // Insert break 2
+  expTimeline.push(
+    createInstructions(
+      experiment.getStimuli().getImage("blackbackground.jpg"),
+      secondBreak,
+      [],
+      [],
+      [],
+      []
+    )[0]
+  );
 
-// Main block 3
-expTimeline.push(createBlock(timelineVariables[2], probabilityData, false));
+  // Main block 3
+  expTimeline.push(createBlock(timelineVariables[2], probabilityData, false));
 
-// Insert break 3
-expTimeline.push(
-  createInstructions(
-    experiment.getStimuli().getImage("blackbackground.jpg"),
-    thirdBreak,
-    [],
-    [],
-    [],
-    []
-  )[0]
-);
+  // Insert break 3
+  expTimeline.push(
+    createInstructions(
+      experiment.getStimuli().getImage("blackbackground.jpg"),
+      thirdBreak,
+      [],
+      [],
+      [],
+      []
+    )[0]
+  );
 
-// Main block 4
-expTimeline.push(createBlock(timelineVariables[3], probabilityData, false));
+  // Main block 4
+  expTimeline.push(createBlock(timelineVariables[3], probabilityData, false));
+}
 
 // Finish
 expTimeline.push(
@@ -809,7 +812,9 @@ expTimeline.push(
     [
       [
         "You're finished with this part of the experiment!",
+        "",
         "Click the red button to answer a final question.",
+        "",
         "You found:",
       ],
     ],
@@ -853,6 +858,7 @@ expTimeline.push(
     [
       [
         "Thank you for participating in this research!",
+        "",
         "Click the red button and press the spacebar to be redirected.",
       ],
     ],
