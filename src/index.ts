@@ -10,7 +10,7 @@
 import consola from "consola";
 
 // Wrapper library
-import { Experiment } from "jspsych-wrapper";
+import { Experiment } from "neurocog";
 
 // Experiment variables
 import {
@@ -246,15 +246,16 @@ const createBlock = (
         on_finish: (data: any) => {
           if (data.rewardStimulus === rewardImage) {
             if (isPractice === false) {
-              experiment.setGlobalStateValue(
-                "realReward",
-                experiment.getGlobalStateValue("realReward") + 1
-              );
+              experiment
+                .getState()
+                .set("realReward", experiment.getState().get("realReward") + 1);
             } else {
-              experiment.setGlobalStateValue(
-                "practiceReward",
-                experiment.getGlobalStateValue("practiceReward") + 1
-              );
+              experiment
+                .getState()
+                .set(
+                  "practiceReward",
+                  experiment.getState().get("practiceReward") + 1
+                );
             }
           }
 
@@ -581,7 +582,7 @@ const createInstructions = (
   leftText: string[],
   centerText: string[],
   rewardText: string[],
-  includeScore = false,
+  includeScore = false
 ) => {
   // Instantitate and create the pages of the instructions
   const instructionPages = [];
@@ -809,7 +810,9 @@ expTimeline.push(
     [
       [
         "You're finished with this part of the experiment!",
+        "",
         "Click the red button to answer a final question.",
+        "",
         "You found:",
       ],
     ],
@@ -853,6 +856,7 @@ expTimeline.push(
     [
       [
         "Thank you for participating in this research!",
+        "",
         "Click the red button and press the spacebar to be redirected.",
       ],
     ],

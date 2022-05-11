@@ -1,5 +1,5 @@
-// 'Experiment' jsPsych wrapper library
-import { Experiment } from "jspsych-wrapper";
+// 'Experiment' library
+import { Experiment } from "neurocog";
 
 // Add 'Experiment' to the global Window interface
 declare global {

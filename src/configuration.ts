@@ -14,6 +14,7 @@ export const configuration = {
   name: "Two-step game",
   studyName: "task_twostep",
   manipulations: {},
+  resources: {},
   stimuli: {
     // Alien 1, main
     "alien1_a1.png": "images/aliens/1/alien1_a1.png",
@@ -112,7 +113,7 @@ export const configuration = {
     "nothing.png": "images/nothing.png",
     "t.png": "images/t.png",
   },
-  seed: "",
+  seed: 0.4735,
   allowParticipantContact: false,
   contact: "henry.burgess@wustl.edu",
   logging: LogLevel.Info,
