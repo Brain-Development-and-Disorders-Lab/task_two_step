@@ -773,38 +773,35 @@ expTimeline.push(
 // Main block 2
 expTimeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
-// Exclude the second half of the game if testing mode is enabled
-if (configuration.manipulations.testing == false) {
-  // Insert break 2
-  expTimeline.push(
-    createInstructions(
-      experiment.getStimuli().getImage("blackbackground.jpg"),
-      secondBreak,
-      [],
-      [],
-      [],
-      []
-    )[0]
-  );
+// Insert break 2
+expTimeline.push(
+  createInstructions(
+    experiment.getStimuli().getImage("blackbackground.jpg"),
+    secondBreak,
+    [],
+    [],
+    [],
+    []
+  )[0]
+);
 
-  // Main block 3
-  expTimeline.push(createBlock(timelineVariables[2], probabilityData, false));
+// Main block 3
+expTimeline.push(createBlock(timelineVariables[2], probabilityData, false));
 
-  // Insert break 3
-  expTimeline.push(
-    createInstructions(
-      experiment.getStimuli().getImage("blackbackground.jpg"),
-      thirdBreak,
-      [],
-      [],
-      [],
-      []
-    )[0]
-  );
+// Insert break 3
+expTimeline.push(
+  createInstructions(
+    experiment.getStimuli().getImage("blackbackground.jpg"),
+    thirdBreak,
+    [],
+    [],
+    [],
+    []
+  )[0]
+);
 
-  // Main block 4
-  expTimeline.push(createBlock(timelineVariables[3], probabilityData, false));
-}
+// Main block 4
+expTimeline.push(createBlock(timelineVariables[3], probabilityData, false));
 
 // Finish
 expTimeline.push(

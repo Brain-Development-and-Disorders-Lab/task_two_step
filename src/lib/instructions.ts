@@ -6,8 +6,6 @@
  *
  * Generate and export the instructions for the task
  */
-import { configuration } from "../configuration";
-
 export const instructions: any[][] = [];
 
 // Black (starting) background
@@ -292,9 +290,7 @@ instructions[18] = [
 
 export const firstBreak = [
   [
-    `Great job so far! You have completed 1 out of ${
-      configuration.manipulations.testing === true ? "2" : "4"
-    } rounds.`,
+    `Great job so far! You have completed 1 out of 4 rounds.`,
     "You may now take a break.",
     "",
     "Click the red button and press the spacebar when you are ready to continue.",

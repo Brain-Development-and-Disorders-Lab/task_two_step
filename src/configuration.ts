@@ -13,9 +13,7 @@ import { LogLevel } from "consola";
 export const configuration = {
   name: "Two-step game",
   studyName: "task_twostep",
-  manipulations: {
-    testing: true,
-  },
+  manipulations: {},
   resources: {},
   stimuli: {
     // Alien 1, main
