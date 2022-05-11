@@ -19,7 +19,7 @@
     "d3": "^7.2.1",
     "jspsych": "^6.0.0",
     "jspsych-attention-check": "^1.4.2",
-    "neurocog": "^0.3.3"
+    "neurocog": "^0.3.4"
   },
   "devDependencies": {
     "@types/d3": "^7.1.0",
