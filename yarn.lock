@@ -3664,10 +3664,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-neurocog@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/neurocog/-/neurocog-0.3.2.tgz#0d2dc65b53bf72231eec282ce52ca254579514ad"
-  integrity sha512-UVOxISsD4Qtvnd8pTbjyljX886hwOTCMUN5gXeJND80Fn9V6MyW1J88FYaQE/txWHKdAvP1WY79Sa1rZ18d5jQ==
+neurocog@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/neurocog/-/neurocog-0.3.3.tgz#b38b9ca82069cdae3b2a62530ae68be4575a5679"
+  integrity sha512-rYyC+35gvX0VEC6l5FrQwJ3ZipHYKzmT18A/sT7Cf/1/3cJNA+Gf/twqExpAU0Bk+wauh+PoytjK0GJlTGNd3w==
   dependencies:
     consola "^2.15.3"
     d3-random "^3.0.1"
