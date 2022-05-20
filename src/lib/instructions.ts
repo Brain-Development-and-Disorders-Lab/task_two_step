@@ -252,10 +252,10 @@ instructions[16] = [
     "Remember, each alien has its own mine. Just because one alien has a bad ",
     "mine and can't share very often, does not mean another has a good mine.",
     "",
-    "There are no funny patterns in how an alien shares,",
-    "like every other time you ask, or depending on which spaceship you took.",
-    "",
     "The aliens are not trying to trick you!",
+    "",
+    "Your actions do not change how good a mine is," +
+    "and the aliens will not hide treasure from you if they have it available.",
   ],
   [
     "Hint #3:",
