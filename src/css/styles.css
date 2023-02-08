@@ -27,13 +27,13 @@
 }
 
 .jspsych-display-element {
-  font-family: "Open Sans", "Arial", sans-serif;
+  font-family: "Arial", "Open Sans", sans-serif;
   font-size: 18px;
   line-height: 1.6em;
 }
 
 .jspsych-display-element input[type="text"] {
-  font-family: "Open Sans", "Arial", sans-serif;
+  font-family: "Arial", "Open Sans", sans-serif;
   font-size: 14px;
 }
 
@@ -43,7 +43,7 @@
   margin: 0px;
   font-size: 14px;
   font-weight: 400;
-  font-family: "Open Sans", "Arial", sans-serif;
+  font-family: "Arial", "Open Sans", sans-serif;
   cursor: pointer;
   line-height: 1.4;
   text-align: center;

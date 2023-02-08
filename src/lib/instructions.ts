@@ -11,97 +11,95 @@ export const instructions: any[][] = [];
 // Black (starting) background
 instructions[0] = [
   [
-    "Please read each page of the instructions carefully.",
+    "Before commencing the task, review the following instructions carefully.",
     "",
-    "When you are ready to go to the next page,",
-    "click on the red button on the bottom right so that it turns green.",
+    "When you are ready to continue, click the red button in",
+    "the lower-right corner of your screen.",
+    "Once the button is green, press the Spacebar to continue.",
     "",
-    "Once the button is green, press the spacebar to continue.",
+    "If you have any questions at any stage of the task, reach out to the research",
+    "coordinator.",
   ],
 ];
 
 // Rocket background
 instructions[1] = [
   [
-    "In this game, you will be taking a spaceship from earth",
-    "to look for space treasure on two different planets.",
+    "Welcome, astronaut! You are now in charge of important exploration missions.",
+    "",
+    "These missions involve taking one of these two spaceships from Earth",
+    "to explore two planets potentially containing resources.",
   ],
 ];
 
 // Alien background
 instructions[2] = [
   [
-    "Each planet has two aliens on it.",
-    "",
-    "Each alien runs a space treasure mine.",
+    "Each planet will have two aliens who are in charge of their own",
+    "resource mines.",
   ],
   [
-    "On each planet, you must ask one alien to share their space treasure with you.",
-    "",
-    "These aliens are nice, so if an alien just found treasure",
-    "in their mine, it will share it with you.",
+    "On each planet, you must ask one alien to share their resources.",
+    "If an alien has resources, it will share them with you.",
+    "A mission is successful when an alien shares their treasure.",
   ],
   [
-    "Choose the left alien by pressing the '1' key and the right alien by pressing the '0' key.",
-    "The choice you make will be highlighted.",
+    "To ask the left alien, press '1'. To ask the right alien, press '0'.",
+    "The alien you asked will be highlighted.",
     "",
-    "You have an opportunity to practice selecting aliens now.",
-    "Click the red button and press the spacebar to continue.",
+    "You can practice asking aliens for resources now.",
+    "Click the red button and press Spacebar to continue.",
   ],
 ];
 
 // Black background
 instructions[3] = [
   [
-    "After you choose an alien, you will find out if they have treasure to share.",
-    "",
-    "The treasure looks like this:",
+    "After you ask an alien, they will show you if they have resources to share.",
+    "Resources looks like this:",
   ],
   [
-    "If the alien doesn't have treasure this time you'll see an empty circle.",
-    "",
+    "If the alien doesn't have resources to share this time, you'll see an empty circle.",
     "The circle looks like this:",
   ],
   [
-    "If an alien has a good mine it will often have treasure to share.",
-    "",
-    "It might not have treasure EVERY time you ask, but it will have treasure most of the time.",
+    "If an alien has a good mine it will often have resources to share.",
+    "It might not have resources every time you ask, but it will have resources most of the time.",
   ],
   [
-    "Another alien might have a bad mine at the moment",
-    "and won't have treasure to share most times you ask.",
+    "Another alien might have a bad mine at the moment,",
+    "and it won't have resources to share most times you ask.",
   ],
 ];
 
 // Yellow alien
 instructions[4] = [
   [
-    "For example, this alien on the yellow planet has a good mine right now.",
+    "For example, this alien on the yellow planet has a good mine at the moment.",
+    "You can now ask it for treasure 10 times. To ask it for treasure, press '1'.",
     "",
-    "You can now ask it for treasure 10 times by pressing '1'.",
-    "",
-    "Click the red button and press the spacebar to continue.",
+    "Click the red button and press Spacebar to continue.",
   ],
   [
-    "See, this alien shared treasure most of the times you asked,",
-    "but maybe not every time.",
+    "The alien shared resources most times you asked.",
+    "During missions, it may not share resources every time you ask.",
   ],
 ];
 
 // Black background
 instructions[5] = [
   [
-    "Every alien has treasure in its mine, but they can't share every time.",
+    "Aliens have resources in their mines, but they can't share their resources every mission.",
     "",
-    "Some aliens will share because treasure is easier to dig up right now.",
+    "For example, some aliens will share because resources are easier to dig up right now.",
   ],
 ];
 
 // One alien to the right
 instructions[6] = [
   [
-    "Now, you can choose between two aliens",
-    "and figure out which alien has more treasure to share.",
+    "You can now choose between two aliens to ask for resources.",
+    "Pay attention to each alien and try to figure out which alien has more resources to share.",
   ],
 ];
 
@@ -111,51 +109,46 @@ instructions[7] = [["...and sometimes come up on the left."]];
 // Black background
 instructions[8] = [
   [
-    "It does not matter which side an alien appears on.",
-    "",
+    "It does not matter which side of your screen an alien appears on.",
     "For example: the left side is not luckier than the right side.",
   ],
   [
-    "You can practice choosing between the aliens now.",
-    "",
-    "You have 10 choices to try to figure out which alien has a good mine.",
+    "You now have 10 practice missions to try to figure out which alien has a good mine.",
+    "To ask the left alien for resources, press '1'. To ask the right alien for resources, press '0'.",
   ],
   [
-    "Remember, press '1' to choose the left alien, or press key '0' to",
-    "choose the right alien.",
-    "",
-    "Click the red button and press the spacebar to continue.",
+    "Click the red button and press Spacebar to begin the practice missions.",
   ],
 ];
 
 // Black background
 instructions[9] = [
   [
-    "You may have learned that this alien had treasure more often.",
-    "",
+    "You may have discovered that this alien had resources to share more often.",
     "Even if this alien had a better mine,",
-    "you couldn't be sure if it had treasure all the time.",
+    "you couldn't be sure if it had resources to share all the time.",
   ],
   [
     "Each alien is like a game of chance, you can never be sure but",
     "you can guess.",
     "",
-    "The treasure an alien can give will change during the game.",
+    "The amount resources an alien can share will change during the missions.",
   ],
   [
-    "An alien with a good mine may dig in a part of their mine that has little treasure.",
+    "An alien with a good mine in previous missions may dig in a part of their",
+    "mine that has few resources.",
     "",
-    "Another alien with little treasure may find a lot of treasure.",
+    "Another alien with few resources in previous missions may discover a lot of resources.",
   ],
   [
-    "Any changes in an alien's mine will happen slowly,",
-    "so try to focus on getting as much treasure as possible.",
+    "Any changes in an alien's mine will happen slowly across multiple missions.",
+    "It is best to focus on retrieving as much resources as possible.",
   ],
   [
-    "So an alien with a good treasure mine right now will",
-    "continue to stay good for a while.",
+    "An alien with a good resource mine right now will",
+    "continue to have a good mine for a while.",
     "",
-    "To find the alien with the best mine at each point in time,",
+    "To find the alien with the best mine during each mission",
     "you must concentrate.",
   ],
 ];
@@ -163,10 +156,10 @@ instructions[9] = [
 // Rockets
 instructions[10] = [
   [
-    "Now that you know have practiced choosing aliens, you can",
-    "learn to play the entire game.",
+    "Now that you know have practiced asking aliens for treasure, you can",
+    "learn how to launch and navigate your spaceship.",
     "",
-    "In the game, you will travel from earth to one of two planets.",
+    "In each mission, you will travel from Earth to one of two planets.",
   ],
 ];
 
@@ -179,10 +172,10 @@ instructions[12] = [["This is the yellow planet."]];
 // Rockets
 instructions[13] = [
   [
-    "First, you need to choose which spaceship to take.",
+    "First, you must select the spaceship to launch.",
     "",
-    "The spaceships can fly to either planet, but one will fly mostly",
-    "to the green planet, and the other mostly to the yellow planet.",
+    "The spaceships can fly to either planet, but one spaceship will fly mostly",
+    "to the green planet, and the other spaceship will fly mostly to the yellow planet.",
   ],
   [
     "The planet a spaceship flies to most often won't change during the game.",
