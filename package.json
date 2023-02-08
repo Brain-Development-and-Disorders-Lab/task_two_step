@@ -10,7 +10,7 @@
   "types": "types/index.d.ts",
   "scripts": {
     "build": "webpack && gulp images",
-    "dev": "webpack serve",
+    "start": "webpack serve",
     "clean": "rm -rf dist",
     "lint": "prettier --write ."
   },
@@ -19,7 +19,7 @@
     "d3": "^7.2.1",
     "jspsych": "^6.0.0",
     "jspsych-attention-check": "^1.4.2",
-    "neurocog": "^0.3.4"
+    "neurocog": "^0.3.8"
   },
   "devDependencies": {
     "@types/d3": "^7.1.0",

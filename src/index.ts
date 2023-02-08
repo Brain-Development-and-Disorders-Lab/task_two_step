@@ -12,30 +12,36 @@ import consola from "consola";
 // Wrapper library
 import { Experiment } from "neurocog";
 
+// General jsPsych imports
+import "jspsych";
+import "jspsych/plugins/jspsych-preload";
+import "jspsych-attention-check";
+
+// Import all our plugins
+import "./lib/plugins/two-step-choice";
+import "./lib/plugins/two-step-instructions";
+import "./lib/plugins/two-step-fixation";
+
+// Styling
+import "./css/styles.css";
+
+// Import data informing probabilities
+import practiceProbabilityData from "./data/masterprobtut.csv";
+import probabilityData from "./data/masterprob4.csv";
+
 // Experiment variables
 import {
   blockLength,
   timeChoice,
   blockCount,
-  rocketSides,
   practiceGameCount,
-  practiceGameIdx,
-  practiceRocketSides,
   keyLeft,
   keyRight,
-  redPlanetFirstRocket,
-  displayOrderRed,
-  displayOrderGreen,
-  displayOrderYellow,
-  displayOrderPurple,
   probability,
   practicePressingNum,
-  practicePressingIdx,
   practiceRewardNum,
-  practiceRewardIdx,
   payoffReward,
   practiceStochasticNum,
-  practiceStochasticIdx,
   payoffInstructions,
 } from "./lib/variables";
 
@@ -50,27 +56,17 @@ import {
 // Configuration
 import { configuration } from "./configuration";
 
-// General jsPsych imports
-import "jspsych";
-import "jspsych/plugins/jspsych-preload";
-import "jspsych-attention-check";
-
-// Import all our plugins
-import "./lib/plugins/two-step-choice";
-import "./lib/plugins/two-step-instructions";
-import "./lib/plugins/two-step-fixation";
-
-// Import the data
-import practiceProbabilityData from "./data/masterprobtut.csv";
-import probabilityData from "./data/masterprob4.csv";
-
-// Styling
-import "./css/styles.css";
-
 // Instantiate the Experiment wrapper class
 export const experiment = new Experiment(configuration);
 
-consola.info(`Experiment loaded, continuing...`);
+// Boolean variables decided randomly at the start of the experiment
+export const rocketSides = experiment.random() < 0.5;
+export const practiceRocketSides = experiment.random() < 0.5;
+export const displayOrderRed = experiment.random() < 0.5;
+export const displayOrderPurple = experiment.random() < 0.5;
+export const displayOrderGreen = experiment.random() < 0.5;
+export const displayOrderYellow = experiment.random() < 0.5;
+export const redPlanetFirstRocket = experiment.random() < 0.5;
 
 // Instantiate the timeline variables for the main trials
 const timelineVariables: any[][] = [];
@@ -132,20 +128,18 @@ for (let i = 0; i < practiceGameCount; i++) {
 let currStageTwo: any[] | null = [];
 
 /**
- * createBlock function
- * @param {any} variables variables
- * @param {any} probabilityData probability data related to the
+ * Function yielding a three-stage grouping of jsPsych trials. This grouping represents
+ * the first decision (between two rockets), the second decision (between two aliens), and
+ * a fixation cross.
+ * @param {any[]} variables timeline variables
+ * @param {{ [x: string]: any }} probabilityData probability data related to the
  * trials of the block
- * @param {Boolean} isPractice whether or not the block of trials
+ * @param {boolean} isPractice whether or not the block of trials
  * are practice trials
  * @return {any} three-stage grouping, including first decision,
  * second decision, and fixation cross
  */
-const createBlock = (
-  variables: any[],
-  probabilityData: { [x: string]: any },
-  isPractice: boolean
-) => {
+const createBlock = (variables: any[], probabilityData: { [x: string]: any }, isPractice: boolean): any => {
   // Create the generic experimental procedure for a single trial.
   // Consists of the first and second choices.
   const procedure = {
@@ -154,22 +148,24 @@ const createBlock = (
         // Instantiate the first choice
         type: "two-step-choice",
         trialStage: "1",
-        choices: [keyLeft, keyRight],
-        planetStimulus: experiment.getStimuli().getImage("earth.png"),
-        rightStimulus: jsPsych.timelineVariable("rightStimulus"),
-        leftStimulus: jsPsych.timelineVariable("leftStimulus"),
         trialNumber: jsPsych.timelineVariable("trialNumber"),
+        choices: [keyLeft, keyRight],
+
+        // Trial stimuli
+        planetStimulus: experiment.getStimuli().getImage("earth.png"),
+        leftStimulus: jsPsych.timelineVariable("leftStimulus"),
+        rightStimulus: jsPsych.timelineVariable("rightStimulus"),
 
         // Specify if this is a practice trial or not
         isPractice: isPractice,
 
         // Define the 'on_start' callback
-        on_start: function () {
+        on_start: () => {
           currStageTwo = [];
         },
 
         // Define the 'on_start' callback
-        on_finish: function (data: any) {
+        on_finish: (data: any) => {
           // Specify the choice made in the data
           if (data.key_press == keyLeft) {
             data.choice = 1;
@@ -331,7 +327,7 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
     }
 
     const firstShipChosen = chosenString.slice(-1) === "1";
-    const goodTransition = Math.random() < probability;
+    const goodTransition = experiment.random() < probability;
 
     // Determine the resulting planet
     let planet = "";
@@ -462,7 +458,7 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
 };
 
 // Setup the experiment timeline
-let expTimeline = [];
+let timeline = [];
 
 // Prepare the resource collections
 const imagesLeft: any[][] = [];
@@ -624,7 +620,7 @@ for (let i = 0; i < instructions.length; i++) {
 
 // Create practice trials for selecting between aliens
 for (let i = 0; i < practicePressingNum - 1; i++) {
-  currentInstructions.splice(practicePressingIdx, 0, {
+  currentInstructions.push({
     type: "two-step-choice",
     timeout: false,
     choices: [keyLeft, keyRight],
@@ -638,7 +634,7 @@ for (let i = 0; i < practicePressingNum - 1; i++) {
   });
 }
 
-currentInstructions.splice(practicePressingIdx, 0, {
+currentInstructions.push({
   type: "two-step-choice",
   timeout: false,
   choices: [keyLeft, keyRight],
@@ -652,7 +648,7 @@ currentInstructions.splice(practicePressingIdx, 0, {
 
 // Create practice trials to select a single alien and view reward outcome
 for (let i = 0; i < practiceRewardNum; i++) {
-  currentInstructions.splice(practiceRewardIdx, 0, {
+  currentInstructions.push({
     type: "two-step-choice",
     timeout: false,
     trialRow: payoffReward,
@@ -682,7 +678,7 @@ for (let i = 0; i < practiceRewardNum; i++) {
 
 // Create practice trials for selecting between aliens
 for (let i = 0; i < practiceStochasticNum; i += 1) {
-  currentInstructions.splice(practiceStochasticIdx, 0, {
+  currentInstructions.push({
     type: "two-step-choice",
     timeout: false,
     trialRow: payoffInstructions,
@@ -697,15 +693,11 @@ for (let i = 0; i < practiceStochasticNum; i += 1) {
 }
 
 // Insert practice trials into instructions
-currentInstructions.splice(
-  practiceGameIdx,
-  0,
-  createBlock(practiceTimelineVariables, practiceProbabilityData, true)
-);
+currentInstructions.push(createBlock(practiceTimelineVariables, practiceProbabilityData, true));
 
 // Insert the three quizzes before the last element in `currentInstructions`
 // Question 1
-currentInstructions.splice(currentInstructions.length - 1, 0, {
+currentInstructions.push({
   type: "attention-check",
   prompt: "True or False: Each spaceship always flies to the same planet.",
   options: ["True", "False"],
@@ -719,7 +711,7 @@ currentInstructions.splice(currentInstructions.length - 1, 0, {
 });
 
 // Question 2
-currentInstructions.splice(currentInstructions.length - 1, 0, {
+currentInstructions.push({
   type: "attention-check",
   prompt:
     "True or False: If an alien has a lot of treasure to share now, " +
@@ -734,7 +726,7 @@ currentInstructions.splice(currentInstructions.length - 1, 0, {
 });
 
 // Question 3
-currentInstructions.splice(currentInstructions.length - 1, 0, {
+currentInstructions.push({
   type: "attention-check",
   prompt:
     "True or False: You will have as much time as " +
@@ -748,18 +740,18 @@ currentInstructions.splice(currentInstructions.length - 1, 0, {
 });
 
 // Remove the instructions about the alien locations
-currentInstructions.splice(27, 2);
+// currentInstructions.splice(27, 2);
 
 // Instantiate the experiment timeline with the instructions and
 // practice trials
-expTimeline = currentInstructions;
+timeline = currentInstructions;
 
 // Create the remaining blocks of the timeline
 // Main block 1
-expTimeline.push(createBlock(timelineVariables[0], probabilityData, false));
+timeline.push(createBlock(timelineVariables[0], probabilityData, false));
 
 // Insert break 1
-expTimeline.push(
+timeline.push(
   createInstructions(
     experiment.getStimuli().getImage("blackbackground.jpg"),
     firstBreak,
@@ -771,10 +763,10 @@ expTimeline.push(
 );
 
 // Main block 2
-expTimeline.push(createBlock(timelineVariables[1], probabilityData, false));
+timeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
 // Insert break 2
-expTimeline.push(
+timeline.push(
   createInstructions(
     experiment.getStimuli().getImage("blackbackground.jpg"),
     secondBreak,
@@ -786,10 +778,10 @@ expTimeline.push(
 );
 
 // Main block 3
-expTimeline.push(createBlock(timelineVariables[2], probabilityData, false));
+timeline.push(createBlock(timelineVariables[2], probabilityData, false));
 
 // Insert break 3
-expTimeline.push(
+timeline.push(
   createInstructions(
     experiment.getStimuli().getImage("blackbackground.jpg"),
     thirdBreak,
@@ -801,10 +793,10 @@ expTimeline.push(
 );
 
 // Main block 4
-expTimeline.push(createBlock(timelineVariables[3], probabilityData, false));
+timeline.push(createBlock(timelineVariables[3], probabilityData, false));
 
 // Finish
-expTimeline.push(
+timeline.push(
   createInstructions(
     experiment.getStimuli().getImage("blackbackground.jpg"),
     [
@@ -825,7 +817,7 @@ expTimeline.push(
 );
 
 // Question about the rockets
-expTimeline.push({
+timeline.push({
   type: "two-step-choice",
   trialStage: "1",
   choices: [keyLeft, keyRight],
@@ -850,7 +842,7 @@ expTimeline.push({
 });
 
 // Finish
-expTimeline.push(
+timeline.push(
   createInstructions(
     experiment.getStimuli().getImage("blackbackground.jpg"),
     [
@@ -869,5 +861,5 @@ expTimeline.push(
 
 // Start the experiment
 experiment.start({
-  timeline: expTimeline,
+  timeline: timeline,
 });

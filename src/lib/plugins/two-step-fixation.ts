@@ -95,7 +95,7 @@ jsPsych.plugins["two-step-fixation"] = (() => {
         .attr("y", centerY)
         .style("text-anchor", "middle")
         .style("font-size", sizeFont + "px")
-        .style("font-family", "Open Sans")
+        .style("font-family", "Arial")
         .style("font-weight", "bold")
         .style("letter-spacing", "0.2")
         .style("fill", "white")

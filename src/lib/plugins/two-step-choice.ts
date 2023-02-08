@@ -249,7 +249,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
         .attr("y", textY)
         .style("text-anchor", "middle")
         .style("font-size", sizeFont + "px")
-        .style("font-family", "Open Sans")
+        .style("font-family", "Arial")
         .style("font-weight", "bold")
         .style("letter-spacing", "0.2")
         .style("fill", "white")
@@ -272,7 +272,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
           .attr("dy", ++lineNumber * lineHeight + dy + "em")
           .style("text-anchor", "middle")
           .style("font-size", sizeFont + "px")
-          .style("font-family", "Open Sans")
+          .style("font-family", "Arial")
           .style("font-weight", "bold")
           .style("letter-spacing", "0.2")
           .style("fill", "white")
@@ -637,9 +637,9 @@ jsPsych.plugins["two-step-choice"] = (() => {
 
       let reward = false;
       if (state == 0) {
-        reward = Math.random() < parseFloat(trialRow[alien]);
+        reward = experiment.random() < parseFloat(trialRow[alien]);
       } else {
-        reward = Math.random() < parseFloat(trialRow[2 + alien]);
+        reward = experiment.random() < parseFloat(trialRow[2 + alien]);
       }
 
       if (reward) {

@@ -6,6 +6,7 @@
  *
  * Experiment-wide variables
  */
+
 // Number of trials in a 'block' of trials
 export const blockLength = 50;
 export const blockCount = 4;
@@ -28,15 +29,6 @@ export const probability = 0.7;
 // Keys and control scheme
 export const keyRight = "0"; // 0 at top of keyboard
 export const keyLeft = "1"; // 1 at top of keyboard
-
-// Random variables
-export const rocketSides = Math.random() < 0.5;
-export const practiceRocketSides = Math.random() < 0.5;
-export const displayOrderRed = Math.random() < 0.5;
-export const displayOrderPurple = Math.random() < 0.5;
-export const displayOrderGreen = Math.random() < 0.5;
-export const displayOrderYellow = Math.random() < 0.5;
-export const redPlanetFirstRocket = Math.random() < 0.5;
 
 // Durations
 export const timeMoney = 1000; // 1000 according to Decker 2016;
