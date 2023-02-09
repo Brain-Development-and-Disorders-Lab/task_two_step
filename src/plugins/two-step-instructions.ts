@@ -36,7 +36,7 @@ import {
   textX,
   sizeFont,
   sizeButton,
-} from "../display";
+} from "../variables";
 
 jsPsych.plugins["two-step-instructions"] = (() => {
   const plugin = {

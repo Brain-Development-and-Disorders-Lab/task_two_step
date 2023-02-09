@@ -26,15 +26,6 @@ import { interval, select } from "d3";
 
 // Experiment variables
 import {
-  timeTransition,
-  timeFlash,
-  timeMoney,
-  keyLeft,
-  keyRight,
-} from "../variables";
-
-// Display variables
-import {
   width,
   height,
   sizeMonster,
@@ -50,7 +41,12 @@ import {
   textX,
   textY,
   sizeFont,
-} from "../display";
+  timeTransition,
+  timeFlash,
+  timeMoney,
+  keyLeft,
+  keyRight,
+} from "../variables";
 
 jsPsych.plugins["two-step-choice"] = (() => {
   const plugin = {

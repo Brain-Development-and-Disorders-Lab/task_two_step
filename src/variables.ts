@@ -4,8 +4,87 @@
  * with children, adolescents, and adults, and adapted here by the Brain Development and Disorders Lab
  * (https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
  *
- * Generate and export the instructions for the task
+ * Experiment-wide variables
  */
+
+// Number of trials in a 'block' of trials
+export const blockLength = 50;
+export const blockCount = 4;
+
+// Number of trial types
+export const practicePressingIdx = 5;
+export const practicePressingNum = 4; // 4 trials to practice selecting alien
+export const practiceRewardIdx = 10 + practicePressingNum;
+export const practiceRewardNum = 10; // 10 trials to practice asking alien
+export const practiceStochasticIdx = 17 + practicePressingNum + practiceRewardNum;
+export const practiceStochasticNum = 10; // 10 trials practice choosing aliens
+export const practiceGameIdx = 34 + practicePressingNum + practiceRewardNum + practiceStochasticNum;
+export const practiceGameCount = 20; // 20 trials to practice full game
+
+// Transition probability
+export const probability = 0.7;
+
+// Keys and control scheme
+export const keyRight = "0"; // 0 at top of keyboard
+export const keyLeft = "1"; // 1 at top of keyboard
+
+// Durations
+export const timeMoney = 1000; // 1000 according to Decker 2016;
+export const timeFlash = 1000; // 1000 according to Decker 2016;
+export const timeChoice = 3000; // 3000 according to Decker 2016;
+export const timeTransition = 90; // from comment in matlab code
+
+// Payoffs
+export const payoffReward = ["0.8", "0.8", "0.8", "0.8"];
+export const payoffInstructions = ["0.9", "0.1", "0.9", "0.1"];
+
+// Display variables
+// Global position variables
+export const height = window.innerHeight;
+export const width = window.innerWidth;
+
+// Overall scaling and picture sizing
+export let pictureHeight: number;
+export let pictureWidth: number;
+
+if (window.innerWidth / window.innerHeight < 1.34) {
+  pictureHeight = window.innerWidth / 1.34;
+  pictureWidth = window.innerWidth;
+} else {
+  pictureHeight = window.innerHeight;
+  pictureWidth = window.innerHeight * 1.34;
+}
+
+// Image scaling
+export const sizeMonster = (pictureHeight * 300) / 758;
+export const sizeReward = (pictureHeight * 75) / 758;
+export const sizeButton = (pictureHeight * 25) / 758;
+
+// Font size
+export const sizeFont = (pictureHeight * 25) / 758;
+
+// Coordinate system for placing stimuli
+export const centerX = width / 2;
+export const centerY = height / 2;
+
+// Left and right choices
+export const choiceY = centerY + 0.22 * pictureHeight - sizeMonster / 2;
+export const choiceXRight = centerX + 0.25 * pictureWidth - sizeMonster / 2;
+export const choiceXLeft = centerX - 0.25 * pictureWidth - sizeMonster / 2;
+
+// Chosen stimulus location
+export const chosenY = centerY - 0.06 * pictureHeight - sizeMonster / 2;
+export const chosenX = centerX - sizeMonster / 2;
+
+export const rewardY = centerY - 0.06 * pictureHeight - sizeReward / 2 - sizeMonster / 2;
+export const rewardX = centerX - sizeReward / 2;
+
+// Text positioning
+export const textX = window.innerWidth / 2;
+export const textY = window.innerHeight / 5;
+export const textInstructionsY = window.innerHeight / 5;
+
+// Instructions
 export const instructions: any[][] = [];
 
 // Black (starting) background
@@ -174,7 +253,7 @@ instructions[13] = [
   [
     "First, you must select the spaceship to launch.",
     "",
-    "The spaceships can fly to either planet, but one spaceship will fly mostly",
+    "The spaceships can fly to either planet, but each spaceship has but one spaceship will fly mostly",
     "to the green planet, and the other spaceship will fly mostly to the yellow planet.",
   ],
   [

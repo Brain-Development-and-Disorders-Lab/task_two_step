@@ -18,9 +18,9 @@ import "jspsych/plugins/jspsych-preload";
 import "jspsych-attention-check";
 
 // Import all our plugins
-import "./lib/plugins/two-step-choice";
-import "./lib/plugins/two-step-instructions";
-import "./lib/plugins/two-step-fixation";
+import "./plugins/two-step-choice";
+import "./plugins/two-step-instructions";
+import "./plugins/two-step-fixation";
 
 // Styling
 import "./css/styles.css";
@@ -43,15 +43,11 @@ import {
   payoffReward,
   practiceStochasticNum,
   payoffInstructions,
-} from "./lib/variables";
-
-// Import the instructions
-import {
   firstBreak,
   instructions,
   secondBreak,
   thirdBreak,
-} from "./lib/instructions";
+} from "./variables";
 
 // Configuration
 import { configuration } from "./configuration";
@@ -459,6 +455,18 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
 
 // Setup the experiment timeline
 let timeline = [];
+
+// Timeline structure:
+// (Instructions)
+// 1. 4 trials to practice selecting an alien
+// (Instructions)
+// 2. 10 trials to practice selecting an alien and seeing resources
+// (Instructions)
+// 3. 10 trials to practice choosing between two aliens for resources
+// (Instructions)
+// 4. 20 trials to practice the full game
+// (Instructions)
+// Main: 4 blocks of 50 trials
 
 // Prepare the resource collections
 const imagesLeft: any[][] = [];

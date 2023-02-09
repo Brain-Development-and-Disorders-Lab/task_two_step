@@ -18,7 +18,7 @@ import consola from "consola";
 import { select } from "d3";
 
 // Display variables
-import { width, height, centerX, centerY, sizeFont } from "../display";
+import { width, height, centerX, centerY, sizeFont } from "../variables";
 
 jsPsych.plugins["two-step-fixation"] = (() => {
   const plugin = {
