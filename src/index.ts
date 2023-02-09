@@ -9,7 +9,7 @@
 // Logging library
 import consola from "consola";
 
-// Wrapper library
+// Neurocog library
 import { Experiment } from "neurocog";
 
 // General jsPsych imports
@@ -27,7 +27,7 @@ import "./css/styles.css";
 
 // Import data informing probabilities
 import practiceProbabilityData from "./data/masterprobtut.csv";
-import probabilityData from "./data/masterprob4.csv";
+// import probabilityData from "./data/masterprob4.csv";
 
 // Experiment variables
 import {
@@ -37,13 +37,12 @@ import {
   probability,
   practicePressingNum,
   practiceRewardNum,
-  payoffReward,
   practiceStochasticNum,
   payoffInstructions,
-  firstBreak,
+  // firstBreak,
   instructions,
-  secondBreak,
-  thirdBreak,
+  // secondBreak,
+  // thirdBreak,
 } from "./variables";
 
 // Configuration
@@ -60,6 +59,76 @@ export const displayOrderPurple = experiment.random() < 0.5;
 export const displayOrderGreen = experiment.random() < 0.5;
 export const displayOrderYellow = experiment.random() < 0.5;
 export const redPlanetFirstRocket = experiment.random() < 0.5;
+
+// Timeline structure:
+// (Instructions)
+// 1. 4 trials to practice selecting an alien
+// (Instructions)
+// 2. 10 trials to practice selecting an alien and seeing resources
+// (Instructions)
+// 3. 10 trials to practice choosing between two aliens for resources
+// (Instructions)
+// 4. 20 trials to practice the full game
+// (Instructions)
+// Main: 4 blocks of 50 trials
+const timeline = [];
+let trialNumber = 0;
+
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: ["Test Instructions Page 1", "Next page starts 4 trials to practice selecting an alien."],
+  include_score: false,
+});
+
+for (let i = 0; i < 4; i++, trialNumber++) {
+  timeline.push({
+    type: "two-step-choice",
+    timeout: false,
+    choices: [configuration.controls.left, configuration.controls.right],
+    trialNumber: trialNumber,
+    leftStimulus: "tutalien2",
+    rightStimulus: "tutalien1",
+    planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    prompt: ["Now try another one!"],
+    responseWindow: configuration.timing.choice,
+    isPractice: true,
+  });
+}
+
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: ["Test Instructions Page 2", "Next page starts 10 trials to practice selecting an alien and seeing resources."],
+  include_score: false,
+});
+
+for (let i = 0; i < 10; i++, trialNumber++) {
+  timeline.push({
+    type: "two-step-choice",
+    timeout: false,
+    trialRow: ["0.8", "0.8", "0.8", "0.8"],
+    trialNumber: trialNumber,
+    choices: [configuration.controls.left, configuration.controls.right],
+
+    planetStimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
+    leftStimulus: "tutalien3",
+    rightStimulus: null,
+
+    responseWindow: configuration.timing.choice,
+    isPractice: true,
+  });
+};
 
 // Instantiate the timeline variables for the main trials
 const timelineVariables: any[][] = [];
@@ -446,21 +515,6 @@ const calculateTransition = (chosenString: string, practice: boolean) => {
   }
 };
 
-// Setup the experiment timeline
-let timeline = [];
-
-// Timeline structure:
-// (Instructions)
-// 1. 4 trials to practice selecting an alien
-// (Instructions)
-// 2. 10 trials to practice selecting an alien and seeing resources
-// (Instructions)
-// 3. 10 trials to practice choosing between two aliens for resources
-// (Instructions)
-// 4. 20 trials to practice the full game
-// (Instructions)
-// Main: 4 blocks of 50 trials
-
 // Prepare the resource collections
 const imagesLeft: any[][] = [];
 const imagesRight: any[][] = [];
@@ -652,7 +706,7 @@ for (let i = 0; i < practiceRewardNum; i++) {
   currentInstructions.push({
     type: "two-step-choice",
     timeout: false,
-    trialRow: payoffReward,
+    trialRow: ["0.8", "0.8", "0.8", "0.8"],
     choices: [configuration.controls.left, configuration.controls.right],
     planetStimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
     trialNumber: practiceRewardNum - i,
@@ -740,125 +794,122 @@ currentInstructions.push({
   feedback_incorrect: "Incorrect. You have a few seconds to make each choice.",
 });
 
-// Remove the instructions about the alien locations
-// currentInstructions.splice(27, 2);
-
 // Instantiate the experiment timeline with the instructions and
 // practice trials
-timeline = currentInstructions;
+// timeline.push(currentInstructions);
 
 // Create the remaining blocks of the timeline
 // Main block 1
-timeline.push(createBlock(timelineVariables[0], probabilityData, false));
+// timeline.push(createBlock(timelineVariables[0], probabilityData, false));
 
 // Insert break 1
-timeline.push(
-  createInstructions(
-    experiment.getStimuli().getImage("blackbackground.jpg"),
-    firstBreak,
-    [],
-    [],
-    [],
-    []
-  )[0]
-);
+// timeline.push(
+//   createInstructions(
+//     experiment.getStimuli().getImage("blackbackground.jpg"),
+//     firstBreak,
+//     [],
+//     [],
+//     [],
+//     []
+//   )[0]
+// );
 
 // Main block 2
-timeline.push(createBlock(timelineVariables[1], probabilityData, false));
+// timeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
 // Insert break 2
-timeline.push(
-  createInstructions(
-    experiment.getStimuli().getImage("blackbackground.jpg"),
-    secondBreak,
-    [],
-    [],
-    [],
-    []
-  )[0]
-);
+// timeline.push(
+//   createInstructions(
+//     experiment.getStimuli().getImage("blackbackground.jpg"),
+//     secondBreak,
+//     [],
+//     [],
+//     [],
+//     []
+//   )[0]
+// );
 
 // Main block 3
-timeline.push(createBlock(timelineVariables[2], probabilityData, false));
+// timeline.push(createBlock(timelineVariables[2], probabilityData, false));
 
 // Insert break 3
-timeline.push(
-  createInstructions(
-    experiment.getStimuli().getImage("blackbackground.jpg"),
-    thirdBreak,
-    [],
-    [],
-    [],
-    []
-  )[0]
-);
+// timeline.push(
+//   createInstructions(
+//     experiment.getStimuli().getImage("blackbackground.jpg"),
+//     thirdBreak,
+//     [],
+//     [],
+//     [],
+//     []
+//   )[0]
+// );
 
 // Main block 4
-timeline.push(createBlock(timelineVariables[3], probabilityData, false));
+// timeline.push(createBlock(timelineVariables[3], probabilityData, false));
 
 // Finish
-timeline.push(
-  createInstructions(
-    experiment.getStimuli().getImage("blackbackground.jpg"),
-    [
-      [
-        "You're finished with this part of the experiment!",
-        "",
-        "Click the red button to answer a final question.",
-        "",
-        "You found:",
-      ],
-    ],
-    [],
-    [],
-    [],
-    [],
-    true
-  )[0]
-);
+// timeline.push(
+//   createInstructions(
+//     experiment.getStimuli().getImage("blackbackground.jpg"),
+//     [
+//       [
+//         "You're finished with this part of the experiment!",
+//         "",
+//         "Click the red button to answer a final question.",
+//         "",
+//         "You found:",
+//       ],
+//     ],
+//     [],
+//     [],
+//     [],
+//     [],
+//     true
+//   )[0]
+// );
 
 // Question about the rockets
-timeline.push({
-  type: "two-step-choice",
-  trialStage: "1",
-  choices: [configuration.controls.left, configuration.controls.right],
-  planetStimulus: experiment.getStimuli().getImage("earth.png"),
-  rightStimulus: rocketSides === true ? "rocket1" : "rocket2",
-  leftStimulus: rocketSides === true ? "rocket2" : "rocket1",
-  isPractice: false,
-  prompt: [
-    "Select the rocket you think went to the red planet most frequently.",
-  ],
-  on_finish: (data: any) => {
-    // Store the keypresses
-    if (data.key_press === configuration.controls.left) {
-      data.choice = 1;
-    }
-    if (data.key_press === configuration.controls.right) {
-      data.choice = 2;
-    }
-    consola.info("data", data);
-  },
-  trialNumber: 0,
-});
+// timeline.push({
+//   type: "two-step-choice",
+//   trialStage: "1",
+//   choices: [configuration.controls.left, configuration.controls.right],
+//   planetStimulus: experiment.getStimuli().getImage("earth.png"),
+//   rightStimulus: rocketSides === true ? "rocket1" : "rocket2",
+//   leftStimulus: rocketSides === true ? "rocket2" : "rocket1",
+//   isPractice: false,
+//   prompt: [
+//     "Select the rocket you think went to the red planet most frequently.",
+//   ],
+//   on_finish: (data: any) => {
+//     // Store the keypresses
+//     if (data.key_press === configuration.controls.left) {
+//       data.choice = 1;
+//     }
+//     if (data.key_press === configuration.controls.right) {
+//       data.choice = 2;
+//     }
+//     consola.info("data", data);
+//   },
+//   trialNumber: 0,
+// });
 
 // Finish
-timeline.push(
-  createInstructions(
-    experiment.getStimuli().getImage("blackbackground.jpg"),
-    [
-      [
-        "Thank you for participating in this research!",
-        "",
-        "Click the red button and press the spacebar to be redirected.",
-      ],
-    ],
-    [],
-    [],
-    [],
-    []
-  )[0]
-);
+// timeline.push(
+//   createInstructions(
+//     experiment.getStimuli().getImage("blackbackground.jpg"),
+//     [
+//       [
+//         "Thank you for participating in this research!",
+//         "",
+//         "Click the red button and press the spacebar to be redirected.",
+//       ],
+//     ],
+//     [],
+//     [],
+//     [],
+//     []
+//   )[0]
+// );
 
 // Start the experiment
 experiment.start({

@@ -25,7 +25,6 @@ export const practiceGameCount = 20; // 20 trials to practice full game
 export const probability = 0.7;
 
 // Payoffs
-export const payoffReward = ["0.8", "0.8", "0.8", "0.8"];
 export const payoffInstructions = ["0.9", "0.1", "0.9", "0.1"];
 
 // Display variables
