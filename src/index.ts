@@ -32,11 +32,8 @@ import probabilityData from "./data/masterprob4.csv";
 // Experiment variables
 import {
   blockLength,
-  timeChoice,
   blockCount,
   practiceGameCount,
-  keyLeft,
-  keyRight,
   probability,
   practicePressingNum,
   practiceRewardNum,
@@ -67,10 +64,6 @@ export const redPlanetFirstRocket = experiment.random() < 0.5;
 // Instantiate the timeline variables for the main trials
 const timelineVariables: any[][] = [];
 let trialRow = 0;
-
-// Reward and no reward stimuli
-const rewardImage = experiment.getStimuli().getImage("t.png");
-const nullImage = experiment.getStimuli().getImage("nothing.png");
 
 // Set the rocket configuration in the main trials
 for (let j = 0; j < blockCount; j++) {
@@ -145,7 +138,7 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
         type: "two-step-choice",
         trialStage: "1",
         trialNumber: jsPsych.timelineVariable("trialNumber"),
-        choices: [keyLeft, keyRight],
+        choices: [configuration.controls.left, configuration.controls.right],
 
         // Trial stimuli
         planetStimulus: experiment.getStimuli().getImage("earth.png"),
@@ -163,10 +156,10 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
         // Define the 'on_start' callback
         on_finish: (data: any) => {
           // Specify the choice made in the data
-          if (data.key_press == keyLeft) {
+          if (data.key_press == configuration.controls.left) {
             data.choice = 1;
           }
-          if (data.key_press == keyRight) {
+          if (data.key_press == configuration.controls.right) {
             data.choice = 2;
           }
 
@@ -183,13 +176,13 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
         },
 
         // Specify a trial duration
-        responseWindow: timeChoice,
+        responseWindow: configuration.timing.choice,
       },
       {
         // Instantiate the second choice
         type: "two-step-choice",
         trialStage: "2",
-        choices: [keyLeft, keyRight],
+        choices: [configuration.controls.left, configuration.controls.right],
         trialNumber: jsPsych.timelineVariable("trialNumber"),
 
         // Specify if this is a practice trial or not
@@ -230,13 +223,13 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
           if (currStageTwo && currStageTwo[3] == null) {
             return 0;
           } else {
-            return timeChoice;
+            return configuration.timing.choice;
           }
         },
 
         // Define the 'on_finish' callback
         on_finish: (data: any) => {
-          if (data.rewardStimulus === rewardImage) {
+          if (data.rewardStimulus === experiment.getStimuli().getImage("t.png")) {
             if (isPractice === false) {
               experiment
                 .getState()
@@ -252,10 +245,10 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
           }
 
           // Specify the choice made in the data
-          if (data.key_press == keyLeft) {
+          if (data.key_press == configuration.controls.left) {
             data.choice = 1;
           }
-          if (data.key_press == keyRight) {
+          if (data.key_press == configuration.controls.right) {
             data.choice = 2;
           }
 
@@ -497,8 +490,8 @@ for (let i = 0; i < instructions.length; i += 1) {
 }
 
 // Reward and no reward images
-imagesReward[3][0] = rewardImage;
-imagesReward[3][1] = nullImage;
+imagesReward[3][0] = experiment.getStimuli().getImage("t.png");
+imagesReward[3][1] = experiment.getStimuli().getImage("nothing.png");
 
 // Center images
 imagesCenter[4][0] = experiment.getStimuli().getImage("tutalien3_norm.png");
@@ -631,12 +624,12 @@ for (let i = 0; i < practicePressingNum - 1; i++) {
   currentInstructions.push({
     type: "two-step-choice",
     timeout: false,
-    choices: [keyLeft, keyRight],
+    choices: [configuration.controls.left, configuration.controls.right],
     planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
     rightStimulus: "tutalien1",
     leftStimulus: "tutalien2",
     prompt: ["Now try another one!"],
-    responseWindow: timeChoice,
+    responseWindow: configuration.timing.choice,
     isPractice: true,
     trialNumber: practicePressingNum - i,
   });
@@ -645,11 +638,11 @@ for (let i = 0; i < practicePressingNum - 1; i++) {
 currentInstructions.push({
   type: "two-step-choice",
   timeout: false,
-  choices: [keyLeft, keyRight],
+  choices: [configuration.controls.left, configuration.controls.right],
   planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
   rightStimulus: "tutalien1",
   leftStimulus: "tutalien2",
-  responseWindow: timeChoice,
+  responseWindow: configuration.timing.choice,
   isPractice: true,
   trialNumber: 1,
 });
@@ -660,7 +653,7 @@ for (let i = 0; i < practiceRewardNum; i++) {
     type: "two-step-choice",
     timeout: false,
     trialRow: payoffReward,
-    choices: [keyLeft, keyRight],
+    choices: [configuration.controls.left, configuration.controls.right],
     planetStimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
     trialNumber: practiceRewardNum - i,
 
@@ -679,7 +672,7 @@ for (let i = 0; i < practiceRewardNum; i++) {
       }
       return "tutalien3";
     },
-    responseWindow: timeChoice,
+    responseWindow: configuration.timing.choice,
     isPractice: true,
   });
 }
@@ -690,11 +683,11 @@ for (let i = 0; i < practiceStochasticNum; i += 1) {
     type: "two-step-choice",
     timeout: false,
     trialRow: payoffInstructions,
-    choices: [keyLeft, keyRight],
+    choices: [configuration.controls.left, configuration.controls.right],
     planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
     rightStimulus: "tutalien1",
     leftStimulus: "tutalien2",
-    responseWindow: timeChoice,
+    responseWindow: configuration.timing.choice,
     isPractice: true,
     trialNumber: practiceStochasticNum - i,
   });
@@ -828,7 +821,7 @@ timeline.push(
 timeline.push({
   type: "two-step-choice",
   trialStage: "1",
-  choices: [keyLeft, keyRight],
+  choices: [configuration.controls.left, configuration.controls.right],
   planetStimulus: experiment.getStimuli().getImage("earth.png"),
   rightStimulus: rocketSides === true ? "rocket1" : "rocket2",
   leftStimulus: rocketSides === true ? "rocket2" : "rocket1",
@@ -838,10 +831,10 @@ timeline.push({
   ],
   on_finish: (data: any) => {
     // Store the keypresses
-    if (data.key_press === keyLeft) {
+    if (data.key_press === configuration.controls.left) {
       data.choice = 1;
     }
-    if (data.key_press === keyRight) {
+    if (data.key_press === configuration.controls.right) {
       data.choice = 2;
     }
     consola.info("data", data);

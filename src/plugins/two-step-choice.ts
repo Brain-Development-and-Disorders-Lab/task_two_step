@@ -41,12 +41,10 @@ import {
   textX,
   textY,
   sizeFont,
-  timeTransition,
-  timeFlash,
-  timeMoney,
-  keyLeft,
-  keyRight,
 } from "../variables";
+
+// Configuration
+import { configuration } from "../configuration";
 
 jsPsych.plugins["two-step-choice"] = (() => {
   const plugin = {
@@ -98,7 +96,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
         type: jsPsych.plugins.parameterType.KEYCODE,
         array: true,
         pretty_name: "Choices",
-        default: [keyLeft, keyRight],
+        default: [configuration.controls.left, configuration.controls.right],
         description:
           "The keys the subject is allowed to " +
           "press to respond to the stimulus.",
@@ -431,7 +429,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
                       .getImage(chosenStimulus.replace(".png", "") + "_a2.png")
                   )
                   .transition()
-                  .duration(timeTransition)
+                  .duration(configuration.timing.transition)
                   .attr("y", chosenY)
                   .attr("x", chosenX)
                   .on("end", () => {
@@ -477,12 +475,12 @@ jsPsych.plugins["two-step-choice"] = (() => {
                             .attr("width", sizeReward)
                             .attr("height", sizeReward)
                             .attr("xlink:href", trial.rewardStimulus);
-                          interval(() => {}, timeMoney);
+                          interval(() => {}, configuration.timing.reward);
                         }
 
                         transition.stop();
                       }
-                    }, timeFlash / 5);
+                    }, configuration.timing.flash / 5);
                   });
               });
           } else {
@@ -504,7 +502,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
                 experiment.getStimuli().getImage(chosenStimulus + "_a2.png")
               )
               .transition()
-              .duration(timeTransition)
+              .duration(configuration.timing.transition)
               .attr("y", chosenY)
               .attr("x", chosenX)
               .on("end", () => {
@@ -549,12 +547,12 @@ jsPsych.plugins["two-step-choice"] = (() => {
                         .attr("width", sizeReward)
                         .attr("height", sizeReward)
                         .attr("xlink:href", trial.rewardStimulus);
-                      interval(() => {}, timeMoney);
+                      interval(() => {}, configuration.timing.reward);
                     }
 
                     transition.stop();
                   }
-                }, timeFlash / 5);
+                }, configuration.timing.flash / 5);
               });
           }
         } else {
@@ -570,7 +568,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
 
           // End the trial
           endTrial();
-        }, timeFlash + timeMoney);
+        }, configuration.timing.flash + configuration.timing.reward);
       }
     };
 
@@ -593,7 +591,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
 
           imageRight
             .transition()
-            .duration(timeFlash)
+            .duration(configuration.timing.flash)
             .attr(
               "xlink:href",
               experiment.getStimuli().getImage(trial.rightStimulus + "_sp.png")
@@ -609,7 +607,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
           endTrial();
-        }, timeFlash);
+        }, configuration.timing.flash);
       }, trial.responseWindow);
     }
   };

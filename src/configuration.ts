@@ -17,6 +17,20 @@ export const configuration = {
   manipulations: {},
   resources: {},
 
+  // Timing duration constants
+  timing: {
+    reward: 1000,
+    flash: 1000,
+    choice: 3000,
+    transition: 90,
+  },
+
+  // Control scheme
+  controls: {
+    left: "1",
+    right: "2",
+  },
+
   stimuli: {
     // Alien 1, main
     "alien1_a1.png": "images/aliens/1/alien1_a1.png",

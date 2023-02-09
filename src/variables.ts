@@ -24,16 +24,6 @@ export const practiceGameCount = 20; // 20 trials to practice full game
 // Transition probability
 export const probability = 0.7;
 
-// Keys and control scheme
-export const keyRight = "0"; // 0 at top of keyboard
-export const keyLeft = "1"; // 1 at top of keyboard
-
-// Durations
-export const timeMoney = 1000; // 1000 according to Decker 2016;
-export const timeFlash = 1000; // 1000 according to Decker 2016;
-export const timeChoice = 3000; // 3000 according to Decker 2016;
-export const timeTransition = 90; // from comment in matlab code
-
 // Payoffs
 export const payoffReward = ["0.8", "0.8", "0.8", "0.8"];
 export const payoffInstructions = ["0.9", "0.1", "0.9", "0.1"];
