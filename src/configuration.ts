@@ -17,6 +17,14 @@ export const configuration = {
   manipulations: {},
   resources: {},
 
+  // Set the training configuration and define the number of trials
+  training: {
+    single: 0,
+    outcome: 0,
+    both: 0,
+    complete: 20,
+  },
+
   // Timing duration constants
   timing: {
     reward: 1000,

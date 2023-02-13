@@ -24,9 +24,6 @@ export const practiceGameCount = 20; // 20 trials to practice full game
 // Transition probability
 export const probability = 0.7;
 
-// Payoffs
-export const payoffInstructions = ["0.9", "0.1", "0.9", "0.1"];
-
 // Display variables
 // Global position variables
 export const height = window.innerHeight;

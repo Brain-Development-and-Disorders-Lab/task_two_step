@@ -35,10 +35,6 @@ import {
   blockCount,
   practiceGameCount,
   probability,
-  practicePressingNum,
-  practiceRewardNum,
-  practiceStochasticNum,
-  payoffInstructions,
   // firstBreak,
   instructions,
   // secondBreak,
@@ -74,6 +70,7 @@ export const redPlanetFirstRocket = experiment.random() < 0.5;
 const timeline = [];
 let trialNumber = 0;
 
+// Training, Part 1: Introduction and practice selecting aliens
 timeline.push({
   type: "two-step-instructions",
   stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
@@ -86,7 +83,7 @@ timeline.push({
   include_score: false,
 });
 
-for (let i = 0; i < 4; i++, trialNumber++) {
+for (let i = 0; i < configuration.training.single; i++, trialNumber++) {
   timeline.push({
     type: "two-step-choice",
     timeout: false,
@@ -99,8 +96,9 @@ for (let i = 0; i < 4; i++, trialNumber++) {
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
-}
+};
 
+// Training, Part 2: Practice selecting an alien and seeing resources
 timeline.push({
   type: "two-step-instructions",
   stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
@@ -113,7 +111,7 @@ timeline.push({
   include_score: false,
 });
 
-for (let i = 0; i < 10; i++, trialNumber++) {
+for (let i = 0; i < configuration.training.outcome; i++, trialNumber++) {
   timeline.push({
     type: "two-step-choice",
     timeout: false,
@@ -128,6 +126,190 @@ for (let i = 0; i < 10; i++, trialNumber++) {
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
+};
+
+// Training, Part 3: Choosing between two aliens
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: ["Test Instructions Page 3", "Next page starts 10 trials to practice choosing between two aliens for resources."],
+  include_score: false,
+});
+
+for (let i = 0; i < configuration.training.both; i++, trialNumber++) {
+  timeline.push({
+    type: "two-step-choice",
+    timeout: false,
+    trialRow: ["0.9", "0.1", "0.9", "0.1"],
+    trialNumber: trialNumber,
+    choices: [configuration.controls.left, configuration.controls.right],
+    leftStimulus: "tutalien2",
+    rightStimulus: "tutalien1",
+    planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    responseWindow: configuration.timing.choice,
+    isPractice: true,
+  });
+};
+
+// Training, Part 4: Entire trials
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: ["Test Instructions Page 4", "Next page starts 20 trials to practice the full game"],
+  include_score: false,
+});
+
+for (let i = 0; i < configuration.training.complete; i++, trialNumber++) {
+  let currStageTwo: any[] = [];
+
+  timeline.push({
+    // Instantiate the first choice
+    type: "two-step-choice",
+    trialStage: "1",
+    trialNumber: trialNumber,
+    choices: [configuration.controls.left, configuration.controls.right],
+
+    // Trial stimuli
+    planetStimulus: experiment.getStimuli().getImage("earth.png"),
+    leftStimulus: practiceRocketSides ? "rocket2" : "rocket1",
+    rightStimulus: practiceRocketSides ? "rocket1" : "rocket2",
+
+    // Specify if this is a practice trial or not
+    isPractice: true,
+
+    // Define the 'on_start' callback
+    on_start: () => {
+      currStageTwo = [];
+    },
+
+    // Define the 'on_start' callback
+    on_finish: (data: any) => {
+      // Specify the choice made in the data
+      if (data.key_press == configuration.controls.left) {
+        data.choice = 1;
+      }
+      if (data.key_press == configuration.controls.right) {
+        data.choice = 2;
+      }
+
+      // Calcuate the transition and then the second location
+      currStageTwo = calculateTransition(data.chosenStimulus, true);
+      if (currStageTwo.length === 0) {
+        currStageTwo = [
+          data.rightStimulus,
+          data.leftStimulus,
+          experiment.getStimuli().getImage("earth.png"),
+          null,
+        ];
+      }
+    },
+
+    // Specify a trial duration
+    responseWindow: configuration.timing.choice,
+  },
+  {
+    // Instantiate the second choice
+    type: "two-step-choice",
+    trialStage: "2",
+    choices: [configuration.controls.left, configuration.controls.right],
+    trialNumber: trialNumber,
+
+    // Specify if this is a practice trial or not
+    isPractice: true,
+
+    // Specify the trial data
+    trialRow: () => {
+      return practiceProbabilityData[i + 1];
+    },
+
+    // Specify the second planet
+    planetStimulus: () => {
+      if (currStageTwo) return currStageTwo[2];
+    },
+
+    // Specify the left alien?
+    rightStimulus: () => {
+      if (currStageTwo) return currStageTwo[0];
+    },
+
+    // Specify the right alien?
+    leftStimulus: () => {
+      if (currStageTwo) return currStageTwo[1];
+    },
+
+    // Specify the reward outcome
+    centerStimulus: () => {
+      if (currStageTwo) return currStageTwo[3];
+    },
+
+    // Specify the transition type
+    transitionType: () => {
+      if (currStageTwo) return currStageTwo[4];
+    },
+
+    // Specify a trial duration
+    responseWindow: () => {
+      if (currStageTwo && currStageTwo[3] == null) {
+        return 0;
+      } else {
+        return configuration.timing.choice;
+      }
+    },
+
+    // Define the 'on_finish' callback
+    on_finish: (data: any) => {
+      if (data.rewardStimulus === experiment.getStimuli().getImage("t.png")) {
+        experiment.getState().set("practiceReward", experiment.getState().get("practiceReward") + 1);
+      }
+
+      // Specify the choice made in the data
+      if (data.key_press == configuration.controls.left) {
+        data.choice = 1;
+      }
+      if (data.key_press == configuration.controls.right) {
+        data.choice = 2;
+      }
+
+      // Specify the transition type in the data
+      if (data.transitionType == true) {
+        data.transition = "common";
+      }
+      if (data.transitionType == false) {
+        data.transition = "rare";
+      }
+
+      // Specify the reward outcome in the data
+      if (
+        data.rewardStimulus == experiment.getStimuli().getImage("t.png")
+      ) {
+        data.wasRewarded = true;
+      } else {
+        data.wasRewarded = false;
+      }
+
+      // Store the timestamp
+      const timestamp = new Date().toISOString().replace(/z|t/gi, " ").trim();
+      jsPsych.data.addDataToLastTrial({ timestamp });
+    },
+  },
+  {
+    // Instantiate the fixation stage
+    type: "two-step-fixation",
+    stimulus: experiment.getStimuli().getImage("earth.png"),
+    text: "+",
+    responseWindow: 1000,
+    trialNumber: trialNumber,
+  },)
 };
 
 // Instantiate the timeline variables for the main trials
@@ -369,149 +551,142 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
  * @param {boolean} practice practice
  * @return {any}
  */
-const calculateTransition = (chosenString: string, practice: boolean) => {
+const calculateTransition = (chosenString: string, isPractice: boolean) => {
   let firstPlanet = "";
   let secondPlanet = "";
 
-  if (chosenString == "" || typeof chosenString === "undefined") {
-    return null;
+  if (chosenString === "" || typeof chosenString === "undefined") {
+    return [];
+  }
+
+  if (isPractice) {
+    firstPlanet = "green";
+    secondPlanet = "yellow";
   } else {
-    if (practice == true) {
-      firstPlanet = "green";
-      secondPlanet = "yellow";
+    firstPlanet = "red";
+    secondPlanet = "purple";
+  }
+
+  const firstShipChosen = chosenString.slice(-1) === "1";
+  const goodTransition = experiment.random() < probability;
+
+  // Determine the resulting planet
+  let planet = "";
+  if (firstShipChosen && redPlanetFirstRocket) {
+    planet = goodTransition ? firstPlanet : secondPlanet;
+  } else if (!firstShipChosen && redPlanetFirstRocket) {
+    planet = goodTransition ? secondPlanet : firstPlanet;
+  } else if (firstShipChosen && !redPlanetFirstRocket) {
+    planet = goodTransition ? secondPlanet : firstPlanet;
+    if (goodTransition) {
+      planet = secondPlanet;
     } else {
-      firstPlanet = "red";
-      secondPlanet = "purple";
+      planet = firstPlanet;
     }
-
-    const firstShipChosen = chosenString.slice(-1) === "1";
-    const goodTransition = experiment.random() < probability;
-
-    // Determine the resulting planet
-    let planet = "";
-    if (firstShipChosen && redPlanetFirstRocket) {
-      if (goodTransition) {
-        planet = firstPlanet;
-      } else {
-        planet = secondPlanet;
-      }
-    } else if (~firstShipChosen && redPlanetFirstRocket) {
-      if (goodTransition) {
-        planet = secondPlanet;
-      } else {
-        planet = firstPlanet;
-      }
-    } else if (firstShipChosen && ~redPlanetFirstRocket) {
-      if (goodTransition) {
-        planet = secondPlanet;
-      } else {
-        planet = firstPlanet;
-      }
-    } else if (~firstShipChosen && ~redPlanetFirstRocket) {
-      if (goodTransition) {
-        planet = firstPlanet;
-      } else {
-        planet = secondPlanet;
-      }
-    }
-
-    let displayOrder = true;
-    if (planet === "red") {
-      // Counter-balancing only enabled in non-practice trials
-      if (practice === false) {
-        displayOrder = displayOrderRed;
-      }
-
-      if (displayOrder) {
-        return [
-          "alien2",
-          "alien1",
-          experiment.getStimuli().getImage("redplanet1.png"),
-          chosenString,
-          goodTransition,
-        ];
-      } else {
-        return [
-          "alien1",
-          "alien2",
-          experiment.getStimuli().getImage("redplanet1.png"),
-          chosenString,
-          goodTransition,
-        ];
-      }
-    } else if (planet === "purple") {
-      // Counter-balancing only enabled in non-practice trials
-      if (practice === false) {
-        displayOrder = displayOrderPurple;
-      }
-
-      if (displayOrder) {
-        return [
-          "alien4",
-          "alien3",
-          experiment.getStimuli().getImage("purpleplanet.png"),
-          chosenString,
-          goodTransition,
-        ];
-      } else {
-        return [
-          "alien3",
-          "alien4",
-          experiment.getStimuli().getImage("purpleplanet.png"),
-          chosenString,
-          goodTransition,
-        ];
-      }
-    } else if (planet === "green") {
-      // Counter-balancing only enabled in non-practice trials
-      if (practice === false) {
-        displayOrder = displayOrderGreen;
-      }
-
-      if (displayOrder) {
-        return [
-          "tutalien2",
-          "tutalien1",
-          experiment.getStimuli().getImage("tutgreenplanet.png"),
-          chosenString,
-          goodTransition,
-        ];
-      } else {
-        return [
-          "tutalien1",
-          "tutalien2",
-          experiment.getStimuli().getImage("tutgreenplanet.png"),
-          chosenString,
-          goodTransition,
-        ];
-      }
-    } else if (planet === "yellow") {
-      // Counter-balancing only enabled in non-practice trials
-      if (practice === false) {
-        displayOrder = displayOrderYellow;
-      }
-
-      if (displayOrder) {
-        return [
-          "tutalien4",
-          "tutalien3",
-          experiment.getStimuli().getImage("tutyellowplanet.png"),
-          chosenString,
-          goodTransition,
-        ];
-      } else {
-        return [
-          "tutalien3",
-          "tutalien4",
-          experiment.getStimuli().getImage("tutyellowplanet.png"),
-          chosenString,
-          goodTransition,
-        ];
-      }
+  } else if (~firstShipChosen && ~redPlanetFirstRocket) {
+    if (goodTransition) {
+      planet = firstPlanet;
     } else {
-      consola.error("Error in transition calculation!");
-      return null;
+      planet = secondPlanet;
     }
+  }
+
+  let displayOrder = true;
+  if (planet === "red") {
+    // Counter-balancing only enabled in non-practice trials
+    if (isPractice === false) {
+      displayOrder = displayOrderRed;
+    }
+
+    if (displayOrder) {
+      return [
+        "alien2",
+        "alien1",
+        experiment.getStimuli().getImage("redplanet1.png"),
+        chosenString,
+        goodTransition,
+      ];
+    } else {
+      return [
+        "alien1",
+        "alien2",
+        experiment.getStimuli().getImage("redplanet1.png"),
+        chosenString,
+        goodTransition,
+      ];
+    }
+  } else if (planet === "purple") {
+    // Counter-balancing only enabled in non-practice trials
+    if (isPractice === false) {
+      displayOrder = displayOrderPurple;
+    }
+
+    if (displayOrder) {
+      return [
+        "alien4",
+        "alien3",
+        experiment.getStimuli().getImage("purpleplanet.png"),
+        chosenString,
+        goodTransition,
+      ];
+    } else {
+      return [
+        "alien3",
+        "alien4",
+        experiment.getStimuli().getImage("purpleplanet.png"),
+        chosenString,
+        goodTransition,
+      ];
+    }
+  } else if (planet === "green") {
+    // Counter-balancing only enabled in non-practice trials
+    if (isPractice === false) {
+      displayOrder = displayOrderGreen;
+    }
+
+    if (displayOrder) {
+      return [
+        "tutalien2",
+        "tutalien1",
+        experiment.getStimuli().getImage("tutgreenplanet.png"),
+        chosenString,
+        goodTransition,
+      ];
+    } else {
+      return [
+        "tutalien1",
+        "tutalien2",
+        experiment.getStimuli().getImage("tutgreenplanet.png"),
+        chosenString,
+        goodTransition,
+      ];
+    }
+  } else if (planet === "yellow") {
+    // Counter-balancing only enabled in non-practice trials
+    if (isPractice === false) {
+      displayOrder = displayOrderYellow;
+    }
+
+    if (displayOrder) {
+      return [
+        "tutalien4",
+        "tutalien3",
+        experiment.getStimuli().getImage("tutyellowplanet.png"),
+        chosenString,
+        goodTransition,
+      ];
+    } else {
+      return [
+        "tutalien3",
+        "tutalien4",
+        experiment.getStimuli().getImage("tutyellowplanet.png"),
+        chosenString,
+        goodTransition,
+      ];
+    }
+  } else {
+    consola.error("Error in transition calculation!");
+    return [];
   }
 };
 
@@ -614,7 +789,6 @@ const instructionsBackgrounds = [
 
 let t: number;
 let currentPage: any;
-let currentSide: boolean;
 
 /**
  * Utility function to assemble instructions, combining text and images
@@ -671,80 +845,6 @@ for (let i = 0; i < instructions.length; i++) {
       imagesReward[i]
     )
   );
-}
-
-// Create practice trials for selecting between aliens
-for (let i = 0; i < practicePressingNum - 1; i++) {
-  currentInstructions.push({
-    type: "two-step-choice",
-    timeout: false,
-    choices: [configuration.controls.left, configuration.controls.right],
-    planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
-    rightStimulus: "tutalien1",
-    leftStimulus: "tutalien2",
-    prompt: ["Now try another one!"],
-    responseWindow: configuration.timing.choice,
-    isPractice: true,
-    trialNumber: practicePressingNum - i,
-  });
-}
-
-currentInstructions.push({
-  type: "two-step-choice",
-  timeout: false,
-  choices: [configuration.controls.left, configuration.controls.right],
-  planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
-  rightStimulus: "tutalien1",
-  leftStimulus: "tutalien2",
-  responseWindow: configuration.timing.choice,
-  isPractice: true,
-  trialNumber: 1,
-});
-
-// Create practice trials to select a single alien and view reward outcome
-for (let i = 0; i < practiceRewardNum; i++) {
-  currentInstructions.push({
-    type: "two-step-choice",
-    timeout: false,
-    trialRow: ["0.8", "0.8", "0.8", "0.8"],
-    choices: [configuration.controls.left, configuration.controls.right],
-    planetStimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
-    trialNumber: practiceRewardNum - i,
-
-    // Right alien image
-    rightStimulus: () => {
-      if (currentSide === true) {
-        return "tutalien3";
-      }
-      return null;
-    },
-
-    // Left alien image
-    leftStimulus: () => {
-      if (currentSide === true) {
-        return null;
-      }
-      return "tutalien3";
-    },
-    responseWindow: configuration.timing.choice,
-    isPractice: true,
-  });
-}
-
-// Create practice trials for selecting between aliens
-for (let i = 0; i < practiceStochasticNum; i += 1) {
-  currentInstructions.push({
-    type: "two-step-choice",
-    timeout: false,
-    trialRow: payoffInstructions,
-    choices: [configuration.controls.left, configuration.controls.right],
-    planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
-    rightStimulus: "tutalien1",
-    leftStimulus: "tutalien2",
-    responseWindow: configuration.timing.choice,
-    isPractice: true,
-    trialNumber: practiceStochasticNum - i,
-  });
 }
 
 // Insert practice trials into instructions
