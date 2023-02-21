@@ -20,9 +20,9 @@ test("both variables true", () => {
   expect(a && b).toBeTruthy();
 
   // The following will not ordinarily execute
-  expect(~a && b).toBeFalsy();
-  expect(a && ~b).toBeFalsy();
-  expect(~a && ~b).toBeFalsy();
+  expect(~a && b).toBeFalsy(); // Fails
+  expect(a && ~b).toBeFalsy(); // Fails
+  expect(~a && ~b).toBeFalsy(); // Fails
 });
 
 test("A false, B true", () => {
@@ -33,8 +33,8 @@ test("A false, B true", () => {
   expect(~a && b).toBeTruthy();
 
   // The following will not ordinarily execute
-  expect(a && ~b).toBeFalsy();
-  expect(~a && ~b).toBeFalsy();
+  expect(a && ~b).toBeFalsy(); // Passes
+  expect(~a && ~b).toBeFalsy(); // Fails
 });
 
 test("A true, B false", () => {
@@ -46,7 +46,7 @@ test("A true, B false", () => {
   expect(a && ~b).toBeTruthy();
 
   // The following will not ordinarily execute
-  expect(~a && ~b).toBeFalsy();
+  expect(~a && ~b).toBeFalsy(); // Fails
 });
 
 test("both variables false", () => {
