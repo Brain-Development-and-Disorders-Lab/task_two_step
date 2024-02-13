@@ -1,6 +1,6 @@
 {
   "name": "task_twostep",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Two-step task, an adaptation of the task used by Nussenbaum, K. et. al. (2020).",
   "repository": "https://henry-burgess@github.com/Brain-Development-and-Disorders-Lab/task_twostep.git",
   "author": "Henry Burgess <henry.burgess@wustl.edu>",
