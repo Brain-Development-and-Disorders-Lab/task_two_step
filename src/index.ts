@@ -27,7 +27,7 @@ import "./css/styles.css";
 
 // Import data informing probabilities
 import practiceProbabilityData from "./data/masterprobtut.csv";
-// import probabilityData from "./data/masterprob4.csv";
+import probabilityData from "./data/masterprob4.csv";
 
 // Experiment variables
 import {
@@ -35,10 +35,6 @@ import {
   blockCount,
   practiceGameCount,
   probability,
-  // firstBreak,
-  instructions,
-  // secondBreak,
-  // thirdBreak,
 } from "./variables";
 
 // Configuration
@@ -55,6 +51,15 @@ export const displayOrderPurple = experiment.random() < 0.5;
 export const displayOrderGreen = experiment.random() < 0.5;
 export const displayOrderYellow = experiment.random() < 0.5;
 export const redPlanetFirstRocket = experiment.random() < 0.5;
+consola.info(`-- Task Variables --
+rocketSides: ${rocketSides}
+practiceRocketSides: ${practiceRocketSides}
+displayOrderRed: ${displayOrderRed}
+displayOrderPurple: ${displayOrderPurple}
+displayOrderGreen: ${displayOrderGreen}
+displayOrderYellow: ${displayOrderYellow}
+redPlanetFirstRocket: ${redPlanetFirstRocket}
+`);
 
 // Timeline structure:
 // (Instructions)
@@ -70,8 +75,9 @@ export const redPlanetFirstRocket = experiment.random() < 0.5;
 const timeline = [];
 let trialNumber = 0;
 
-// Training, Part 1: Introduction and practice selecting aliens
-timeline.push({
+// Training, Part 1: Introduction
+timeline.push(
+  {
   type: "two-step-instructions",
   stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
   leftStimulus: [],
@@ -79,10 +85,83 @@ timeline.push({
   rightStimulus: [],
   rewardImage: [],
   choices: [" "],
-  prompt: ["Test Instructions Page 1", "Next page starts 4 trials to practice selecting an alien."],
+    prompt: [
+      "Before commencing the task, review the following instructions carefully.",
+      "",
+      "When you are ready to continue, click the red button in",
+      "the lower-right corner of your screen.",
+      "Once the button is green, press the Spacebar to continue.",
+      "",
+      "If you have any questions at any stage of the task, reach out to the research",
+      "coordinator.",
+    ],
   include_score: false,
-});
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("earth.png"),
+    leftStimulus: experiment.getStimuli().getImage("rocket1_norm.png"),
+    centerStimulus: [],
+    rightStimulus: experiment.getStimuli().getImage("rocket2_norm.png"),
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Welcome, astronaut! You are now in charge of important exploration missions.",
+      "",
+      "These missions involve taking one of these two spaceships from Earth",
+      "to explore two planets potentially containing resources.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
+    centerStimulus: [],
+    rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Each planet will have two aliens who are in charge of their own",
+      "resource mines.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
+    centerStimulus: [],
+    rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "On each planet, you must ask one alien to share their resources.",
+      "If an alien has resources, it will share them with you.",
+      "A mission is successful when an alien shares their treasure.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
+    centerStimulus: [],
+    rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "To ask the left alien, press '1'. To ask the right alien, press '0'.",
+      "The alien you asked will be highlighted.",
+      "",
+      "You can practice asking aliens for resources now.",
+      "Click the red button and press Spacebar to continue.",
+    ],
+    include_score: false,
+  },
+);
 
+// Training, Part 1: Practice selecting an alien
 for (let i = 0; i < configuration.training.single; i++, trialNumber++) {
   timeline.push({
     type: "two-step-choice",
@@ -92,14 +171,43 @@ for (let i = 0; i < configuration.training.single; i++, trialNumber++) {
     leftStimulus: "tutalien2",
     rightStimulus: "tutalien1",
     planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
-    prompt: ["Now try another one!"],
+    prompt: [i == 0 ? "Select an alien!" : "Select another alien!"],
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
 };
 
 // Training, Part 2: Practice selecting an alien and seeing resources
-timeline.push({
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: experiment.getStimuli().getImage("t.png"),
+    choices: [" "],
+    prompt: [
+      "After you ask an alien, they will show you if they have resources to share.",
+      "Resources looks like this:",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: experiment.getStimuli().getImage("nothing.png"),
+    choices: [" "],
+    prompt: [
+      "If the alien doesn't have resources to share this time, you'll see an empty circle.",
+      "The circle looks like this:",
+    ],
+    include_score: false,
+  },
+  {
   type: "two-step-instructions",
   stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
   leftStimulus: [],
@@ -107,9 +215,44 @@ timeline.push({
   rightStimulus: [],
   rewardImage: [],
   choices: [" "],
-  prompt: ["Test Instructions Page 2", "Next page starts 10 trials to practice selecting an alien and seeing resources."],
+    prompt: [
+      "If an alien has a good mine it will often have resources to share.",
+      "It might not have resources every time you ask, but it will have",
+      "resources most of the time.",
+    ],
   include_score: false,
-});
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Another alien might have a bad mine at the moment,",
+      "and it won't have resources to share most times you ask.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
+    leftStimulus: experiment.getStimuli().getImage("tutalien3_norm.png"),
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "For example, this alien on the yellow planet has a good mine at the moment.",
+      "You can now ask it for treasure 10 times. To ask it for treasure, press '1'.",
+      "",
+      "Click the red button and press Spacebar to continue.",
+    ],
+    include_score: false,
+  },
+);
 
 for (let i = 0; i < configuration.training.outcome; i++, trialNumber++) {
   timeline.push({
@@ -118,18 +261,32 @@ for (let i = 0; i < configuration.training.outcome; i++, trialNumber++) {
     trialRow: ["0.8", "0.8", "0.8", "0.8"],
     trialNumber: trialNumber,
     choices: [configuration.controls.left, configuration.controls.right],
-
     planetStimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
     leftStimulus: "tutalien3",
     rightStimulus: null,
-
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
 };
 
-// Training, Part 3: Choosing between two aliens
 timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("tutyellowplanet.png"),
+  leftStimulus: experiment.getStimuli().getImage("tutalien3_norm.png"),
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: [
+    "The alien shared resources most times you asked.",
+    "During missions, it may not share resources every time you ask.",
+  ],
+  include_score: false,
+});
+
+// Training, Part 3: Choosing between two aliens
+timeline.push(
+  {
   type: "two-step-instructions",
   stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
   leftStimulus: [],
@@ -137,9 +294,43 @@ timeline.push({
   rightStimulus: [],
   rewardImage: [],
   choices: [" "],
-  prompt: ["Test Instructions Page 3", "Next page starts 10 trials to practice choosing between two aliens for resources."],
+    prompt: [
+      "You can will choose between two aliens to ask for resources.",
+      "Pay attention to each alien and try to figure out which alien has more resources to share.",
+    ],
   include_score: false,
-});
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "It does not matter which side of your screen an alien appears on.",
+      "For example: the left side is not luckier than the right side.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "You now have 10 practice missions to try to figure out which alien has a good mine.",
+      "To ask the left alien for resources, press '1'. To ask the right alien for resources, press '0'.",
+      "",
+      "Click the red button and press Spacebar to continue.",
+    ],
+    include_score: false,
+  },
+);
 
 for (let i = 0; i < configuration.training.both; i++, trialNumber++) {
   timeline.push({
@@ -157,7 +348,8 @@ for (let i = 0; i < configuration.training.both; i++, trialNumber++) {
 };
 
 // Training, Part 4: Entire trials
-timeline.push({
+timeline.push(
+  {
   type: "two-step-instructions",
   stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
   leftStimulus: [],
@@ -165,9 +357,77 @@ timeline.push({
   rightStimulus: [],
   rewardImage: [],
   choices: [" "],
-  prompt: ["Test Instructions Page 4", "Next page starts 20 trials to practice the full game"],
+    prompt: [
+      "You may have discovered that this alien had resources to share more often.",
+      "Even if this alien had a better mine,",
+      "you couldn't be sure if it had resources to share all the time.",
+    ],
   include_score: false,
-});
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Each alien is like a game of chance, you can never be sure but",
+      "you can guess.",
+      "",
+      "The amount resources an alien can share will change during the missions.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "An alien with a good mine in previous missions may dig in a part of their",
+      "mine that has few resources.",
+      "",
+      "Another alien with few resources in previous missions may discover a lot of resources.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Any changes in an alien's mine will happen slowly across multiple missions.",
+      "It is best to focus on retrieving as much resources as possible.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "An alien with a good resource mine right now will",
+      "continue to have a good mine for a while.",
+      "",
+      "To find the alien with the best mine during each mission",
+      "you must concentrate.",
+    ],
+    include_score: false,
+  },
+);
 
 for (let i = 0; i < configuration.training.complete; i++, trialNumber++) {
   let currStageTwo: any[] = [];
