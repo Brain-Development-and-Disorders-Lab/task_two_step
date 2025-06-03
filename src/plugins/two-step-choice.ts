@@ -623,11 +623,18 @@ jsPsych.plugins["two-step-choice"] = (() => {
     // 'Experiment' instance
     const experiment = window.Experiment;
 
+    let debugString = "-- Function --";
+    debugString += `\nName: calculateReward`;
+    debugString += `\n\tchosenString: ${chosenString}`;
+
     if (chosenString == "") {
+      consola.info(debugString);
       return null;
     } else {
       const alien = parseInt(chosenString.slice(-1)) % 2;
       const state = +(parseInt(chosenString.slice(-1)) > 2);
+      debugString += `\n\talien: ${alien}`;
+      debugString += `\n\tstate: ${state}`;
 
       let reward = false;
       if (state == 0) {
@@ -635,6 +642,9 @@ jsPsych.plugins["two-step-choice"] = (() => {
       } else {
         reward = experiment.random() < parseFloat(trialRow[2 + alien]);
       }
+
+      debugString += `\n\treward: ${reward}`;
+      consola.info(debugString);
 
       if (reward) {
         return experiment.getStimuli().getImage("t.png");
