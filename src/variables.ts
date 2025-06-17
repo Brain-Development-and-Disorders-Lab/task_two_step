@@ -73,63 +73,6 @@ export const textInstructionsY = window.innerHeight / 5;
 // Instructions
 export const instructions: any[][] = [];
 
-// Black background
-instructions[15] = [
-  [
-    "That is the end of the practice games.",
-    "",
-    "Click the red button and press the spacebar when you are ready to continue.",
-  ],
-];
-
-// Hints
-instructions[16] = [
-  [
-    "This is nearly the end of the tutorial!",
-    "",
-    "In the real game, the planets, aliens, and spaceships will be new colors,",
-    "but the rules will be the same.",
-    "",
-    "The game is hard, so you will need to concentrate,",
-    "but don't be afraid to trust your instincts.",
-    "",
-    "Here are three hints on how to play the game.",
-  ],
-  [
-    "Hint #1:",
-    "Remember which aliens have treasure. How good a mine is changes slowly,",
-    "so an alien that has a lot of treasure to share now,",
-    "will probably be able to share a lot in the near future.",
-  ],
-  [
-    "Hint #2:",
-    "Remember, each alien has its own mine. Just because one alien has a bad ",
-    "mine and can't share very often, does not mean another has a good mine.",
-    "",
-    "The aliens are not trying to trick you!",
-    "",
-    "Your actions do not change how good a mine is," +
-    "and the aliens will not hide treasure from you if they have it available.",
-  ],
-  [
-    "Hint #3:",
-    "The spaceship you choose is important because often an alien on one planet ",
-    "may be better than the ones on another planet.",
-    "",
-    "You can find more treasure by finding the spaceship",
-    "that is most likely to take you to right planet.",
-  ],
-];
-
-// Pre-attention-check
-instructions[17] = [
-  [
-    "Now it's time to make sure you know how to play.",
-    "",
-    "Please respond 'True' or 'False' to the questions on the next few pages.",
-  ],
-];
-
 // Pre-game
 instructions[18] = [
   [

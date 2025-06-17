@@ -102,7 +102,7 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
 
           // Calcuate the transition and then the second location
           stageState = calculateTransition(data.chosenStimulus, isPractice);
-          if (stageState == null) {
+          if (stageState == null || stageState.length === 0) {
             stageState = [
               data.rightStimulus,
               data.leftStimulus,
@@ -1048,6 +1048,115 @@ let stageState: any[] | null = [];
 
 // Insert practice trials into instructions
 timeline.push(createBlock(practiceTimelineVariables, practiceProbabilityData, true));
+
+// Post-practice instructions
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "That is the end of the practice games.",
+      "",
+      "Click the red button and press the spacebar when you are ready to continue.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "This is nearly the end of the tutorial!",
+      "",
+      "In the real game, the planets, aliens, and spaceships will be new colors,",
+      "but the rules will be the same.",
+      "",
+      "The game is hard, so you will need to concentrate,",
+      "but don't be afraid to trust your instincts.",
+      "",
+      "Here are three hints on how to play the game.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Hint #1:",
+      "Remember which aliens have treasure. How good a mine is changes slowly,",
+      "so an alien that has a lot of treasure to share now,",
+      "will probably be able to share a lot in the near future.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Hint #2:",
+      "Remember, each alien has its own mine. Just because one alien has a bad ",
+      "mine and can't share very often, does not mean another has a good mine.",
+      "",
+      "The aliens are not trying to trick you!",
+      "",
+      "Your actions do not change how good a mine is,",
+      "and the aliens will not hide treasure from you if they have it available.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Hint #3:",
+      "The spaceship you choose is important because often an alien on one planet ",
+      "may be better than the ones on another planet.",
+      "",
+      "You can find more treasure by finding the spaceship",
+      "that is most likely to take you to right planet.",
+    ],
+    include_score: false,
+  },
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Now it's time to make sure you know how to play.",
+      "",
+      "Please respond 'True' or 'False' to the questions on the next few pages.",
+    ],
+    include_score: false,
+  },
+);
 
 // Insert the three quizzes before the last element in `currentInstructions`
 // Question 1
