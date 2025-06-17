@@ -11,7 +11,7 @@
 import { LogLevel } from "consola";
 
 export const configuration = {
-  name: "Two-step game",
+  name: "Two-Step Game",
   studyName: "task_twostep",
 
   manipulations: {},
@@ -19,9 +19,9 @@ export const configuration = {
 
   // Set the training configuration and define the number of trials
   training: {
-    single: 0,
-    outcome: 0,
-    both: 0,
+    single: 4,
+    outcome: 10,
+    both: 10,
     complete: 20,
   },
 

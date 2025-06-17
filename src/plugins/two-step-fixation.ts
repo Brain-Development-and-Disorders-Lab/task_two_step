@@ -124,7 +124,7 @@ jsPsych.plugins["two-step-fixation"] = (() => {
     };
 
     // Configure a trial timeout and limit the duration
-    if (trial.responseWindow !== null) {
+    if (trial.responseWindow !== null && trial.responseWindow > 0) {
       jsPsych.pluginAPI.setTimeout(function () {
         endTrial();
       }, trial.responseWindow);
