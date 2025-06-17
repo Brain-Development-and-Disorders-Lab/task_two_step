@@ -4,7 +4,7 @@ An adaptation of the task described by [Nussenbaum, K., Scheuplein, M., Phaneuf,
 
 They collected data from 151 participants on two tasks: the two-step task, as described in Decker et al. (2016) and the Matrix Reasoning Item Bank (MaRs-IB) as described in Chierchia, Fuhrmann et al. (2019).
 
-The adaptation of the two-step task, developed using [jsPsych](https://www.jspsych.org/), can be found in the *src* directory.
+The adaptation of the two-step task, developed using [jsPsych](https://www.jspsych.org/), can be found in the _src_ directory.
 
 ## Task Overview
 
@@ -15,7 +15,7 @@ The jsPsych version of the task was originally coded by the [Niv Lab](https://ni
 
 ## Data and analysis code
 
-All raw data and analysis code has been moved into the *analysis* directory. All analyses and results reported in the Nussenbaum et. al. (2020) manuscript can be reproduced by running the R scripts (for all data summary statistics and regression analyses) and MATLAB code (for the computational modeling of the two-step task data).
+All raw data and analysis code has been moved into the _analysis_ directory. All analyses and results reported in the Nussenbaum et. al. (2020) manuscript can be reproduced by running the R scripts (for all data summary statistics and regression analyses) and MATLAB code (for the computational modeling of the two-step task data).
 
 For questions about the task used by Nussenbaum et. al., please contact katenuss@nyu.edu. For questions about this specific adaptation, please contact henry.burgess@wustl.edu.
 
