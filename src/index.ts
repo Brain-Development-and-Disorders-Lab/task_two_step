@@ -51,7 +51,9 @@ export const displayOrderPurple = experiment.random() < 0.5;
 export const displayOrderGreen = experiment.random() < 0.5;
 export const displayOrderYellow = experiment.random() < 0.5;
 export const redPlanetFirstRocket = experiment.random() < 0.5;
-consola.info(`-- Task Variables --\nrocketSides: ${rocketSides}\npracticeRocketSides: ${practiceRocketSides}\ndisplayOrderRed: ${displayOrderRed}\ndisplayOrderPurple: ${displayOrderPurple}\ndisplayOrderGreen: ${displayOrderGreen}\ndisplayOrderYellow: ${displayOrderYellow}\nredPlanetFirstRocket: ${redPlanetFirstRocket}\n`);
+consola.info(
+  `-- Task Variables --\nrocketSides: ${rocketSides}\npracticeRocketSides: ${practiceRocketSides}\ndisplayOrderRed: ${displayOrderRed}\ndisplayOrderPurple: ${displayOrderPurple}\ndisplayOrderGreen: ${displayOrderGreen}\ndisplayOrderYellow: ${displayOrderYellow}\nredPlanetFirstRocket: ${redPlanetFirstRocket}\n`
+);
 
 /**
  * Function yielding a three-stage grouping of jsPsych trials. This grouping represents
@@ -65,7 +67,11 @@ consola.info(`-- Task Variables --\nrocketSides: ${rocketSides}\npracticeRocketS
  * @return {any} three-stage grouping, including first decision,
  * second decision, and fixation cross
  */
-const createBlock = (variables: any[], probabilityData: { [x: string]: any }, isPractice: boolean): any => {
+const createBlock = (
+  variables: any[],
+  probabilityData: { [x: string]: any },
+  isPractice: boolean
+): any => {
   // Create the generic experimental procedure for a single trial.
   // Consists of the first and second choices.
   const procedure = {
@@ -166,7 +172,9 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
 
         // Define the 'on_finish' callback
         on_finish: (data: any) => {
-          if (data.rewardStimulus === experiment.getStimuli().getImage("t.png")) {
+          if (
+            data.rewardStimulus === experiment.getStimuli().getImage("t.png")
+          ) {
             if (isPractice === false) {
               experiment
                 .getState()
@@ -239,7 +247,7 @@ const createBlock = (variables: any[], probabilityData: { [x: string]: any }, is
  */
 const calculateTransition = (chosenString: string, isPractice: boolean) => {
   let debugString = "-- Function --";
-  debugString += `\nName: calculateTransition`
+  debugString += `\nName: calculateTransition`;
   debugString += `\n\tchosenString: ${chosenString}`;
   debugString += `\n\tisPractice: ${isPractice}`;
 
@@ -270,11 +278,12 @@ const calculateTransition = (chosenString: string, isPractice: boolean) => {
 
   if (redPlanetFirstRocket) {
     // If rocket 1 goes to red planet (redPlanetFirstRocket is true)
-    planet = (firstShipChosen === isCommonTransition) ? firstPlanet : secondPlanet;
-  }
-  else {
+    planet =
+      firstShipChosen === isCommonTransition ? firstPlanet : secondPlanet;
+  } else {
     // If rocket 2 goes to red planet (redPlanetFirstRocket is false)
-    planet = (firstShipChosen === isCommonTransition) ? secondPlanet : firstPlanet;
+    planet =
+      firstShipChosen === isCommonTransition ? secondPlanet : firstPlanet;
   }
   debugString += `\n\tplanet: ${planet}`;
   consola.info(debugString);
@@ -475,7 +484,7 @@ timeline.push(
       "Click the red button and press Spacebar to continue.",
     ],
     include_score: false,
-  },
+  }
 );
 
 // Training, Part 1: Practice selecting an alien
@@ -492,7 +501,7 @@ for (let i = 0; i < configuration.training.single; i++, trialNumber++) {
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
-};
+}
 
 // Training, Part 2: Practice selecting an alien and seeing resources
 timeline.push(
@@ -556,7 +565,7 @@ timeline.push(
       "Click the red button and press Spacebar to continue.",
     ],
     include_score: false,
-  },
+  }
 );
 
 for (let i = 0; i < configuration.training.outcome; i++, trialNumber++) {
@@ -572,7 +581,7 @@ for (let i = 0; i < configuration.training.outcome; i++, trialNumber++) {
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
-};
+}
 
 timeline.push({
   type: "two-step-instructions",
@@ -622,7 +631,7 @@ timeline.push(
       "Click the red button and press Spacebar to continue.",
     ],
     include_score: false,
-  },
+  }
 );
 
 for (let i = 0; i < configuration.training.both; i++, trialNumber++) {
@@ -638,7 +647,7 @@ for (let i = 0; i < configuration.training.both; i++, trialNumber++) {
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
-};
+}
 
 // Training, Part 4: Entire trials
 timeline.push(
@@ -746,9 +755,7 @@ timeline.push(
     rightStimulus: [],
     rewardImage: [],
     choices: [" "],
-    prompt: [
-      "This is the green planet.",
-    ],
+    prompt: ["This is the green planet."],
     include_score: false,
   },
   {
@@ -759,9 +766,7 @@ timeline.push(
     rightStimulus: [],
     rewardImage: [],
     choices: [" "],
-    prompt: [
-      "This is the yellow planet.",
-    ],
+    prompt: ["This is the yellow planet."],
     include_score: false,
   },
   {
@@ -845,151 +850,156 @@ timeline.push(
       "Good luck! Remember that '1' selects left and '0' selects right.",
     ],
     include_score: false,
-  },
+  }
 );
 
 for (let i = 0; i < configuration.training.complete; i++, trialNumber++) {
   let stageState: any[] = [];
 
-  timeline.push({
-    // Instantiate the first choice
-    type: "two-step-choice",
-    trialStage: "1",
-    trialNumber: trialNumber,
-    choices: [configuration.controls.left, configuration.controls.right],
+  timeline.push(
+    {
+      // Instantiate the first choice
+      type: "two-step-choice",
+      trialStage: "1",
+      trialNumber: trialNumber,
+      choices: [configuration.controls.left, configuration.controls.right],
 
-    // Trial stimuli
-    planetStimulus: experiment.getStimuli().getImage("earth.png"),
-    leftStimulus: practiceRocketSides ? "rocket2" : "rocket1",
-    rightStimulus: practiceRocketSides ? "rocket1" : "rocket2",
+      // Trial stimuli
+      planetStimulus: experiment.getStimuli().getImage("earth.png"),
+      leftStimulus: practiceRocketSides ? "rocket2" : "rocket1",
+      rightStimulus: practiceRocketSides ? "rocket1" : "rocket2",
 
-    // Specify if this is a practice trial or not
-    isPractice: true,
+      // Specify if this is a practice trial or not
+      isPractice: true,
 
-    // Define the 'on_start' callback
-    on_start: () => {
-      stageState = [];
+      // Define the 'on_start' callback
+      on_start: () => {
+        stageState = [];
+      },
+
+      // Define the 'on_start' callback
+      on_finish: (data: any) => {
+        // Specify the choice made in the data
+        if (data.key_press == configuration.controls.left) {
+          data.choice = 1;
+        }
+        if (data.key_press == configuration.controls.right) {
+          data.choice = 2;
+        }
+
+        // Calcuate the transition and then the second location
+        stageState = calculateTransition(data.chosenStimulus, true);
+        if (stageState.length === 0) {
+          stageState = [
+            data.rightStimulus,
+            data.leftStimulus,
+            experiment.getStimuli().getImage("earth.png"),
+            null,
+          ];
+        }
+      },
+
+      // Specify a trial duration
+      responseWindow: configuration.timing.choice,
     },
+    {
+      // Instantiate the second choice
+      type: "two-step-choice",
+      trialStage: "2",
+      choices: [configuration.controls.left, configuration.controls.right],
+      trialNumber: trialNumber,
 
-    // Define the 'on_start' callback
-    on_finish: (data: any) => {
-      // Specify the choice made in the data
-      if (data.key_press == configuration.controls.left) {
-        data.choice = 1;
-      }
-      if (data.key_press == configuration.controls.right) {
-        data.choice = 2;
-      }
+      // Specify if this is a practice trial or not
+      isPractice: true,
 
-      // Calcuate the transition and then the second location
-      stageState = calculateTransition(data.chosenStimulus, true);
-      if (stageState.length === 0) {
-        stageState = [
-          data.rightStimulus,
-          data.leftStimulus,
-          experiment.getStimuli().getImage("earth.png"),
-          null,
-        ];
-      }
+      // Specify the trial data
+      trialRow: () => {
+        return practiceProbabilityData[i + 1];
+      },
+
+      // Specify the second planet
+      planetStimulus: () => {
+        if (stageState) return stageState[2];
+      },
+
+      // Specify the left alien?
+      rightStimulus: () => {
+        if (stageState) return stageState[0];
+      },
+
+      // Specify the right alien?
+      leftStimulus: () => {
+        if (stageState) return stageState[1];
+      },
+
+      // Specify the reward outcome
+      centerStimulus: () => {
+        if (stageState) return stageState[3];
+      },
+
+      // Specify the transition type
+      transitionType: () => {
+        if (stageState) return stageState[4];
+      },
+
+      // Specify a trial duration
+      responseWindow: () => {
+        if (stageState && stageState[3] == null) {
+          return 0;
+        } else {
+          return configuration.timing.choice;
+        }
+      },
+
+      // Define the 'on_finish' callback
+      on_finish: (data: any) => {
+        if (data.rewardStimulus === experiment.getStimuli().getImage("t.png")) {
+          experiment
+            .getState()
+            .set(
+              "practiceReward",
+              experiment.getState().get("practiceReward") + 1
+            );
+        }
+
+        // Specify the choice made in the data
+        if (data.key_press == configuration.controls.left) {
+          data.choice = 1;
+        }
+        if (data.key_press == configuration.controls.right) {
+          data.choice = 2;
+        }
+
+        // Specify the transition type in the data
+        if (data.transitionType == true) {
+          data.transition = "common";
+        }
+        if (data.transitionType == false) {
+          data.transition = "rare";
+        }
+
+        // Specify the reward outcome in the data
+        if (data.rewardStimulus == experiment.getStimuli().getImage("t.png")) {
+          data.wasRewarded = true;
+        } else {
+          data.wasRewarded = false;
+        }
+
+        // Store the timestamp
+        const timestamp = new Date().toISOString().replace(/z|t/gi, " ").trim();
+        jsPsych.data.addDataToLastTrial({ timestamp });
+      },
     },
-
-    // Specify a trial duration
-    responseWindow: configuration.timing.choice,
-  },
-  {
-    // Instantiate the second choice
-    type: "two-step-choice",
-    trialStage: "2",
-    choices: [configuration.controls.left, configuration.controls.right],
-    trialNumber: trialNumber,
-
-    // Specify if this is a practice trial or not
-    isPractice: true,
-
-    // Specify the trial data
-    trialRow: () => {
-      return practiceProbabilityData[i + 1];
-    },
-
-    // Specify the second planet
-    planetStimulus: () => {
-      if (stageState) return stageState[2];
-    },
-
-    // Specify the left alien?
-    rightStimulus: () => {
-      if (stageState) return stageState[0];
-    },
-
-    // Specify the right alien?
-    leftStimulus: () => {
-      if (stageState) return stageState[1];
-    },
-
-    // Specify the reward outcome
-    centerStimulus: () => {
-      if (stageState) return stageState[3];
-    },
-
-    // Specify the transition type
-    transitionType: () => {
-      if (stageState) return stageState[4];
-    },
-
-    // Specify a trial duration
-    responseWindow: () => {
-      if (stageState && stageState[3] == null) {
-        return 0;
-      } else {
-        return configuration.timing.choice;
-      }
-    },
-
-    // Define the 'on_finish' callback
-    on_finish: (data: any) => {
-      if (data.rewardStimulus === experiment.getStimuli().getImage("t.png")) {
-        experiment.getState().set("practiceReward", experiment.getState().get("practiceReward") + 1);
-      }
-
-      // Specify the choice made in the data
-      if (data.key_press == configuration.controls.left) {
-        data.choice = 1;
-      }
-      if (data.key_press == configuration.controls.right) {
-        data.choice = 2;
-      }
-
-      // Specify the transition type in the data
-      if (data.transitionType == true) {
-        data.transition = "common";
-      }
-      if (data.transitionType == false) {
-        data.transition = "rare";
-      }
-
-      // Specify the reward outcome in the data
-      if (
-        data.rewardStimulus == experiment.getStimuli().getImage("t.png")
-      ) {
-        data.wasRewarded = true;
-      } else {
-        data.wasRewarded = false;
-      }
-
-      // Store the timestamp
-      const timestamp = new Date().toISOString().replace(/z|t/gi, " ").trim();
-      jsPsych.data.addDataToLastTrial({ timestamp });
-    },
-  },
-  {
-    // Instantiate the fixation stage
-    type: "two-step-fixation",
-    stimulus: experiment.getStimuli().getImage("earth.png"),
-    text: "+",
-    responseWindow: 1000,
-    trialNumber: trialNumber,
-  },)
-};
+    {
+      // Instantiate the fixation stage
+      type: "two-step-fixation",
+      stimulus: experiment.getStimuli().getImage("earth.png"),
+      text: "+",
+      responseWindow: 1000,
+      trialNumber: trialNumber,
+    }
+  );
+}
 
 // Instantiate the timeline variables for the main trials
 const timelineVariables: any[][] = [];
@@ -1047,7 +1057,9 @@ for (let i = 0; i < practiceGameCount; i++) {
 let stageState: any[] | null = [];
 
 // Insert practice trials into instructions
-timeline.push(createBlock(practiceTimelineVariables, practiceProbabilityData, true));
+timeline.push(
+  createBlock(practiceTimelineVariables, practiceProbabilityData, true)
+);
 
 // Post-practice instructions
 timeline.push(
@@ -1155,7 +1167,7 @@ timeline.push(
       "Please respond 'True' or 'False' to the questions on the next few pages.",
     ],
     include_score: false,
-  },
+  }
 );
 
 // Insert the three quizzes before the last element in `currentInstructions`
@@ -1203,122 +1215,112 @@ timeline.push({
 });
 
 // Pre-main instructions
-timeline.push(
-  {
-    type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
-    leftStimulus: [],
-    centerStimulus: [],
-    rightStimulus: [],
-    rewardImage: [],
-    choices: [" "],
-    prompt: [
-      "OK! Now you know how to play.",
-      "",
-      "In the real game we'll count how many pieces of space treasure",
-      "you find and show you at the end.",
-      "",
-      "Ready? Now its time to play the game! Good luck space traveler!",
-    ],
-    include_score: false,
-  },
-);
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: [
+    "OK! Now you know how to play.",
+    "",
+    "In the real game we'll count how many pieces of space treasure",
+    "you find and show you at the end.",
+    "",
+    "Ready? Now its time to play the game! Good luck space traveler!",
+  ],
+  include_score: false,
+});
 
 // Create the remaining blocks of the timeline
 // Main block 1
 timeline.push(createBlock(timelineVariables[0], probabilityData, false));
 
 // Break 1
-timeline.push(
-  {
-    type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
-    leftStimulus: [],
-    centerStimulus: [],
-    rightStimulus: [],
-    rewardImage: [],
-    choices: [" "],
-    prompt: [
-      `Great job so far! You have completed 1 out of 4 rounds.`,
-      "You may now take a break.",
-      "",
-      "Click the red button and press the spacebar when you are ready to continue.",
-    ],
-    include_score: false,
-  },
-);
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: [
+    `Great job so far! You have completed 1 out of 4 rounds.`,
+    "You may now take a break.",
+    "",
+    "Click the red button and press the spacebar when you are ready to continue.",
+  ],
+  include_score: false,
+});
 
 // Main block 2
 timeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
 // Break 2
-timeline.push(
-  {
-    type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
-    leftStimulus: [],
-    centerStimulus: [],
-    rightStimulus: [],
-    rewardImage: [],
-    choices: [" "],
-    prompt: [
-      "Awesome! You are halfway through the game.",
-      "",
-      "You may now take a break.",
-      "",
-      "Click the red button and press the spacebar when you are ready to continue.",
-    ],
-    include_score: false,
-  },
-);
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: [
+    "Awesome! You are halfway through the game.",
+    "",
+    "You may now take a break.",
+    "",
+    "Click the red button and press the spacebar when you are ready to continue.",
+  ],
+  include_score: false,
+});
 
 // Main block 3
 timeline.push(createBlock(timelineVariables[2], probabilityData, false));
 
 // Break 3
-timeline.push(
-  {
-    type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
-    leftStimulus: [],
-    centerStimulus: [],
-    rightStimulus: [],
-    rewardImage: [],
-    choices: [" "],
-    prompt: [
-      "Almost done! Just 1 more round to go.",
-      "",
-      "You may now take a break.",
-      "",
-      "Click the red button and press the spacebar when you are ready to continue.",
-    ],
-    include_score: false,
-  },
-);
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: [
+    "Almost done! Just 1 more round to go.",
+    "",
+    "You may now take a break.",
+    "",
+    "Click the red button and press the spacebar when you are ready to continue.",
+  ],
+  include_score: false,
+});
 
 // Main block 4
 timeline.push(createBlock(timelineVariables[3], probabilityData, false));
 
 // Finish
-timeline.push(
-  {
-    type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
-    leftStimulus: [],
-    centerStimulus: [],
-    rightStimulus: [],
-    rewardImage: [],
-    choices: [" "],
-    prompt: [
-      "You're finished with this part of the experiment!",
-      "",
-      "Click the red button to answer a final question.",
-      "",
-      "You found:",
-    ],
-    include_score: true,
-  },
-);
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: [
+    "You're finished with this part of the experiment!",
+    "",
+    "Click the red button to answer a final question.",
+    "",
+    "You found:",
+  ],
+  include_score: true,
+});
 
 // Question about the rockets
 timeline.push({
@@ -1346,23 +1348,21 @@ timeline.push({
 });
 
 // Finish
-timeline.push(
-  {
-    type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
-    leftStimulus: [],
-    centerStimulus: [],
-    rightStimulus: [],
-    rewardImage: [],
-    choices: [" "],
-    prompt: [
-      "Thank you for participating in this research!",
-      "",
-      "Click the red button and press the spacebar to be redirected.",
-    ],
-    include_score: false,
-  },
-);
+timeline.push({
+  type: "two-step-instructions",
+  stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+  leftStimulus: [],
+  centerStimulus: [],
+  rightStimulus: [],
+  rewardImage: [],
+  choices: [" "],
+  prompt: [
+    "Thank you for participating in this research!",
+    "",
+    "Click the red button and press the spacebar to be redirected.",
+  ],
+  include_score: false,
+});
 
 // Start the experiment
 experiment.start({

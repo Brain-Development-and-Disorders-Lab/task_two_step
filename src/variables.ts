@@ -55,7 +55,8 @@ export const choiceXLeft = centerX - 0.25 * pictureWidth - sizeMonster / 2;
 export const chosenY = centerY - 0.06 * pictureHeight - sizeMonster / 2;
 export const chosenX = centerX - sizeMonster / 2;
 
-export const rewardY = centerY - 0.06 * pictureHeight - sizeReward / 2 - sizeMonster / 2;
+export const rewardY =
+  centerY - 0.06 * pictureHeight - sizeReward / 2 - sizeMonster / 2;
 export const rewardX = centerX - sizeReward / 2;
 
 // Text positioning
