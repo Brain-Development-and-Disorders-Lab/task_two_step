@@ -12,13 +12,6 @@ export const blockLength = 50;
 export const blockCount = 4;
 
 // Number of trial types
-export const practicePressingIdx = 5;
-export const practicePressingNum = 4; // 4 trials to practice selecting alien
-export const practiceRewardIdx = 10 + practicePressingNum;
-export const practiceRewardNum = 10; // 10 trials to practice asking alien
-export const practiceStochasticIdx = 17 + practicePressingNum + practiceRewardNum;
-export const practiceStochasticNum = 10; // 10 trials practice choosing aliens
-export const practiceGameIdx = 34 + practicePressingNum + practiceRewardNum + practiceStochasticNum;
 export const practiceGameCount = 20; // 20 trials to practice full game
 
 // Transition probability
@@ -69,6 +62,3 @@ export const rewardX = centerX - sizeReward / 2;
 export const textX = window.innerWidth / 2;
 export const textY = window.innerHeight / 5;
 export const textInstructionsY = window.innerHeight / 5;
-
-// Instructions
-export const instructions: any[][] = [];
