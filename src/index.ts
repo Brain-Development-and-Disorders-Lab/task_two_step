@@ -1202,118 +1202,167 @@ timeline.push({
   feedback_incorrect: "Incorrect. You have a few seconds to make each choice.",
 });
 
+// Pre-main instructions
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "OK! Now you know how to play.",
+      "",
+      "In the real game we'll count how many pieces of space treasure",
+      "you find and show you at the end.",
+      "",
+      "Ready? Now its time to play the game! Good luck space traveler!",
+    ],
+    include_score: false,
+  },
+);
+
 // Create the remaining blocks of the timeline
 // Main block 1
 timeline.push(createBlock(timelineVariables[0], probabilityData, false));
 
-// Insert break 1
-// timeline.push(
-//   createInstructions(
-//     experiment.getStimuli().getImage("blackbackground.jpg"),
-//     firstBreak,
-//     [],
-//     [],
-//     [],
-//     []
-//   )[0]
-// );
+// Break 1
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      `Great job so far! You have completed 1 out of 4 rounds.`,
+      "You may now take a break.",
+      "",
+      "Click the red button and press the spacebar when you are ready to continue.",
+    ],
+    include_score: false,
+  },
+);
 
 // Main block 2
-// timeline.push(createBlock(timelineVariables[1], probabilityData, false));
+timeline.push(createBlock(timelineVariables[1], probabilityData, false));
 
-// Insert break 2
-// timeline.push(
-//   createInstructions(
-//     experiment.getStimuli().getImage("blackbackground.jpg"),
-//     secondBreak,
-//     [],
-//     [],
-//     [],
-//     []
-//   )[0]
-// );
+// Break 2
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Awesome! You are halfway through the game.",
+      "",
+      "You may now take a break.",
+      "",
+      "Click the red button and press the spacebar when you are ready to continue.",
+    ],
+    include_score: false,
+  },
+);
 
 // Main block 3
-// timeline.push(createBlock(timelineVariables[2], probabilityData, false));
+timeline.push(createBlock(timelineVariables[2], probabilityData, false));
 
-// Insert break 3
-// timeline.push(
-//   createInstructions(
-//     experiment.getStimuli().getImage("blackbackground.jpg"),
-//     thirdBreak,
-//     [],
-//     [],
-//     [],
-//     []
-//   )[0]
-// );
+// Break 3
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Almost done! Just 1 more round to go.",
+      "",
+      "You may now take a break.",
+      "",
+      "Click the red button and press the spacebar when you are ready to continue.",
+    ],
+    include_score: false,
+  },
+);
 
 // Main block 4
-// timeline.push(createBlock(timelineVariables[3], probabilityData, false));
+timeline.push(createBlock(timelineVariables[3], probabilityData, false));
 
 // Finish
-// timeline.push(
-//   createInstructions(
-//     experiment.getStimuli().getImage("blackbackground.jpg"),
-//     [
-//       [
-//         "You're finished with this part of the experiment!",
-//         "",
-//         "Click the red button to answer a final question.",
-//         "",
-//         "You found:",
-//       ],
-//     ],
-//     [],
-//     [],
-//     [],
-//     [],
-//     true
-//   )[0]
-// );
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "You're finished with this part of the experiment!",
+      "",
+      "Click the red button to answer a final question.",
+      "",
+      "You found:",
+    ],
+    include_score: true,
+  },
+);
 
 // Question about the rockets
-// timeline.push({
-//   type: "two-step-choice",
-//   trialStage: "1",
-//   choices: [configuration.controls.left, configuration.controls.right],
-//   planetStimulus: experiment.getStimuli().getImage("earth.png"),
-//   rightStimulus: rocketSides === true ? "rocket1" : "rocket2",
-//   leftStimulus: rocketSides === true ? "rocket2" : "rocket1",
-//   isPractice: false,
-//   prompt: [
-//     "Select the rocket you think went to the red planet most frequently.",
-//   ],
-//   on_finish: (data: any) => {
-//     // Store the keypresses
-//     if (data.key_press === configuration.controls.left) {
-//       data.choice = 1;
-//     }
-//     if (data.key_press === configuration.controls.right) {
-//       data.choice = 2;
-//     }
-//     consola.info("data", data);
-//   },
-//   trialNumber: 0,
-// });
+timeline.push({
+  type: "two-step-choice",
+  trialStage: "1",
+  choices: [configuration.controls.left, configuration.controls.right],
+  planetStimulus: experiment.getStimuli().getImage("earth.png"),
+  rightStimulus: rocketSides === true ? "rocket1" : "rocket2",
+  leftStimulus: rocketSides === true ? "rocket2" : "rocket1",
+  isPractice: false,
+  prompt: [
+    "Select the rocket you think went to the red planet most frequently.",
+  ],
+  on_finish: (data: any) => {
+    // Store the keypresses
+    if (data.key_press === configuration.controls.left) {
+      data.choice = 1;
+    }
+    if (data.key_press === configuration.controls.right) {
+      data.choice = 2;
+    }
+    consola.info("data", data);
+  },
+  trialNumber: 0,
+});
 
 // Finish
-// timeline.push(
-//   createInstructions(
-//     experiment.getStimuli().getImage("blackbackground.jpg"),
-//     [
-//       [
-//         "Thank you for participating in this research!",
-//         "",
-//         "Click the red button and press the spacebar to be redirected.",
-//       ],
-//     ],
-//     [],
-//     [],
-//     [],
-//     []
-//   )[0]
-// );
+timeline.push(
+  {
+    type: "two-step-instructions",
+    stimulus: experiment.getStimuli().getImage("blackbackground.jpg"),
+    leftStimulus: [],
+    centerStimulus: [],
+    rightStimulus: [],
+    rewardImage: [],
+    choices: [" "],
+    prompt: [
+      "Thank you for participating in this research!",
+      "",
+      "Click the red button and press the spacebar to be redirected.",
+    ],
+    include_score: false,
+  },
+);
 
 // Start the experiment
 experiment.start({
