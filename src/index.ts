@@ -679,7 +679,7 @@ timeline.push(
       "Each alien is like a game of chance, you can never be sure but",
       "you can guess.",
       "",
-      "The amount resources an alien can share will change during the missions.",
+      "The amount of resources an alien can share will change during the missions.",
     ],
     include_score: false,
   },
@@ -710,7 +710,7 @@ timeline.push(
     prompt: [
       "Any changes in an alien's mine will happen slowly across multiple missions.",
       "",
-      "It is best to focus on retrieving as much resources as possible.",
+      "It is best to focus on retrieving as many resources as possible.",
     ],
     include_score: false,
   },
