@@ -256,10 +256,11 @@ jsPsych.plugins["two-step-choice"] = (() => {
       let lineNumber = 0;
       const lineHeight = 1.1; // ems
       const dy = 0;
+      let promptTextElements: any[] = [];
 
       for (let i = 0; i < trial.prompt.length; i++) {
         // Append a line of text
-        svg
+        const textElement = svg
           .append("text")
           .attr("x", textX)
           .attr("y", textInstructionsY)
@@ -271,8 +272,12 @@ jsPsych.plugins["two-step-choice"] = (() => {
           .style("letter-spacing", "0.2")
           .style("fill", "white")
           .text(trial.prompt[i]);
+        promptTextElements.push(textElement);
         lineNumber++;
       }
+
+      // Store the prompt text elements for later manipulation
+      trial.promptTextElements = promptTextElements;
     }
 
     // Configure the overall response data
@@ -384,6 +389,13 @@ jsPsych.plugins["two-step-choice"] = (() => {
 
         // Set the 'validResponse' flag
         validResponse = true;
+
+        // Hide all prompt lines except the first one after response
+        if (trial.promptTextElements && trial.promptTextElements.length > 1) {
+          for (let i = 1; i < trial.promptTextElements.length; i++) {
+            trial.promptTextElements[i].style("opacity", "0");
+          }
+        }
 
         if (trial.trialPrompt == null) {
           // Determine what choice was made
