@@ -448,8 +448,8 @@ timeline.push(
     rewardImage: [],
     choices: [" "],
     prompt: [
-      "Each planet will have two aliens who are in charge of their own",
-      "resource mines.",
+      "Each planet will have two aliens who are in charge of their own mine",
+      "that contains resources.",
     ],
     include_score: false,
   },
@@ -462,9 +462,9 @@ timeline.push(
     rewardImage: [],
     choices: [" "],
     prompt: [
-      "On each planet, you must ask one alien to share their resources.",
-      "If an alien has resources, it will share them with you.",
-      "A mission is successful when an alien shares their treasure.",
+      "On each planet you must ask one alien to share their resources.",
+      "If an alien has resources it will share them with you.",
+      "A mission is successful when an alien shares their resources.",
     ],
     include_score: false,
   },
@@ -477,9 +477,6 @@ timeline.push(
     rewardImage: [],
     choices: [" "],
     prompt: [
-      "To ask the left alien, press '1'. To ask the right alien, press '0'.",
-      "The alien you asked will be highlighted.",
-      "",
       "You can practice asking aliens for resources now.",
       "Click the red button and press Spacebar to continue.",
     ],
@@ -497,7 +494,12 @@ for (let i = 0; i < configuration.training.single; i++, trialNumber++) {
     leftStimulus: "tutalien2",
     rightStimulus: "tutalien1",
     planetStimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
-    prompt: [i == 0 ? "Select an alien!" : "Select another alien!"],
+    prompt: [
+      i == 0 ? "Select an alien!" : "Select another alien!",
+      "",
+      "To ask the left alien, press '1'. To ask the right alien, press '0'.",
+      "The alien you asked will be highlighted.",
+    ],
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
@@ -514,7 +516,7 @@ timeline.push(
     rewardImage: experiment.getStimuli().getImage("t.png"),
     choices: [" "],
     prompt: [
-      "After you ask an alien, they will show you if they have resources to share.",
+      "After you ask an alien they will show you if they have resources to share.",
       "Resources looks like this:",
     ],
     include_score: false,
@@ -560,7 +562,7 @@ timeline.push(
     choices: [" "],
     prompt: [
       "For example, this alien on the yellow planet has a good mine at the moment.",
-      "You can now ask it for treasure 10 times. To ask it for treasure, press '1'.",
+      "You can now ask it for resources 10 times. To ask it for resources, press '1'.",
       "",
       "Click the red button and press Spacebar to continue.",
     ],
@@ -679,7 +681,7 @@ timeline.push(
       "Each alien is like a game of chance, you can never be sure but",
       "you can guess.",
       "",
-      "The amount resources an alien can share will change during the missions.",
+      "The amount of resources an alien can share will change during the missions.",
     ],
     include_score: false,
   },
@@ -710,7 +712,7 @@ timeline.push(
     prompt: [
       "Any changes in an alien's mine will happen slowly across multiple missions.",
       "",
-      "It is best to focus on retrieving as much resources as possible.",
+      "It is best to focus on retrieving as many resources as possible.",
     ],
     include_score: false,
   },
@@ -740,7 +742,7 @@ timeline.push(
     rewardImage: [],
     choices: [" "],
     prompt: [
-      "Now that you know have practiced asking aliens for treasure, you can",
+      "Now that you know have practiced asking aliens for resources, you can",
       "learn how to launch and navigate your spaceship.",
       "",
       "In each mission, you will travel from Earth to one of two planets.",
@@ -814,8 +816,8 @@ timeline.push(
     prompt: [
       "Let's practice choosing spaceships before doing the full game.",
       "",
-      "Remember, you still want to find as much space treasure as you can",
-      "by asking an alien to share their treasure with you.",
+      "Remember, you still want to find as many space resources as you can",
+      "by asking an alien to share their resources with you.",
     ],
     include_score: false,
   },
@@ -828,7 +830,7 @@ timeline.push(
     rewardImage: [],
     choices: [" "],
     prompt: [
-      "How much bonus money you make is based on how much space treasure you find.",
+      "How much bonus money you make is based on how many space resources you find.",
       "",
       "This is just a practice round of 20 flights, you're not playing for money now.",
     ],
@@ -1109,8 +1111,8 @@ timeline.push(
     choices: [" "],
     prompt: [
       "Hint #1:",
-      "Remember which aliens have treasure. How good a mine is changes slowly,",
-      "so an alien that has a lot of treasure to share now,",
+      "Remember which aliens have resources. How good a mine is changes slowly,",
+      "so an alien that has a lot of resources to share now,",
       "will probably be able to share a lot in the near future.",
     ],
     include_score: false,
@@ -1131,7 +1133,7 @@ timeline.push(
       "The aliens are not trying to trick you!",
       "",
       "Your actions do not change how good a mine is,",
-      "and the aliens will not hide treasure from you if they have it available.",
+      "and the aliens will not hide resources from you if they have it available.",
     ],
     include_score: false,
   },
@@ -1148,7 +1150,7 @@ timeline.push(
       "The spaceship you choose is important because often an alien on one planet ",
       "may be better than the ones on another planet.",
       "",
-      "You can find more treasure by finding the spaceship",
+      "You can find more resources by finding the spaceship",
       "that is most likely to take you to right planet.",
     ],
     include_score: false,
@@ -1189,15 +1191,15 @@ timeline.push({
 timeline.push({
   type: "attention-check",
   prompt:
-    "True or False: If an alien has a lot of treasure to share now, " +
-    "then they will probably have a lot of treasure to share in the " +
+    "True or False: If an alien has a lot of resources to share now, " +
+    "then they will probably have a lot of resources to share in the " +
     "near future.",
   options: ["True", "False"],
   options_radio: true,
   option_correct: 0,
   confirmation: true,
   feedback_correct: "Correct!",
-  feedback_incorrect: "Incorrect. Some aliens have more treasure than others.",
+  feedback_incorrect: "Incorrect. Some aliens have more resources than others.",
 });
 
 // Question 3
@@ -1226,7 +1228,7 @@ timeline.push({
   prompt: [
     "OK! Now you know how to play.",
     "",
-    "In the real game we'll count how many pieces of space treasure",
+    "In the real game we'll count how many space resources",
     "you find and show you at the end.",
     "",
     "Ready? Now its time to play the game! Good luck space traveler!",
