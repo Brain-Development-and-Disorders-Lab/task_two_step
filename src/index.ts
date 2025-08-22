@@ -441,7 +441,7 @@ timeline.push(
   },
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
     centerStimulus: [],
     rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
@@ -455,7 +455,7 @@ timeline.push(
   },
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
     centerStimulus: [],
     rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
@@ -470,7 +470,7 @@ timeline.push(
   },
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
     centerStimulus: [],
     rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
@@ -655,7 +655,7 @@ for (let i = 0; i < configuration.training.both; i++, trialNumber++) {
 timeline.push(
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
     centerStimulus: [],
     rightStimulus: [],
