@@ -441,7 +441,7 @@ timeline.push(
   },
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
     centerStimulus: [],
     rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
@@ -455,7 +455,7 @@ timeline.push(
   },
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
     centerStimulus: [],
     rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
@@ -470,7 +470,7 @@ timeline.push(
   },
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien1_norm.png"),
     centerStimulus: [],
     rightStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
@@ -655,7 +655,7 @@ for (let i = 0; i < configuration.training.both; i++, trialNumber++) {
 timeline.push(
   {
     type: "two-step-instructions",
-    stimulus: experiment.getStimuli().getImage("tutgreenplanet.png"),
+    stimulus: experiment.getStimuli().getImage("earth.png"),
     leftStimulus: experiment.getStimuli().getImage("tutalien2_norm.png"),
     centerStimulus: [],
     rightStimulus: [],
@@ -782,7 +782,7 @@ timeline.push(
     prompt: [
       "First, you must select the spaceship to launch.",
       "",
-      "The spaceships can fly to either planet, but each spaceship has but one",
+      "The spaceships can fly to either planet, but one",
       "spaceship will fly mostly to the green planet, and the other spaceship will",
       "fly mostly to the yellow planet.",
     ],
@@ -832,7 +832,7 @@ timeline.push(
     prompt: [
       "How much bonus money you make is based on how many space resources you find.",
       "",
-      "This is just a practice round of 20 flights, you're not playing for money now.",
+      "This is just a practice round of 20 flights, you're not playing for resources yet.",
     ],
     include_score: false,
   },
