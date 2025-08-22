@@ -72,6 +72,9 @@ const createBlock = (
   probabilityData: { [x: string]: any },
   isPractice: boolean
 ): any => {
+  // Local scope for state
+  let stageState: any[] = [];
+
   // Create the generic experimental procedure for a single trial.
   // Consists of the first and second choices.
   const procedure = {
@@ -855,154 +858,6 @@ timeline.push(
   }
 );
 
-for (let i = 0; i < configuration.training.complete; i++, trialNumber++) {
-  let stageState: any[] = [];
-
-  timeline.push(
-    {
-      // Instantiate the first choice
-      type: "two-step-choice",
-      trialStage: "1",
-      trialNumber: trialNumber,
-      choices: [configuration.controls.left, configuration.controls.right],
-
-      // Trial stimuli
-      planetStimulus: experiment.getStimuli().getImage("earth.png"),
-      leftStimulus: practiceRocketSides ? "rocket2" : "rocket1",
-      rightStimulus: practiceRocketSides ? "rocket1" : "rocket2",
-
-      // Specify if this is a practice trial or not
-      isPractice: true,
-
-      // Define the 'on_start' callback
-      on_start: () => {
-        stageState = [];
-      },
-
-      // Define the 'on_start' callback
-      on_finish: (data: any) => {
-        // Specify the choice made in the data
-        if (data.key_press == configuration.controls.left) {
-          data.choice = 1;
-        }
-        if (data.key_press == configuration.controls.right) {
-          data.choice = 2;
-        }
-
-        // Calcuate the transition and then the second location
-        stageState = calculateTransition(data.chosenStimulus, true);
-        if (stageState.length === 0) {
-          stageState = [
-            data.rightStimulus,
-            data.leftStimulus,
-            experiment.getStimuli().getImage("earth.png"),
-            null,
-          ];
-        }
-      },
-
-      // Specify a trial duration
-      responseWindow: configuration.timing.choice,
-    },
-    {
-      // Instantiate the second choice
-      type: "two-step-choice",
-      trialStage: "2",
-      choices: [configuration.controls.left, configuration.controls.right],
-      trialNumber: trialNumber,
-
-      // Specify if this is a practice trial or not
-      isPractice: true,
-
-      // Specify the trial data
-      trialRow: () => {
-        return practiceProbabilityData[i + 1];
-      },
-
-      // Specify the second planet
-      planetStimulus: () => {
-        if (stageState) return stageState[2];
-      },
-
-      // Specify the left alien?
-      rightStimulus: () => {
-        if (stageState) return stageState[0];
-      },
-
-      // Specify the right alien?
-      leftStimulus: () => {
-        if (stageState) return stageState[1];
-      },
-
-      // Specify the reward outcome
-      centerStimulus: () => {
-        if (stageState) return stageState[3];
-      },
-
-      // Specify the transition type
-      transitionType: () => {
-        if (stageState) return stageState[4];
-      },
-
-      // Specify a trial duration
-      responseWindow: () => {
-        if (stageState && stageState[3] == null) {
-          return 0;
-        } else {
-          return configuration.timing.choice;
-        }
-      },
-
-      // Define the 'on_finish' callback
-      on_finish: (data: any) => {
-        if (data.rewardStimulus === experiment.getStimuli().getImage("t.png")) {
-          experiment
-            .getState()
-            .set(
-              "practiceReward",
-              experiment.getState().get("practiceReward") + 1
-            );
-        }
-
-        // Specify the choice made in the data
-        if (data.key_press == configuration.controls.left) {
-          data.choice = 1;
-        }
-        if (data.key_press == configuration.controls.right) {
-          data.choice = 2;
-        }
-
-        // Specify the transition type in the data
-        if (data.transitionType == true) {
-          data.transition = "common";
-        }
-        if (data.transitionType == false) {
-          data.transition = "rare";
-        }
-
-        // Specify the reward outcome in the data
-        if (data.rewardStimulus == experiment.getStimuli().getImage("t.png")) {
-          data.wasRewarded = true;
-        } else {
-          data.wasRewarded = false;
-        }
-
-        // Store the timestamp
-        const timestamp = new Date().toISOString().replace(/z|t/gi, " ").trim();
-        jsPsych.data.addDataToLastTrial({ timestamp });
-      },
-    },
-    {
-      // Instantiate the fixation stage
-      type: "two-step-fixation",
-      stimulus: experiment.getStimuli().getImage("earth.png"),
-      text: "+",
-      responseWindow: 1000,
-      trialNumber: trialNumber,
-    }
-  );
-}
-
 // Instantiate the timeline variables for the main trials
 const timelineVariables: any[][] = [];
 let trialRow = 0;
@@ -1055,8 +910,6 @@ for (let i = 0; i < practiceGameCount; i++) {
   }
   trialRow++;
 }
-
-let stageState: any[] | null = [];
 
 // Insert practice trials into instructions
 timeline.push(

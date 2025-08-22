@@ -8,7 +8,7 @@
  */
 
 // Number of trials in a 'block' of trials
-export const blockLength = 50;
+export const blockLength = 10; // Set to 10 for pilot study, 50 for full study
 export const blockCount = 4;
 
 // Number of trial types
