@@ -782,7 +782,7 @@ timeline.push(
     prompt: [
       "First, you must select the spaceship to launch.",
       "",
-      "The spaceships can fly to either planet, but each spaceship has but one",
+      "The spaceships can fly to either planet, but one",
       "spaceship will fly mostly to the green planet, and the other spaceship will",
       "fly mostly to the yellow planet.",
     ],
@@ -832,7 +832,7 @@ timeline.push(
     prompt: [
       "How much bonus money you make is based on how many space resources you find.",
       "",
-      "This is just a practice round of 20 flights, you're not playing for money now.",
+      "This is just a practice round of 20 flights, you're not playing for resources yet.",
     ],
     include_score: false,
   },
