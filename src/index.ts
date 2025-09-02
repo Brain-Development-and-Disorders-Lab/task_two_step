@@ -217,12 +217,9 @@ const createBlock = (
             data.wasRewarded = false;
           }
 
-          // Store the timestamp
-          const timestamp = new Date()
-            .toISOString()
-            .replace(/z|t/gi, " ")
-            .trim();
-          jsPsych.data.addDataToLastTrial({ timestamp });
+          // Store the trial end time
+          const trialEndTime = Date.now();
+          jsPsych.data.addDataToLastTrial({ trialEndTime });
         },
       },
       {
