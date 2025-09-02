@@ -218,10 +218,7 @@ const createBlock = (
           }
 
           // Store the timestamp
-          const timestamp = new Date()
-            .toISOString()
-            .replace(/z|t/gi, " ")
-            .trim();
+          const timestamp = Date.now();
           jsPsych.data.addDataToLastTrial({ timestamp });
         },
       },
