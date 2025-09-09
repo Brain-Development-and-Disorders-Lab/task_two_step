@@ -267,7 +267,7 @@ const calculateTransition = (chosenString: string, isPractice: boolean) => {
     secondPlanet = "purple";
   }
 
-  const firstShipChosen = chosenString.slice(-1) === "1";
+  const firstShipChosen = chosenString.slice(-1) === configuration.controls.left;
   const goodTransition = experiment.random() < probability;
   debugString += `\n\tprobability: ${probability}`;
   debugString += `\n\tgoodTransition: ${goodTransition}`;
@@ -497,7 +497,7 @@ for (let i = 0; i < configuration.training.single; i++, trialNumber++) {
     prompt: [
       i == 0 ? "Select an alien!" : "Select another alien!",
       "",
-      "To ask the left alien, press '1'. To ask the right alien, press '0'.",
+      "To ask the left alien, press 'F'. To ask the right alien, press 'J'.",
       "The alien you asked will be highlighted.",
     ],
     responseWindow: configuration.timing.choice,
@@ -562,7 +562,7 @@ timeline.push(
     choices: [" "],
     prompt: [
       "For example, this alien on the yellow planet has a good mine at the moment.",
-      "You can now ask it for resources 10 times. To ask it for resources, press '1'.",
+      "You can now ask it for resources 10 times. To ask it for resources, press 'F'.",
       "",
       "Click the red button and press Spacebar to continue.",
     ],
@@ -628,7 +628,7 @@ timeline.push(
     choices: [" "],
     prompt: [
       "You now have 10 practice missions to try to figure out which alien has a good mine.",
-      "To ask the left alien for resources, press '1'. To ask the right alien for resources, press '0'.",
+      "To ask the left alien for resources, press 'F'. To ask the right alien for resources, press 'J'.",
       "",
       "Click the red button and press Spacebar to continue.",
     ],
@@ -849,7 +849,7 @@ timeline.push(
       "you will see a large red 'X' appear on each rocket or alien and that choice will be over.",
       "",
       "Don't feel rushed, but please try to make a choice every time.",
-      "Good luck! Remember that '1' selects left and '0' selects right.",
+      "Good luck! Remember that 'F' selects left and 'J' selects right.",
     ],
     include_score: false,
   }

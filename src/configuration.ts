@@ -35,8 +35,8 @@ export const configuration = {
 
   // Control scheme
   controls: {
-    left: "1",
-    right: "0",
+    left: "f",
+    right: "j",
   },
 
   stimuli: {
