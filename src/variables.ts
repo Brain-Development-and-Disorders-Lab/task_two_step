@@ -40,7 +40,7 @@ export const sizeReward = (pictureHeight * 75) / 758;
 export const sizeButton = (pictureHeight * 25) / 758;
 
 // Font size
-export const sizeFont = (pictureHeight * 25) / 758;
+export const sizeFont = (pictureHeight * 20) / 758;
 
 // Coordinate system for placing stimuli
 export const centerX = width / 2;
