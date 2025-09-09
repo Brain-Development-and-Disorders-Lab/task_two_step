@@ -188,20 +188,44 @@ jsPsych.plugins["two-step-instructions"] = (() => {
         .attr("xlink:href", trial.centerStimulus);
     }
 
-    // Append the continue button to the view
+    // Set button dimensions and positioning
+    const buttonWidth = sizeButton * 3.6;
+    const buttonHeight = sizeButton * 1.8;
+    const buttonX = choiceXRight + sizeMonster - buttonWidth / 2;
+    const buttonY = choiceY + sizeMonster - 50 - buttonHeight / 2;
+
     const imageButton = svg
-      .append("svg:circle")
-      .attr("r", sizeButton)
-      .attr("cx", choiceXRight + sizeMonster)
-      .attr("cy", choiceY + sizeMonster - 50)
-      .style("fill", "red")
-      .style("stroke", "black")
-      .style("stroke-width", 6)
+      .append("svg:rect")
+      .attr("x", buttonX)
+      .attr("y", buttonY)
+      .attr("width", buttonWidth)
+      .attr("height", buttonHeight)
+      .attr("rx", 8)
+      .attr("ry", 8)
+      .style("fill", "#DC143C")
+      .style("cursor", "pointer")
       .on("click", () => {
         trial.button_clicked = true;
-        imageButton.style("fill", "green");
-        imageButton.style("stroke", "black");
+        imageButton.style("fill", "#4CAF50");
+        buttonText.text("Next →");
+        imageButton.style("cursor", "default");
       });
+
+    // Add text inside the button
+    const buttonText = svg
+      .append("text")
+      .attr("x", buttonX + buttonWidth / 2)
+      .attr("y", buttonY + buttonHeight / 2 + 1)
+      .style("text-anchor", "middle")
+      .style("dominant-baseline", "central")
+      .style("font-size", (sizeFont * 0.6) + "px")
+      .style("font-family", "Arial")
+      .style("font-weight", "bold")
+      .style("fill", "white")
+      .style("user-select", "none")
+      .style("pointer-events", "none")
+      .style("cursor", "pointer")
+      .text("Ready?");
 
     // Add the main prompt to the view
     if (trial.prompt !== null) {

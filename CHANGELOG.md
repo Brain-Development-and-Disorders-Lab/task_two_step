@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Changed control scheme to use "F" and "J" keys rather than "1" and "0"
+- Changed instructions buttons to include text and visual responsiveness
 
 ### Fixed
 
