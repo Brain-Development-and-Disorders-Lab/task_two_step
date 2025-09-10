@@ -131,6 +131,11 @@ jsPsych.plugins["two-step-choice"] = (() => {
         default: undefined,
         description: "The trial ID associated with this fixation.",
       },
+      trainingMode: {
+        type: jsPsych.plugins.parameterType.STRING,
+        default: null,
+        description: "Training mode: 'spaceship_only', 'alien_only', or null for complete trial.",
+      },
     },
   };
 
@@ -329,6 +334,7 @@ jsPsych.plugins["two-step-choice"] = (() => {
         trialStage: trial.trialStage,
         isPractice: trial.isPractice,
         transitionType: trial.transitionType,
+        trainingMode: trial.trainingMode,
         choiceStageOne: "",
         choiceStageTwo: "",
       };
@@ -559,14 +565,29 @@ jsPsych.plugins["two-step-choice"] = (() => {
           endTrial();
         }
 
-        // Create a timeout for displaying the trial outcome
-        jsPsych.pluginAPI.setTimeout(() => {
-          // Cancel the keyboard listener
-          jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+        // Handle training mode early termination
+        if (trial.trainingMode === "spaceship_only" && trial.trialStage === "1") {
+          // For spaceship-only training, end after showing planet transition briefly
+          jsPsych.pluginAPI.setTimeout(() => {
+            jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+            endTrial();
+          }, configuration.timing.transition + 500); // Brief delay to show planet
+        } else if (trial.trainingMode === "alien_only" && trial.trialStage === "2") {
+          // For alien-only training, end after showing reward
+          jsPsych.pluginAPI.setTimeout(() => {
+            jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+            endTrial();
+          }, configuration.timing.flash + configuration.timing.reward);
+        } else {
+          // Normal complete trial behavior
+          jsPsych.pluginAPI.setTimeout(() => {
+            // Cancel the keyboard listener
+            jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
 
-          // End the trial
-          endTrial();
-        }, configuration.timing.flash + configuration.timing.reward);
+            // End the trial
+            endTrial();
+          }, configuration.timing.flash + configuration.timing.reward);
+        }
       }
     };
 
