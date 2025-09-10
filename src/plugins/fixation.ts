@@ -34,7 +34,7 @@ class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
   trial(displayElement: HTMLElement, trial: TrialType<typeof FixationPlugin.info>) {
     // Create the display
     const html = `
-      <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
         <img src="${trial.stimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
         <div style="position: relative; z-index: 10; font-size: 48px; color: white; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
           +
