@@ -55,36 +55,141 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
   constructor(jsPsych: JsPsych) {
     this.jsPsych = jsPsych;
+    this.data = this.createDefaultData();
+  }
 
-    // Initialize data structure with default values
-    this.data = {
-      // Core data
+  private createDefaultData(): ChoiceTrialData {
+    return {
       trialNumber: 0,
       trialStartTime: 0,
       trialEndTime: 0,
-      // Parameters
       trialType: 'full',
       leftKey: 'f',
       rightKey: 'j',
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
       transitionLikelihood: 1.0,
       responseWindow: 3000,
-      // Response data
       keyPress: '',
       choice: 0,
       rt: 0,
       timeout: false,
-      // Computed data
       wasRewarded: false,
       transitionType: 'none',
     };
   }
 
-  trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
-    // Call onStart callback if provided
-    if (trial.onStart) {
-      trial.onStart();
+  private getStimulusPath(filename: string): string {
+    return this.jsPsych.extensions.Neurocog.getStimulus(filename);
+  }
+
+  private getRocketStimuli(isPractice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+    return {
+      leftStimulus: isPractice ? 'tutrocket1_norm.png' : 'rocket1_norm.png',
+      rightStimulus: isPractice ? 'tutrocket2_norm.png' : 'rocket2_norm.png',
+      planetStimulus: 'earth.png'
+    };
+  }
+
+  private getAlienStimuli(isPractice: boolean, rocketChoice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+    if (isPractice) {
+      const planet = rocketChoice ? 'tutgreenplanet.png' : 'tutyellowplanet.png';
+      return {
+        leftStimulus: planet.includes('green') ? 'tutalien1_norm.png' : 'tutalien3_norm.png',
+        rightStimulus: planet.includes('green') ? 'tutalien2_norm.png' : 'tutalien4_norm.png',
+        planetStimulus: planet
+      };
+    } else {
+      const isCommonTransition = this.jsPsych.extensions.Neurocog.random() < this.data.transitionLikelihood;
+      const planet = (rocketChoice === isCommonTransition) ? 'redplanet1.png' : 'purpleplanet.png';
+      return {
+        leftStimulus: planet.includes('red') ? 'alien1_norm.png' : 'alien3_norm.png',
+        rightStimulus: planet.includes('red') ? 'alien2_norm.png' : 'alien4_norm.png',
+        planetStimulus: planet
+      };
     }
+  }
+
+  private generateStimuli(trialType: string, isPractice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+    if (trialType === 'training-rocket') {
+      return this.getRocketStimuli(isPractice);
+    } else if (trialType === 'training-alien') {
+      return {
+        leftStimulus: isPractice ? 'tutalien1_norm.png' : 'alien1_norm.png',
+        rightStimulus: isPractice ? 'tutalien2_norm.png' : 'alien2_norm.png',
+        planetStimulus: isPractice ? 'tutgreenplanet.png' : 'redplanet1.png'
+      };
+    } else if (trialType === 'training-full' || trialType === 'full') {
+      if (this.currentStage === 'rocket') {
+        return this.getRocketStimuli(isPractice);
+      } else {
+        return this.getAlienStimuli(isPractice, this.data.choice === 1);
+      }
+    }
+    return this.getRocketStimuli(false);
+  }
+
+  private createDisplayHTML(leftStimulus: string, rightStimulus: string, planetStimulus: string, rewardStimulus: string, trialType: string): string {
+    const showRewardSymbol = trialType === 'training-alien' || trialType === 'training-full' || trialType === 'full';
+
+    return `
+      <style>
+        @keyframes glideToCenter {
+          0% { transform: translate(-50%, -50%); }
+          100% { transform: translate(-50%, -50%); }
+        }
+        .stimulus-container { transition: all 0.5s ease-in-out; }
+        .stimulus-container.glide-left { left: 50% !important; top: 35% !important; transform: translate(-50%, -50%) !important; }
+        .stimulus-container.glide-right { right: 50% !important; top: 35% !important; transform: translate(50%, -50%) !important; }
+        .fade-out { opacity: 0.3; }
+      </style>
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
+        <img src="${planetStimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+        <div id="left-stimulus" class="stimulus-container" style="position: absolute; left: 25%; top: 60%; transform: translate(-50%, -50%);">
+          <img src="${leftStimulus}" style="width: 144px; height: 144px; object-fit: contain;" />
+        </div>
+        <div id="right-stimulus" class="stimulus-container" style="position: absolute; right: 25%; top: 60%; transform: translate(50%, -50%);">
+          <img src="${rightStimulus}" style="width: 144px; height: 144px; object-fit: contain;" />
+        </div>
+        ${showRewardSymbol ? `
+          <div id="reward-symbol" style="position: absolute; opacity: 0; transition: opacity 0.2s ease-in-out;">
+            <img src="${rewardStimulus}" style="width: 60px; height: 60px; object-fit: contain;" />
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  private calculateAndShowReward(isLeftChoice: boolean, rewardSymbolElement: HTMLElement | null): void {
+    if (!rewardSymbolElement) return;
+
+    const probability = isLeftChoice ? (this.data.rewardLikelihoods[0] || 0.5) : (this.data.rewardLikelihoods[1] || 0.5);
+    const wasRewarded = this.jsPsych.extensions.Neurocog.random() < probability;
+    const rewardStimulus = this.getStimulusPath(wasRewarded ? 't.png' : 'nothing.png');
+
+    rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
+    rewardSymbolElement.style.left = '50%';
+    rewardSymbolElement.style.top = '25%';
+    rewardSymbolElement.style.transform = 'translate(-50%, -50%)';
+    rewardSymbolElement.style.opacity = '1';
+    this.data.wasRewarded = wasRewarded;
+  }
+
+  private createTimeoutOverlay(element: HTMLElement): void {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.top = '50%';
+    overlay.style.left = '50%';
+    overlay.style.transform = 'translate(-50%, -50%)';
+    overlay.style.fontSize = '80px';
+    overlay.style.color = 'red';
+    overlay.style.fontWeight = 'bold';
+    overlay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
+    overlay.style.zIndex = '1000';
+    overlay.innerHTML = '✕';
+    element.appendChild(overlay);
+  }
+
+  private updateTrialData(trial: TrialType<typeof ChoicePlugin.info>): void {
     this.data.trialStartTime = Date.now();
     this.data.trialType = trial.trialType;
     this.data.leftKey = trial.leftKey || 'f';
@@ -92,145 +197,70 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.data.rewardLikelihoods = trial.rewardLikelihoods;
     this.data.transitionLikelihood = trial.transitionLikelihood || 1.0;
     this.data.responseWindow = trial.responseWindow || 3000;
+  }
 
-    // Initialize response data
+  private handleStageTransition(isLeftChoice: boolean, trialType: string, isPractice: boolean, displayElement: HTMLElement): void {
+    this.currentStage = 'alien';
+    this.data.choice = isLeftChoice ? 1 : 2;
+    this.data.keyPress = isLeftChoice ? this.data.leftKey : this.data.rightKey;
+    this.data.rt = Date.now() - this.data.trialStartTime;
+
+    const alienStimuli = this.generateStimuli(trialType, isPractice);
+    const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
+    const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
+    const planetStimulus = this.getStimulusPath(alienStimuli.planetStimulus);
+
+    displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialType);
+  }
+
+  private finalizeTrialData(response: { key: string; rt: number } | null, trialType: string): void {
+    this.data.trialEndTime = Date.now();
+
+    if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'alien') {
+      if (response) {
+        this.data.keyPress = response.key;
+        this.data.rt = response.rt;
+        this.data.timeout = false;
+        this.data.choice = response.key === this.data.leftKey ? 1 : 2;
+      } else {
+        this.data.keyPress = '';
+        this.data.choice = 0;
+        this.data.rt = 0;
+        this.data.timeout = true;
+      }
+    } else if (response) {
+      this.data.keyPress = response.key;
+      this.data.rt = response.rt;
+      this.data.timeout = false;
+      this.data.choice = response.key === this.data.leftKey ? 1 : 2;
+    } else {
+      this.data.keyPress = '';
+      this.data.choice = 0;
+      this.data.rt = 0;
+      this.data.timeout = true;
+    }
+  }
+
+  trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
+    if (trial.onStart) trial.onStart();
+    this.updateTrialData(trial);
+
     let response: { key: string; rt: number } | null = null;
     let isAnimating = false;
-
-    // Determine stimuli based on trial type
     const trialType = trial.trialType || 'full';
     const isPractice = trialType.startsWith('training-');
-
-    // Reset stage for new trial
     this.currentStage = 'rocket';
 
-    // Function to generate stimuli based on current stage
-    const generateStimuli = () => {
-      if (trialType === 'training-rocket') {
-        // Rocket training: left rocket goes to green planet 100%, right rocket goes to yellow planet 100%
-        return {
-          leftStimulus: isPractice ? 'tutrocket1_norm.png' : 'rocket1_norm.png',
-          rightStimulus: isPractice ? 'tutrocket2_norm.png' : 'rocket2_norm.png',
-          planetStimulus: 'earth.png'
-        };
-      } else if (trialType === 'training-alien') {
-        // Alien training: use rewardLikelihoods for first two aliens
-        return {
-          leftStimulus: isPractice ? 'tutalien1_norm.png' : 'alien1_norm.png',
-          rightStimulus: isPractice ? 'tutalien2_norm.png' : 'alien2_norm.png',
-          planetStimulus: isPractice ? 'tutgreenplanet.png' : 'redplanet1.png'
-        };
-      } else if (trialType === 'training-full' || trialType === 'full') {
-        // Two-stage trials: rocket stage or alien stage
-        if (this.currentStage === 'rocket') {
-          return {
-            leftStimulus: isPractice ? 'tutrocket1_norm.png' : 'rocket1_norm.png',
-            rightStimulus: isPractice ? 'tutrocket2_norm.png' : 'rocket2_norm.png',
-            planetStimulus: 'earth.png'
-          };
-        } else {
-          // Alien stage - determine planet based on rocket choice and transition
-          const isCommonTransition = this.jsPsych.extensions.Neurocog.random() < this.data.transitionLikelihood;
-          const rocketChoice = this.data.choice === 1; // true if left rocket chosen
-
-          if (isPractice) {
-            // Training: left rocket → green planet, right rocket → yellow planet
-            const planet = rocketChoice ? 'tutgreenplanet.png' : 'tutyellowplanet.png';
-            return {
-              leftStimulus: planet.includes('green') ? 'tutalien1_norm.png' : 'tutalien3_norm.png',
-              rightStimulus: planet.includes('green') ? 'tutalien2_norm.png' : 'tutalien4_norm.png',
-              planetStimulus: planet
-            };
-          } else {
-            // Full trials: use transition logic
-            const planet = (rocketChoice === isCommonTransition) ? 'redplanet1.png' : 'purpleplanet.png';
-            return {
-              leftStimulus: planet.includes('red') ? 'alien1_norm.png' : 'alien3_norm.png',
-              rightStimulus: planet.includes('red') ? 'alien2_norm.png' : 'alien4_norm.png',
-              planetStimulus: planet
-            };
-          }
-        }
-      }
-
-      // Default fallback
-      return {
-        leftStimulus: 'rocket1_norm.png',
-        rightStimulus: 'rocket2_norm.png',
-        planetStimulus: 'earth.png'
-      };
-    };
-
     // Generate initial stimuli
-    let { leftStimulus, rightStimulus, planetStimulus } = generateStimuli();
-    let rewardStimulus: string = this.jsPsych.extensions.Neurocog.getStimulus('nothing.png');
+    let { leftStimulus, rightStimulus, planetStimulus } = this.generateStimuli(trialType, isPractice);
+    let rewardStimulus: string = this.getStimulusPath('nothing.png');
 
     // Update to use the actual stimuli paths
-    leftStimulus = this.jsPsych.extensions.Neurocog.getStimulus(leftStimulus);
-    rightStimulus = this.jsPsych.extensions.Neurocog.getStimulus(rightStimulus);
-    planetStimulus = this.jsPsych.extensions.Neurocog.getStimulus(planetStimulus);
+    leftStimulus = this.getStimulusPath(leftStimulus);
+    rightStimulus = this.getStimulusPath(rightStimulus);
+    planetStimulus = this.getStimulusPath(planetStimulus);
 
-    // Create the display HTML based on trial type
-    const html = `
-      <style>
-        @keyframes glideToCenter {
-          0% {
-            transform: translate(-50%, -50%);
-          }
-          100% {
-            transform: translate(-50%, -50%);
-          }
-        }
-
-        .stimulus-container {
-          transition: all 0.5s ease-in-out;
-        }
-
-        .stimulus-container.glide-left {
-          left: 50% !important;
-          top: 40% !important;
-          transform: translate(-50%, -50%) !important;
-        }
-
-        .stimulus-container.glide-right {
-          right: 50% !important;
-          top: 40% !important;
-          transform: translate(50%, -50%) !important;
-        }
-
-        .fade-out {
-          opacity: 0.3;
-        }
-      </style>
-      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
-        <!-- Background planet -->
-        <img src="${planetStimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
-
-        <!-- Left stimulus -->
-        <div id="left-stimulus" class="stimulus-container" style="position: absolute; left: 25%; top: 50%; transform: translate(-50%, -50%);">
-          <img src="${leftStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
-        </div>
-
-        <!-- Right stimulus -->
-        <div id="right-stimulus" class="stimulus-container" style="position: absolute; right: 25%; top: 50%; transform: translate(50%, -50%);">
-          <img src="${rightStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
-        </div>
-
-        <!-- Reward symbol (positioned dynamically above selected alien) -->
-        ${(trialType === 'training-alien' || trialType === 'training-full' || trialType === 'full') ? `
-          <div id="reward-symbol" style="position: absolute; opacity: 0; transition: opacity 0.2s ease-in-out;">
-            <img src="${rewardStimulus}" style="width: 60px; height: 60px; object-fit: contain;" />
-          </div>
-        ` : ''}
-
-        <!-- Instructions -->
-        <div id="instructions" style="position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); text-align: center;">
-          Press <strong>F</strong> for left, <strong>J</strong> for right
-        </div>
-      </div>
-    `;
-
-    displayElement.innerHTML = html;
+    displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, rewardStimulus, trialType);
 
     // Animation handler for two-stage flow
     const animateSelection = (isLeftChoice: boolean) => {
@@ -242,12 +272,6 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
       // Clear timeout
       this.jsPsych.pluginAPI.clearAllTimeouts();
-
-      // Hide instructions
-      const instructionsElement = displayElement.querySelector('#instructions') as HTMLElement;
-      if (instructionsElement) {
-        instructionsElement.style.opacity = '0';
-      }
 
       // Get stimulus elements
       const leftStimulusElement = displayElement.querySelector('#left-stimulus') as HTMLElement;
@@ -276,11 +300,9 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       if (trialType === 'training-rocket') {
         // Single stage - show planet preview then finish
         setTimeout(() => {
-          // Brief pause before showing planet to make transition feel natural
           setTimeout(() => {
             // Determine destination planet based on rocket choice
             const rocketChoice = isLeftChoice ? 1 : 2;
-            const isPractice = trialType.startsWith('training-');
 
             // Training: left rocket → green planet, right rocket → yellow planet
             const planet = rocketChoice === 1 ? 'tutgreenplanet.png' : 'tutyellowplanet.png';
@@ -288,40 +310,20 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             const rightAlien = planet.includes('green') ? 'tutalien2_norm.png' : 'tutalien4_norm.png';
 
             // Update display to show planet with aliens
-            const planetStimulus = this.jsPsych.extensions.Neurocog.getStimulus(planet);
-            const leftStimulus = this.jsPsych.extensions.Neurocog.getStimulus(leftAlien);
-            const rightStimulus = this.jsPsych.extensions.Neurocog.getStimulus(rightAlien);
+            const planetStimulus = this.getStimulusPath(planet);
+            const leftStimulus = this.getStimulusPath(leftAlien);
+            const rightStimulus = this.getStimulusPath(rightAlien);
 
-            displayElement.innerHTML = `
-              <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
-                <img src="${planetStimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
-                <div style="position: absolute; left: 25%; top: 50%; transform: translate(-50%, -50%);">
-                  <img src="${leftStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
-                </div>
-                <div style="position: absolute; right: 25%; top: 50%; transform: translate(50%, -50%);">
-                  <img src="${rightStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
-                </div>
-              </div>
-            `;
+            displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialType);
 
             // Wait for preview duration (same as reward display), then finish
             setTimeout(() => finishTrial(), 1000);
           }, 300); // Brief pause before planet appears
-        }, 500);
+        }, 1000);
       } else if (trialType === 'training-alien') {
         // Single stage with reward
         setTimeout(() => {
-          if (rewardSymbolElement) {
-            const probability = isLeftChoice ? (this.data.rewardLikelihoods[0] || 0.5) : (this.data.rewardLikelihoods[1] || 0.5);
-            const wasRewarded = this.jsPsych.extensions.Neurocog.random() < probability;
-            rewardStimulus = this.jsPsych.extensions.Neurocog.getStimulus(wasRewarded ? 't.png' : 'nothing.png');
-            rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
-            rewardSymbolElement.style.left = '50%';
-            rewardSymbolElement.style.top = '25%';
-            rewardSymbolElement.style.transform = 'translate(-50%, -50%)';
-            rewardSymbolElement.style.opacity = '1';
-            this.data.wasRewarded = wasRewarded;
-          }
+          this.calculateAndShowReward(isLeftChoice, rewardSymbolElement);
           setTimeout(() => finishTrial(), 1000);
         }, 500);
       } else if (trialType === 'training-full' || trialType === 'full') {
@@ -329,45 +331,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         if (this.currentStage === 'rocket') {
           // Rocket stage - transition to alien stage
           setTimeout(() => {
-            this.currentStage = 'alien';
-            this.data.choice = isLeftChoice ? 1 : 2; // Store rocket choice
-            this.data.keyPress = isLeftChoice ? this.data.leftKey : this.data.rightKey;
-            this.data.rt = Date.now() - this.data.trialStartTime;
-
-            // Generate alien stimuli and update display
-            const alienStimuli = generateStimuli();
-            leftStimulus = this.jsPsych.extensions.Neurocog.getStimulus(alienStimuli.leftStimulus);
-            rightStimulus = this.jsPsych.extensions.Neurocog.getStimulus(alienStimuli.rightStimulus);
-            planetStimulus = this.jsPsych.extensions.Neurocog.getStimulus(alienStimuli.planetStimulus);
-
-            // Update display
-            displayElement.innerHTML = `
-              <style>
-                @keyframes glideToCenter {
-                  0% { transform: translate(-50%, -50%); }
-                  100% { transform: translate(-50%, -50%); }
-                }
-                .stimulus-container { transition: all 0.5s ease-in-out; }
-                .stimulus-container.glide-left { left: 50% !important; top: 40% !important; transform: translate(-50%, -50%) !important; }
-                .stimulus-container.glide-right { right: 50% !important; top: 40% !important; transform: translate(50%, -50%) !important; }
-                .fade-out { opacity: 0.3; }
-              </style>
-              <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
-                <img src="${planetStimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
-                <div id="left-stimulus" class="stimulus-container" style="position: absolute; left: 25%; top: 50%; transform: translate(-50%, -50%);">
-                  <img src="${leftStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
-                </div>
-                <div id="right-stimulus" class="stimulus-container" style="position: absolute; right: 25%; top: 50%; transform: translate(50%, -50%);">
-                  <img src="${rightStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
-                </div>
-                <div id="reward-symbol" style="position: absolute; opacity: 0; transition: opacity 0.2s ease-in-out;">
-                  <img src="${rewardStimulus}" style="width: 60px; height: 60px; object-fit: contain;" />
-                </div>
-                <div id="instructions" style="position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); text-align: center;">
-                  Press <strong>F</strong> for left, <strong>J</strong> for right
-                </div>
-              </div>
-            `;
+            this.handleStageTransition(isLeftChoice, trialType, isPractice, displayElement);
 
             // Reset animation state and add new keyboard listener
             isAnimating = false;
@@ -382,17 +346,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         } else {
           // Alien stage - show reward
           setTimeout(() => {
-            if (rewardSymbolElement) {
-              const probability = isLeftChoice ? (this.data.rewardLikelihoods[0] || 0.5) : (this.data.rewardLikelihoods[1] || 0.5);
-              const wasRewarded = this.jsPsych.extensions.Neurocog.random() < probability;
-              rewardStimulus = this.jsPsych.extensions.Neurocog.getStimulus(wasRewarded ? 't.png' : 'nothing.png');
-              rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
-              rewardSymbolElement.style.left = '50%';
-              rewardSymbolElement.style.top = '25%';
-              rewardSymbolElement.style.transform = 'translate(-50%, -50%)';
-              rewardSymbolElement.style.opacity = '1';
-              this.data.wasRewarded = wasRewarded;
-            }
+            this.calculateAndShowReward(isLeftChoice, rewardSymbolElement);
             setTimeout(() => finishTrial(), 1000);
           }, 500);
         }
@@ -421,50 +375,15 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
           if (!isAnimating) {
             document.removeEventListener('keydown', keyboardListener);
 
-            // Show red X for timeout - overlay on both stimuli
             const leftStimulusElement = displayElement.querySelector('#left-stimulus') as HTMLElement;
             const rightStimulusElement = displayElement.querySelector('#right-stimulus') as HTMLElement;
 
-            // Create red X overlay for left stimulus
-            if (leftStimulusElement) {
-              const leftTimeoutOverlay = document.createElement('div');
-              leftTimeoutOverlay.style.position = 'absolute';
-              leftTimeoutOverlay.style.top = '50%';
-              leftTimeoutOverlay.style.left = '50%';
-              leftTimeoutOverlay.style.transform = 'translate(-50%, -50%)';
-              leftTimeoutOverlay.style.fontSize = '80px';
-              leftTimeoutOverlay.style.color = 'red';
-              leftTimeoutOverlay.style.fontWeight = 'bold';
-              leftTimeoutOverlay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
-              leftTimeoutOverlay.style.zIndex = '1000';
-              leftTimeoutOverlay.innerHTML = '✕';
-              leftStimulusElement.appendChild(leftTimeoutOverlay);
-            }
+            if (leftStimulusElement) this.createTimeoutOverlay(leftStimulusElement);
+            if (rightStimulusElement) this.createTimeoutOverlay(rightStimulusElement);
 
-            // Create red X overlay for right stimulus
-            if (rightStimulusElement) {
-              const rightTimeoutOverlay = document.createElement('div');
-              rightTimeoutOverlay.style.position = 'absolute';
-              rightTimeoutOverlay.style.top = '50%';
-              rightTimeoutOverlay.style.left = '50%';
-              rightTimeoutOverlay.style.transform = 'translate(-50%, -50%)';
-              rightTimeoutOverlay.style.fontSize = '80px';
-              rightTimeoutOverlay.style.color = 'red';
-              rightTimeoutOverlay.style.fontWeight = 'bold';
-              rightTimeoutOverlay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
-              rightTimeoutOverlay.style.zIndex = '1000';
-              rightTimeoutOverlay.innerHTML = '✕';
-              rightStimulusElement.appendChild(rightTimeoutOverlay);
-            }
-
-            // Set timeout data
             this.data.timeout = true;
             this.data.trialEndTime = Date.now();
-
-            // Wait a moment to show the X, then finish
-            setTimeout(() => {
-              finishTrial();
-            }, 1000);
+            setTimeout(() => finishTrial(), 1000);
           }
         }, this.data.responseWindow);
       }
@@ -477,47 +396,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     document.addEventListener('keydown', keyboardListener);
 
     const finishTrial = () => {
-      this.data.trialEndTime = Date.now();
-
-      // For two-stage trials, update final choice data
-      if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'alien') {
-        if (response) {
-          this.data.keyPress = response.key;
-          this.data.rt = response.rt;
-          this.data.timeout = false;
-          // Update choice for alien selection
-          this.data.choice = response.key === this.data.leftKey ? 1 : 2;
-        } else {
-          this.data.keyPress = '';
-          this.data.choice = 0;
-          this.data.rt = 0;
-          this.data.timeout = true;
-        }
-      } else if (response) {
-        // Single stage trials
-        this.data.keyPress = response.key;
-        this.data.rt = response.rt;
-        this.data.timeout = false;
-        this.data.choice = response.key === this.data.leftKey ? 1 : 2;
-      } else {
-        // Timeout case
-        this.data.keyPress = '';
-        this.data.choice = 0;
-        this.data.rt = 0;
-        this.data.timeout = true;
-      }
-
-      // Call onFinish callback if provided
-      if (trial.onFinish) {
-        trial.onFinish(this.data);
-      }
-
-      // Clear display
+      this.finalizeTrialData(response, trialType);
+      if (trial.onFinish) trial.onFinish(this.data);
       displayElement.innerHTML = '';
-
       console.log(this.data);
-
-      // End trial
       this.jsPsych.finishTrial(this.data);
     };
   }
