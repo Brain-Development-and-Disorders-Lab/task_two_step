@@ -6,7 +6,6 @@
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';
 import NeurocogExtension from 'neurocog';
-import { ChoiceTrialData } from './types';
 import FixationPlugin from './plugins/fixation';
 import ChoicePlugin from './plugins/choice';
 import { config } from './config';
@@ -27,7 +26,7 @@ const jsPsych = initJsPsych({
         manipulations: {},
         resources: {},
         stimuli: stimuli,
-        seed: 0.4735,
+        seed: 0.2846,
       }
     }
   ],
