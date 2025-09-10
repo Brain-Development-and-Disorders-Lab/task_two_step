@@ -25,8 +25,8 @@ export interface ExperimentConfig {
     right: string;
   };
 
-  // Transition probability
-  transitionProbability: number;
+  // Transition likelihood
+  transitionLikelihood: number;
 
   // Experiment metadata
   name: string;
@@ -55,6 +55,7 @@ export const config: ExperimentConfig = {
   },
 
   transitionProbability: 0.7,
+  transitionLikelihood: 0.7,
 
   name: 'Two-Step Task',
   studyName: 'task_two_step',

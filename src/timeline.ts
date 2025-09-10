@@ -217,7 +217,7 @@ function createTimeline(): any[] {
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: 0.7,
+      transitionLikelihood: config.transitionLikelihood,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,

@@ -132,7 +132,16 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       };
     } else {
       const isCommonTransition = this.jsPsych.extensions.Neurocog.random() < this.data.transitionLikelihood;
-      const planet = (rocketChoice === isCommonTransition) ? 'redplanet1.png' : 'purpleplanet.png';
+      let planet: string;
+      if (isCommonTransition) {
+        planet = rocketChoice ? 'purpleplanet.png' : 'redplanet1.png';
+      } else {
+        planet = rocketChoice ? 'redplanet1.png' : 'purpleplanet.png';
+      }
+
+      // Set transition type for data logging
+      this.data.transitionType = isCommonTransition ? 'common' : 'rare';
+
       return {
         leftStimulus: planet.includes('red') ? 'alien1_norm.png' : 'alien3_norm.png',
         rightStimulus: planet.includes('red') ? 'alien2_norm.png' : 'alien4_norm.png',
@@ -474,7 +483,6 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       this.finalizeTrialData(response, trialType);
       if (trial.onFinish) trial.onFinish(this.data);
       displayElement.innerHTML = '';
-      console.log(this.data);
       this.jsPsych.finishTrial(this.data);
     };
   }
