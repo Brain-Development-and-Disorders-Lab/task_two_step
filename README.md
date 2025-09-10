@@ -1,83 +1,71 @@
 # Two-Step Task
 
-A clean TypeScript implementation of the two-step behavioral task paradigm using the latest jsPsych framework.
+An adaptation of the task described by [Nussenbaum, K., Scheuplein, M., Phaneuf, C., Evans, M.D., & Hartley, C.A. (2020) - Moving developmental research online: comparing in-lab and web-based studies of model-based reinforcement learning.](https://online.ucpress.edu/collabra/article/6/1/17213/114338/Moving-Developmental-Research-Online-Comparing-In).
 
-## Overview
+They collected data from 151 participants on two tasks: the two-step task, as described in Decker et al. (2016) and the Matrix Reasoning Item Bank (MaRs-IB) as described in Chierchia, Fuhrmann et al. (2019).
 
-This is a simplified, maintainable implementation of a two-step decision-making task where participants make sequential choices that lead to probabilistic outcomes. The task involves:
+The adaptation of the two-step task, developed using [jsPsych](https://www.jspsych.org/), can be found in the _src_ directory.
 
-1. **Stage 1**: Choosing between two rockets on Earth
-2. **Stage 2**: Flying to a planet and choosing between two aliens
-3. **Outcome**: Receiving or not receiving space resources based on alien choice
+## Task Overview
 
-## Experiment Flow
+This sequential decision-making task was originally described in [Decker et al. (2016)](https://journals.sagepub.com/doi/full/10.1177/0956797616639301?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed), and is based off of an adult task originally described in [Daw et al. (2011)](<https://www.cell.com/neuron/fulltext/S0896-6273(11)00125-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0896627311001255%3Fshowall%3Dtrue>).
+Participants make a series of sequential decisions to try to gain as much reward as possible. In this version, on each trial, participants first must select a spaceship, which then transports them to one of two planets where they can ask an alien for space treasure.
 
-### Timeline Structure
-- **Instructions**: Welcome screen explaining the task
-- **Training Phase 1**: 4 rocket selection trials (configurable)
-- **Training Phase 2**: 4 alien selection trials (configurable)
-- **Training Phase 3**: 4 complete mission trials (configurable)
-- **Main Trials**: 4 complete missions with counter-balancing (configurable)
+The jsPsych version of the task was originally coded by the [Niv Lab](https://nivlab.princeton.edu/) at Princeton, adapted by the [Hartley Lab](https://www.hartleylab.org/) at NYU for use online with children, adolescents, and adults, and adapted here by the [Brain Development and Disorders Lab](https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
 
-### Controls
-- **F key**: Select left option
-- **J key**: Select right option
-- **Spacebar**: Continue through instructions
+## Major Changes
 
-### Timing
-- **Fixation**: 500ms cross display between trials
-- **Choice**: 3000ms response window for decisions
-- **Transition**: 90ms between rocket choice and planet display
+- Complete refactor and rewrite of core experiment architecture
+- [Pavlovia](https://pavlovia.org/) integration was removed from all source code.
+
+Other changes include:
+
+- Gorilla platform integration
+  - Packaging of images, audio and CSV files
+  - Integration of `Neurocog` library for integration with Gorilla
+- Rocket images and backgrounds updated
 
 ## Data Collection
+
+All raw data and analysis code has been moved into the _analysis_ directory. All analyses and results reported in the Nussenbaum et. al. (2020) manuscript can be reproduced by running the R scripts (for all data summary statistics and regression analyses) and MATLAB code (for the computational modeling of the two-step task data).
 
 The experiment collects comprehensive data for each trial:
 
 ### Trial Information
+
 - `trialNumber`: Sequential trial number
 - `trialStage`: '1' (rocket choice), '2' (alien choice), or 'fixation'
 - `isPractice`: Boolean indicating practice vs. main trial
 
 ### Stimuli
+
 - `leftStimulus`: Path to left choice stimulus
 - `rightStimulus`: Path to right choice stimulus
 - `planetStimulus`: Background planet image
 - `rewardStimulus`: Reward/no-reward indicator
 
 ### Participant Response
+
 - `keyPress`: Key pressed ('f' or 'j')
 - `choice`: Numeric choice (1 = left, 2 = right)
 - `rt`: Reaction time in milliseconds
 
 ### Transition & Reward Data
+
 - `transitionType`: Boolean (true = common, false = rare)
 - `transition`: String ('common' or 'rare')
 - `wasRewarded`: Boolean indicating if reward was received
 
 ### Timing
+
 - `trialStartTime`: Timestamp when trial began
 - `trialEndTime`: Timestamp when trial ended
 
 ### Counter-balancing Variables
+
 - `rocketSides`: Random rocket position assignment
 - `displayOrderRed/Purple/Green/Yellow`: Random alien order per planet
 - `redPlanetFirstRocket`: Random rocket-to-planet mapping
-
-## Technical Architecture
-
-### Core Components
-- **ExperimentLogic**: Handles transition calculations and counter-balancing
-- **Custom Plugins**: Fixation, choice, and instructions plugins
-- **Timeline**: Configurable trial sequence with training and main phases
-- **Data Integration**: Probability data embedded in TypeScript
-
-### Key Features
-- **Responsive Design**: Adapts to different screen sizes
-- **Hot Reload**: Development server with live updates
-- **TypeScript**: Full type safety and modern development experience
-- **Modular Structure**: Clean separation of concerns
-- **Configurable**: Easy adjustment of trial counts and parameters
-- **Neurocog Integration**: Proper stimuli loading and preloading via neurocog
 
 ## Configuration
 
@@ -103,71 +91,15 @@ export const config: ExperimentConfig = {
 };
 ```
 
-## Development
-
-### Setup
-```bash
-npm install
-npm run dev
-```
-
-### Build
-```bash
-npm run build
-```
-
-### Available Scripts
-- `npm run dev`: Start development server with hot reload
-- `npm run build`: Build production bundle
-- `npm run clean`: Clean build directory
-- `npm run lint`: Run ESLint
-- `npm run type-check`: TypeScript type checking
-
-## Dependencies
-
-- **jsPsych**: ^8.0.0 (Latest version)
-- **neurocog**: ^0.3.8 (Gorilla platform integration)
-- **TypeScript**: ^5.3.3
-- **Webpack**: ^5.89.0 (Build system)
-
-## File Structure
-
-```
-src/
-├── config.ts          # Experiment configuration
-├── types.ts           # TypeScript type definitions
-├── stimuli.ts         # Stimuli mapping
-├── data.ts            # Probability data (embedded from CSV)
-├── experiment.ts      # Core experiment logic
-├── timeline.ts        # Timeline implementation
-├── plugins/           # Custom jsPsych plugins
-│   ├── fixation.ts
-│   ├── choice.ts
-│   └── instructions.ts
-├── images/            # Stimuli images
-└── index.ts           # Main entry point
-```
-
-## Counter-balancing
-
-The experiment implements sophisticated counter-balancing to ensure balanced conditions:
-
-- **Rocket Positions**: Random assignment of rocket 1/2 to left/right
-- **Alien Orders**: Random left/right order for each planet type
-- **Rocket-Planet Mapping**: Random assignment of which rocket goes to which planet
-- **Transition Probabilities**: 70% common, 30% rare transitions
-
-## Integration
-
-This implementation integrates with:
-- **Gorilla Platform**: Via neurocog package
-- **jsPsych**: Latest version with modern plugin architecture
-- **Responsive Design**: Works across different screen sizes and devices
-
 ## License
 
-CC-BY-4.0
+<!-- CC BY-NC-SA 4.0 License -->
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+  <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
-## Contact
+## Issues and Feedback
 
-Henry Burgess <henry.burgess@wustl.edu>
+For questions about the task used by Nussenbaum et. al., please contact <[katenuss@nyu.edu](mailto:katenuss@nyu.edu)>. Please contact **Henry Burgess** <[henry.burgess@wustl.edu](mailto:henry.burgess@wustl.edu)> regarding this adaptation or other code-related issues and feedback.
