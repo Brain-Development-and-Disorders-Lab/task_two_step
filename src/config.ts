@@ -5,9 +5,9 @@
 export interface ExperimentConfig {
   // Trial counts - configurable for easy adjustment
   trainingTrials: {
-    rocketToAlien: number;
-    alienToReward: number;
-    complete: number;
+    rocket: number;
+    alien: number;
+    full: number;
   };
   mainTrials: number;
 
@@ -36,9 +36,9 @@ export interface ExperimentConfig {
 
 export const config: ExperimentConfig = {
   trainingTrials: {
-    rocketToAlien: 4,
-    alienToReward: 4,
-    complete: 4,
+    rocket: 4,
+    alien: 4,
+    full: 4,
   },
   mainTrials: 4,
 

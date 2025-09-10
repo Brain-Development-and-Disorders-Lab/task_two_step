@@ -48,7 +48,6 @@ class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
     const trialData: FixationTrialData = {
       trialNumber: trial.trialNumber,
       trialStage: 'fixation',
-      isPractice: false,
       stimulus: trial.stimulus,
       duration: trial.duration,
       trialStartTime: Date.now(),

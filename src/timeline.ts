@@ -3,14 +3,19 @@
  * Creates trials iteratively without complex blocks
  */
 
+// jsPsych
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';
+
+// Custom plugins and extensions
 import NeurocogExtension from 'neurocog';
 import FixationPlugin from './plugins/fixation';
 import ChoicePlugin from './plugins/choice';
+
+// Configuration and data
 import { config } from './config';
 import { stimuli } from './stimuli';
-import { mainTrialProbabilities, tutorialTrialProbabilities } from './data';
+import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
 
 // Initialize jsPsych instance
 const jsPsych = initJsPsych({
@@ -56,7 +61,7 @@ function createTimeline(): any[] {
     button_label_next: 'Continue',
   });
 
-  // Training Phase 1: Rocket training (4 trials)
+  // Training Phase 1: Select a rocket and preview the planet
   timeline.push({
     type: instructions,
     pages: [
@@ -70,14 +75,14 @@ function createTimeline(): any[] {
     button_label_next: 'Start Practice',
   });
 
-  for (let i = 0; i < config.trainingTrials.rocketToAlien; i++) {
+  for (let i = 0; i < config.trainingTrials.rocket; i++) {
     timeline.push({
       type: ChoicePlugin,
       trialType: 'training-rocket',
       trialNumber: trialNumber++,
       leftKey: config.controls.left,
       rightKey: config.controls.right,
-      rewardLikelihoods: [0.5, 0.5, 0.5, 0.5], // Not used in rocket training
+      rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
       transitionLikelihood: 1.0,
       responseWindow: config.timing.choice,
       extensions: [{
@@ -98,7 +103,7 @@ function createTimeline(): any[] {
     });
   }
 
-  // Training Phase 2: Alien training (4 trials)
+  // Training Phase 2: Select an alien and see if they share resources
   timeline.push({
     type: instructions,
     pages: [
@@ -112,7 +117,7 @@ function createTimeline(): any[] {
     button_label_next: 'Start Practice',
   });
 
-  for (let i = 0; i < config.trainingTrials.alienToReward; i++) {
+  for (let i = 0; i < config.trainingTrials.alien; i++) {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
       type: ChoicePlugin,
@@ -141,7 +146,7 @@ function createTimeline(): any[] {
     });
   }
 
-  // Training Phase 3: Complete training (4 trials)
+  // Training Phase 3: Complete trials
   timeline.push({
     type: instructions,
     pages: [
@@ -157,7 +162,7 @@ function createTimeline(): any[] {
     button_label_next: 'Start Practice',
   });
 
-  for (let i = 0; i < config.trainingTrials.complete; i++) {
+  for (let i = 0; i < config.trainingTrials.full; i++) {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
       type: ChoicePlugin,
@@ -201,9 +206,9 @@ function createTimeline(): any[] {
     button_label_next: 'Start Real Game',
   });
 
-  // Main trials (4 trials)
+  // Main trials
   for (let i = 0; i < config.mainTrials; i++) {
-    const probData = mainTrialProbabilities[i % mainTrialProbabilities.length];
+    const probData = fullTrialProbabilities[i % fullTrialProbabilities.length];
     timeline.push({
       type: ChoicePlugin,
       trialType: 'full',
@@ -211,7 +216,7 @@ function createTimeline(): any[] {
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: 1.0, // Will be updated later for transition logic
+      transitionLikelihood: 0.7,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,

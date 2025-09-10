@@ -12,15 +12,14 @@ export interface BaseTrialData {
   trialEndTime: number;
 }
 
-// Fixation trial data
+// Fixation plugin data
 export interface FixationTrialData extends BaseTrialData {
   trialStage: 'fixation';
-  isPractice: boolean;
   stimulus: string;
   duration: number;
 }
 
-// Choice trial data (for both rocket and alien choices)
+// Choice trial data
 export interface ChoiceTrialData extends BaseTrialData {
   trialType: TrialType;
   trialNumber: number;
@@ -29,11 +28,13 @@ export interface ChoiceTrialData extends BaseTrialData {
   rewardLikelihoods: number[]; // Array of 4 floats representing reward probabilities
   transitionLikelihood: number; // Probability of common vs rare transitions
   responseWindow: number;
+
   // Response data
   keyPress: string; // empty string if timeout
   choice: 0 | 1 | 2; // 0 = timeout, 1 = left, 2 = right
   rt: number; // 0 if timeout
   timeout: boolean; // true if trial timed out
+
   // Computed data
   wasRewarded: boolean; // computed from reward logic
   transitionType: 'none' | 'common' | 'rare'; // computed from transition logic
