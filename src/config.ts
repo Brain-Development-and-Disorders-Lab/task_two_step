@@ -43,10 +43,10 @@ export const config: ExperimentConfig = {
   mainTrials: 4,
 
   timing: {
-    fixation: 500,
+    fixation: 1000,
     choice: 3000,
     reward: 1000,
-    transition: 90,
+    transition: 1500,
   },
 
   controls: {

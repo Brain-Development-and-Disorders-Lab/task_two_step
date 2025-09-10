@@ -3,7 +3,13 @@
  * Handles both rocket selection (stage 1) and alien selection (stage 2)
  */
 
+// Custom types
 import { ChoiceTrialData } from '../types';
+
+// Configuration
+import { config } from '../config';
+
+// jsPsych
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
 class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
@@ -317,15 +323,15 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialType);
 
             // Wait for preview duration (same as reward display), then finish
-            setTimeout(() => finishTrial(), 1000);
-          }, 300); // Brief pause before planet appears
-        }, 1000);
+            setTimeout(() => finishTrial(), config.timing.reward);
+          }, config.timing.reward); // Brief pause before planet appears
+        }, config.timing.reward);
       } else if (trialType === 'training-alien') {
         // Single stage with reward
         setTimeout(() => {
           this.calculateAndShowReward(isLeftChoice, rewardSymbolElement);
-          setTimeout(() => finishTrial(), 1000);
-        }, 500);
+          setTimeout(() => finishTrial(), config.timing.reward);
+        }, config.timing.reward);
       } else if (trialType === 'training-full' || trialType === 'full') {
         // Two-stage trials
         if (this.currentStage === 'rocket') {
@@ -342,13 +348,13 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             if (trialType === 'full') {
               setupTimeout();
             }
-          }, 1500);
+          }, config.timing.transition);
         } else {
           // Alien stage - show reward
           setTimeout(() => {
             this.calculateAndShowReward(isLeftChoice, rewardSymbolElement);
-            setTimeout(() => finishTrial(), 1000);
-          }, 500);
+            setTimeout(() => finishTrial(), config.timing.reward);
+          }, config.timing.reward);
         }
       }
     };
@@ -383,7 +389,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
             this.data.timeout = true;
             this.data.trialEndTime = Date.now();
-            setTimeout(() => finishTrial(), 1000);
+            setTimeout(() => finishTrial(), config.timing.reward);
           }
         }, this.data.responseWindow);
       }
