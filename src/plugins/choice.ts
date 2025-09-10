@@ -174,7 +174,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
     rewardSymbolElement.style.left = '50%';
-    rewardSymbolElement.style.top = '25%';
+    rewardSymbolElement.style.top = '22%';
     rewardSymbolElement.style.transform = 'translate(-50%, -50%)';
     rewardSymbolElement.style.opacity = '1';
     this.data.wasRewarded = wasRewarded;
