@@ -24,6 +24,7 @@ export interface FixationTrialData extends BaseTrialData {
 // Choice trial data (for both rocket and alien choices)
 export interface ChoiceTrialData extends BaseTrialData {
   trialStage: '1' | '2';
+  trialType: 'rocket-only' | 'alien-only' | 'complete';
   isPractice: boolean;
   leftStimulus: string;
   rightStimulus: string;

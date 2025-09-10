@@ -14,6 +14,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         type: ParameterType.COMPLEX,
         default: undefined,
       },
+      trialType: {
+        type: ParameterType.STRING,
+        default: 'complete',
+      },
       trialNumber: {
         type: ParameterType.INT,
         default: undefined,
@@ -79,6 +83,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     const startTime = Date.now();
     let response: { key: string; rt: number } | null = null;
+    let isAnimating = false;
 
     // Resolve dynamic stimulus values
     const leftStimulus = trial.leftStimulus;
@@ -86,37 +91,129 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     const planetStimulus = trial.planetStimulus;
     const rewardStimulus = trial.rewardStimulus;
 
-    // Create the display HTML
+    // Create the display HTML based on trial type
     const html = `
+      <style>
+        @keyframes glideToCenter {
+          0% {
+            transform: translate(-50%, -50%);
+          }
+          100% {
+            transform: translate(-50%, -50%);
+          }
+        }
+
+        .stimulus-container {
+          transition: all 0.5s ease-in-out;
+        }
+
+        .stimulus-container.glide-left {
+          left: 50% !important;
+          top: 40% !important;
+          transform: translate(-50%, -50%) !important;
+        }
+
+        .stimulus-container.glide-right {
+          right: 50% !important;
+          top: 40% !important;
+          transform: translate(50%, -50%) !important;
+        }
+
+        .fade-out {
+          opacity: 0.3;
+        }
+      </style>
       <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
         <!-- Background planet -->
         <img src="${planetStimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
 
         <!-- Left stimulus -->
-        <div style="position: absolute; left: 25%; top: 50%; transform: translate(-50%, -50%);">
+        <div id="left-stimulus" class="stimulus-container" style="position: absolute; left: 25%; top: 50%; transform: translate(-50%, -50%);">
           <img src="${leftStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
         </div>
 
         <!-- Right stimulus -->
-        <div style="position: absolute; right: 25%; top: 50%; transform: translate(50%, -50%);">
+        <div id="right-stimulus" class="stimulus-container" style="position: absolute; right: 25%; top: 50%; transform: translate(50%, -50%);">
           <img src="${rightStimulus}" style="width: 120px; height: 120px; object-fit: contain;" />
         </div>
 
-        <!-- Reward stimulus (if stage 2 and reward exists) -->
-        ${rewardStimulus ? `
-          <div style="position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);">
-            <img src="${rewardStimulus}" style="width: 60px; height: 60px; object-fit: contain;" />
+        <!-- Reward symbol (positioned dynamically above selected alien) -->
+        ${(trial.trialType === 'alien-only' || trial.trialType === 'complete') ? `
+          <div id="reward-symbol" style="position: absolute; opacity: 0; transition: opacity 0.2s ease-in-out;">
+            <img src="${rewardStimulus || 'nothing.png'}" style="width: 60px; height: 60px; object-fit: contain;" />
           </div>
         ` : ''}
 
         <!-- Instructions -->
-        <div style="position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); text-align: center;">
+        <div id="instructions" style="position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); text-align: center;">
           Press <strong>F</strong> for left, <strong>J</strong> for right
         </div>
       </div>
     `;
 
     displayElement.innerHTML = html;
+
+    // Animation handler
+    const animateSelection = (isLeftChoice: boolean) => {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      // Remove keyboard listener
+      document.removeEventListener('keydown', keyboardListener);
+
+      // Clear timeout
+      this.jsPsych.pluginAPI.clearAllTimeouts();
+
+      // Hide instructions
+      const instructionsElement = displayElement.querySelector('#instructions') as HTMLElement;
+      if (instructionsElement) {
+        instructionsElement.style.opacity = '0';
+      }
+
+      // Get stimulus elements
+      const leftStimulusElement = displayElement.querySelector('#left-stimulus') as HTMLElement;
+      const rightStimulusElement = displayElement.querySelector('#right-stimulus') as HTMLElement;
+      const rewardSymbolElement = displayElement.querySelector('#reward-symbol') as HTMLElement;
+
+      if (isLeftChoice) {
+        // Fade out right stimulus and glide left to center
+        if (rightStimulusElement) {
+          rightStimulusElement.classList.add('fade-out');
+        }
+        if (leftStimulusElement) {
+          leftStimulusElement.classList.add('glide-left');
+        }
+      } else {
+        // Fade out left stimulus and glide right to center
+        if (leftStimulusElement) {
+          leftStimulusElement.classList.add('fade-out');
+        }
+        if (rightStimulusElement) {
+          rightStimulusElement.classList.add('glide-right');
+        }
+      }
+
+      // Position reward symbol above the selected alien after glide completes
+      setTimeout(() => {
+        if (rewardSymbolElement && (trial.trialType === 'alien-only' || trial.trialType === 'complete')) {
+          // Position reward symbol above the selected alien (at 40% top position)
+          rewardSymbolElement.style.left = '50%';
+          rewardSymbolElement.style.top = '25%'; // Above the alien at 40%
+          rewardSymbolElement.style.transform = 'translate(-50%, -50%)';
+          rewardSymbolElement.style.opacity = '1';
+        }
+      }, 500); // After glide animation completes
+
+      // Calculate total wait time based on trial type
+      const totalWaitTime = (trial.trialType === 'alien-only' || trial.trialType === 'complete')
+        ? 1700 // 500ms animation + 200ms delay + 1000ms reward display
+        : 1500; // 500ms animation + 1000ms hold (no reward)
+
+      // Wait for animation + reward display, then finish trial
+      setTimeout(() => {
+        finishTrial();
+      }, totalWaitTime);
+    };
 
     // Keyboard event handler
     const keyboardListener = (event: KeyboardEvent) => {
@@ -128,21 +225,17 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
           rt: Date.now() - startTime,
         };
 
-        // Remove listener
-        document.removeEventListener('keydown', keyboardListener);
-
-        // Clear timeout
-        this.jsPsych.pluginAPI.clearAllTimeouts();
-
-        // Finish trial
-        finishTrial();
+        // Trigger animation
+        animateSelection(key === trial.leftKey);
       }
     };
 
     // Timeout handler
     this.jsPsych.pluginAPI.setTimeout(() => {
-      document.removeEventListener('keydown', keyboardListener);
-      finishTrial();
+      if (!isAnimating) {
+        document.removeEventListener('keydown', keyboardListener);
+        finishTrial();
+      }
     }, trial.responseWindow);
 
     // Add keyboard listener
@@ -152,6 +245,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       const trialData: ChoiceTrialData = {
         trialNumber: trial.trialNumber,
         trialStage: trial.trialStage,
+        trialType: trial.trialType as 'rocket-only' | 'alien-only' | 'complete',
         isPractice: trial.isPractice,
         leftStimulus: leftStimulus,
         rightStimulus: rightStimulus,

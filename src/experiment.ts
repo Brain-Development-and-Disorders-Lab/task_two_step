@@ -10,10 +10,10 @@ export class ExperimentLogic {
   // Counter-balancing variables (randomized at start)
   public readonly rocketSides: boolean;
   public readonly practiceRocketSides: boolean;
-  public readonly displayOrderRed: boolean;
-  public readonly displayOrderPurple: boolean;
-  public readonly displayOrderGreen: boolean;
-  public readonly displayOrderYellow: boolean;
+  public readonly swapRedPlanet: boolean;
+  public readonly swapPurplePlanet: boolean;
+  public readonly swapGreenPlanet: boolean;
+  public readonly swapYellowPlanet: boolean;
   public readonly redPlanetFirstRocket: boolean;
 
   // State tracking
@@ -25,19 +25,19 @@ export class ExperimentLogic {
     // Randomize counter-balancing variables
     this.rocketSides = Math.random() < 0.5;
     this.practiceRocketSides = Math.random() < 0.5;
-    this.displayOrderRed = Math.random() < 0.5;
-    this.displayOrderPurple = Math.random() < 0.5;
-    this.displayOrderGreen = Math.random() < 0.5;
-    this.displayOrderYellow = Math.random() < 0.5;
+    this.swapRedPlanet = Math.random() < 0.5;
+    this.swapPurplePlanet = Math.random() < 0.5;
+    this.swapGreenPlanet = Math.random() < 0.5;
+    this.swapYellowPlanet = Math.random() < 0.5;
     this.redPlanetFirstRocket = Math.random() < 0.5;
 
     console.log('Counter-balancing variables:', {
       rocketSides: this.rocketSides,
       practiceRocketSides: this.practiceRocketSides,
-      displayOrderRed: this.displayOrderRed,
-      displayOrderPurple: this.displayOrderPurple,
-      displayOrderGreen: this.displayOrderGreen,
-      displayOrderYellow: this.displayOrderYellow,
+      swapRedPlanet: this.swapRedPlanet,
+      swapPurplePlanet: this.swapPurplePlanet,
+      swapGreenPlanet: this.swapGreenPlanet,
+      swapYellowPlanet: this.swapYellowPlanet,
       redPlanetFirstRocket: this.redPlanetFirstRocket,
     });
   }
@@ -82,9 +82,9 @@ export class ExperimentLogic {
    */
   private getAliensForPlanet(planet: string, isPractice: boolean, goodTransition: boolean, chosenStimulus: string): any[] {
     if (planet === 'red') {
-      const displayOrder = isPractice ? true : this.displayOrderRed;
+      const counterbalanced = isPractice ? true : this.swapRedPlanet;
 
-      if (displayOrder) {
+      if (counterbalanced) {
         return [
           'alien2',
           'alien1',
@@ -102,9 +102,9 @@ export class ExperimentLogic {
         ];
       }
     } else if (planet === 'purple') {
-      const displayOrder = isPractice ? true : this.displayOrderPurple;
+      const counterbalanced = isPractice ? true : this.swapPurplePlanet;
 
-      if (displayOrder) {
+      if (counterbalanced) {
         return [
           'alien4',
           'alien3',
@@ -122,9 +122,9 @@ export class ExperimentLogic {
         ];
       }
     } else if (planet === 'green') {
-      const displayOrder = isPractice ? true : this.displayOrderGreen;
+      const counterbalanced = isPractice ? true : this.swapGreenPlanet;
 
-      if (displayOrder) {
+      if (counterbalanced) {
         return [
           'tutalien2',
           'tutalien1',
@@ -142,9 +142,9 @@ export class ExperimentLogic {
         ];
       }
     } else if (planet === 'yellow') {
-      const displayOrder = isPractice ? true : this.displayOrderYellow;
+      const counterbalanced = isPractice ? true : this.swapYellowPlanet;
 
-      if (displayOrder) {
+      if (counterbalanced) {
         return [
           'tutalien4',
           'tutalien3',
@@ -228,5 +228,27 @@ export class ExperimentLogic {
    */
   getStageState(): any[] {
     return this.stageState;
+  }
+
+  /**
+   * Generate a random stage state for alien-only trials
+   */
+  generateRandomStageState(isPractice: boolean): any[] {
+    // Randomly choose a planet and aliens
+    const planets = isPractice
+      ? [['tutalien1', 'tutalien2', 'tutgreenplanet.png'], ['tutalien3', 'tutalien4', 'tutyellowplanet.png']]
+      : [['alien1', 'alien2', 'redplanet1.png'], ['alien3', 'alien4', 'purpleplanet.png']];
+
+    const randomIndex = Math.floor(Math.random() * planets.length);
+    const randomPlanet = planets[randomIndex]!; // Non-null assertion since we know the array has elements
+    const randomTransition = Math.random() < 0.5;
+
+    return [
+      randomPlanet[0], // left alien
+      randomPlanet[1], // right alien
+      randomPlanet[2], // planet image
+      '', // chosen stimulus (empty for alien-only trials)
+      randomTransition, // transition type
+    ];
   }
 }

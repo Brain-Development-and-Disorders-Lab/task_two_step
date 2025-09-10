@@ -38,9 +38,139 @@ const jsPsych = initJsPsych({
 });
 
 /**
+ * Create a rocket-only trial (Phase 1 training)
+ */
+function createRocketOnlyTrial(
+  trialNumber: number,
+  isPractice: boolean
+): any[] {
+  const trials: any[] = [];
+
+  // Rocket choice only
+  trials.push({
+    type: ChoicePlugin,
+    trialStage: '1',
+    trialType: 'rocket-only',
+    trialNumber: trialNumber,
+    isPractice: isPractice,
+    leftKey: config.controls.left,
+    rightKey: config.controls.right,
+    leftStimulus: jsPsych.extensions.Neurocog.getStimulus(isPractice ? 'tutrocket1_norm.png' : 'rocket1_norm.png'),
+    rightStimulus: jsPsych.extensions.Neurocog.getStimulus(isPractice ? 'tutrocket2_norm.png' : 'rocket2_norm.png'),
+    planetStimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+    responseWindow: config.timing.choice,
+    onStart: () => {
+      experimentLogic.resetStageState();
+    },
+    onFinish: (data: ChoiceTrialData) => {
+      // Calculate transition and set stage state
+      const chosenStimulus = data.choice === 1 ? data.leftStimulus : data.rightStimulus;
+      const stageState = experimentLogic.calculateTransition(chosenStimulus, isPractice);
+      experimentLogic.setStageState(stageState);
+    },
+    extensions: [{
+      type: NeurocogExtension,
+    }],
+  });
+
+  // Fixation
+  trials.push({
+    type: FixationPlugin,
+    stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+    text: '+',
+    duration: config.timing.fixation,
+    trialNumber: trialNumber,
+    extensions: [{
+      type: NeurocogExtension,
+    }],
+  });
+
+  return trials;
+}
+
+/**
+ * Create an alien-only trial (Phase 2 training)
+ */
+function createAlienOnlyTrial(
+  trialNumber: number,
+  isPractice: boolean,
+  probabilityData?: any
+): any[] {
+  const trials: any[] = [];
+
+  // Set up a random stage state for alien-only trials
+  const randomState = experimentLogic.generateRandomStageState(isPractice);
+  experimentLogic.setStageState(randomState);
+
+  // Alien choice only
+  trials.push({
+    type: ChoicePlugin,
+    trialStage: '2',
+    trialType: 'alien-only',
+    trialNumber: trialNumber,
+    isPractice: isPractice,
+    leftKey: config.controls.left,
+    rightKey: config.controls.right,
+    leftStimulus: () => {
+      const state = experimentLogic.getStageState();
+      return state[1] ? jsPsych.extensions.Neurocog.getStimulus(state[1] + '_norm.png') : '';
+    },
+    rightStimulus: () => {
+      const state = experimentLogic.getStageState();
+      return state[0] ? jsPsych.extensions.Neurocog.getStimulus(state[0] + '_norm.png') : '';
+    },
+    planetStimulus: () => {
+      const state = experimentLogic.getStageState();
+      return state[2] ? jsPsych.extensions.Neurocog.getStimulus(state[2]) : '';
+    },
+    rewardStimulus: () => {
+      const state = experimentLogic.getStageState();
+      if (state[3]) {
+        // Determine if reward should be shown
+        const alienChoice = state[3];
+        const probData = probabilityData || tutorialTrialProbabilities[trialNumber % tutorialTrialProbabilities.length];
+        const wasRewarded = experimentLogic.determineReward(alienChoice, probData);
+
+        if (wasRewarded) {
+          experimentLogic.updateReward(isPractice, true);
+          return jsPsych.extensions.Neurocog.getStimulus('t.png');
+        } else {
+          return jsPsych.extensions.Neurocog.getStimulus('nothing.png');
+        }
+      }
+      return '';
+    },
+    responseWindow: config.timing.choice,
+    onFinish: (data: ChoiceTrialData) => {
+      // Determine if was rewarded (only if not a timeout)
+      if (!data.timeout && data.rewardStimulus) {
+        data.wasRewarded = data.rewardStimulus === jsPsych.extensions.Neurocog.getStimulus('t.png');
+      }
+    },
+    extensions: [{
+      type: NeurocogExtension,
+    }],
+  });
+
+  // Fixation
+  trials.push({
+    type: FixationPlugin,
+    stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+    text: '+',
+    duration: config.timing.fixation,
+    trialNumber: trialNumber,
+    extensions: [{
+      type: NeurocogExtension,
+    }],
+  });
+
+  return trials;
+}
+
+/**
  * Create a complete trial block (rocket choice + alien choice + fixation)
  */
-function createTrialBlock(
+function createCompleteTrialBlock(
   trialNumber: number,
   isPractice: boolean,
   probabilityData?: any
@@ -51,6 +181,7 @@ function createTrialBlock(
   trials.push({
     type: ChoicePlugin,
     trialStage: '1',
+    trialType: 'complete',
     trialNumber: trialNumber,
     isPractice: isPractice,
     leftKey: config.controls.left,
@@ -77,6 +208,7 @@ function createTrialBlock(
   trials.push({
     type: ChoicePlugin,
     trialStage: '2',
+    trialType: 'complete',
     trialNumber: trialNumber,
     isPractice: isPractice,
     leftKey: config.controls.left,
@@ -182,7 +314,7 @@ function createTimeline(): any[] {
   });
 
   for (let i = 0; i < config.trainingTrials.rocketToAlien; i++) {
-    timeline.push(...createTrialBlock(trialNumber++, true));
+    timeline.push(...createRocketOnlyTrial(trialNumber++, true));
   }
 
   // Training Phase 2: Alien to Reward (4 trials)
@@ -200,7 +332,7 @@ function createTimeline(): any[] {
   });
 
   for (let i = 0; i < config.trainingTrials.alienToReward; i++) {
-    timeline.push(...createTrialBlock(trialNumber++, true));
+    timeline.push(...createAlienOnlyTrial(trialNumber++, true));
   }
 
   // Training Phase 3: Complete trials (4 trials)
@@ -220,7 +352,7 @@ function createTimeline(): any[] {
   });
 
   for (let i = 0; i < config.trainingTrials.complete; i++) {
-    timeline.push(...createTrialBlock(trialNumber++, true));
+    timeline.push(...createCompleteTrialBlock(trialNumber++, true));
   }
 
   // Pre-main instructions
@@ -241,7 +373,7 @@ function createTimeline(): any[] {
   // Main trials (4 trials)
   for (let i = 0; i < config.mainTrials; i++) {
     const probData = mainTrialProbabilities[i % mainTrialProbabilities.length];
-    timeline.push(...createTrialBlock(trialNumber++, false, probData));
+    timeline.push(...createCompleteTrialBlock(trialNumber++, false, probData));
   }
 
   // Final instructions with score
