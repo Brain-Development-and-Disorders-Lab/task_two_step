@@ -556,7 +556,6 @@ jsPsych.plugins["two-step-choice"] = (() => {
           }
         } else {
           // This only gets evaluated if 'trialPrompt' is 'true'
-          consola.info(`'endTrial()' called.`);
           endTrial();
         }
 

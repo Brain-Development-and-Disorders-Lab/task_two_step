@@ -33,8 +33,8 @@ import probabilityData from "./data/masterprob4.csv";
 import {
   blockLength,
   blockCount,
-  practiceGameCount,
   probability,
+  practiceGameCount,
 } from "./variables";
 
 // Configuration
@@ -428,17 +428,18 @@ timeline.push(
   {
     type: "two-step-instructions",
     stimulus: experiment.getStimuli().getImage("earth.png"),
-    leftStimulus: experiment.getStimuli().getImage("rocket1_norm.png"),
+    leftStimulus: experiment.getStimuli().getImage("tutrocket1_norm.png"),
     centerStimulus: [],
-    rightStimulus: experiment.getStimuli().getImage("rocket2_norm.png"),
+    rightStimulus: experiment.getStimuli().getImage("tutrocket2_norm.png"),
     rewardImage: [],
     choices: [" "],
     prompt: [
       "Welcome! You are an astronaut in charge of important exploration missions to find space resources.",
       "",
       "Each mission involves flying a spaceship from Earth to explore two planets that may contain",
-      "space resources. You will have two spaceships to choose from, and they look like these ones",
-      "shown below:",
+      "space resources. At the start of a mission, you will have two spaceships to choose from.",
+      "",
+      "The actual spaceships will be different, but they will look similar to these ones shown below:",
     ],
     include_score: false,
   },
@@ -452,9 +453,11 @@ timeline.push(
     choices: [" "],
     prompt: [
       "",
-      "Once you arrive at a planet, there will be two aliens that are guarding the space resources.",
       "",
-      "The aliens may look like the ones shown below:",
+      "After you choose a spaceship, you will fly to another planet. Once you arrive at a planet, there",
+      "will be two aliens on that planet that may have space resources to share from their mine.",
+      "",
+      "The actual aliens will be different, but they will look similar to these ones shown below:",
     ],
     include_score: false,
   },
@@ -469,8 +472,9 @@ timeline.push(
     prompt: [
       "",
       "",
-      "While you are at a planet, you can ask one of the aliens if they will share their space",
-      "resources with you. A mission is successful when an alien shares their space resources.",
+      "",
+      "While you are at a planet, you can ask one of the aliens if they will share space resources",
+      "from their mine with you. A mission is successful when an alien shares their space resources.",
       "",
       "When you are ready, let's practice asking an alien to share their space resources!",
     ],
@@ -491,16 +495,17 @@ for (let i = 0; i < configuration.training.single; i++, trialNumber++) {
     prompt: [
       "You have landed on the green planet!",
       "To ask the left alien, press the \"F\" key. To ask the right alien, press the \"J\" key.",
+      "The alien you ask will be highlighted and move to the center of your screen.",
+      "You will not see if the alien has shared their space resources with you yet.",
       "",
       i == 0 ? "Select an alien!" : "Select another alien!",
-      "The alien you ask will be highlighted and move to the center of your screen.",
     ],
     responseWindow: configuration.timing.choice,
     isPractice: true,
   });
 }
 
-// Training, Part 2: Practice selecting an alien and seeing resources
+// Training, Part 3: Practice selecting an alien and seeing resources
 timeline.push(
   {
     type: "two-step-instructions",
@@ -511,9 +516,12 @@ timeline.push(
     rewardImage: experiment.getStimuli().getImage("t.png"),
     choices: [" "],
     prompt: [
-      "After you ask an alien, they will show you if they have space resources to share.",
       "",
-      "Resources looks like this:",
+      "",
+      "Now that you have practiced asking an alien to share their space resources,",
+      "this is what a space resource looks like. The alien will show you if they",
+      "have space resources to share. Space resources look like this:",
+      "",
     ],
     include_score: false,
   },
@@ -526,9 +534,12 @@ timeline.push(
     rewardImage: experiment.getStimuli().getImage("nothing.png"),
     choices: [" "],
     prompt: [
-      "If the alien doesn't have space resources to share this time, you'll see an empty circle.",
       "",
-      "The empty circle looks like this:",
+      "",
+      "",
+      "If the alien doesn't have space resources to share at that moment, you'll",
+      "see an empty circle. The empty circle will look like this:",
+      "",
     ],
     include_score: false,
   },
@@ -882,7 +893,7 @@ for (let j = 0; j < blockCount; j++) {
 
 // Instantiate the timeline variables for the practice trials
 const practiceTimelineVariables = [];
-trialRow = 0;
+let practiceTrialRow = 0;
 
 // Set the rocket configuration in the practice trials
 for (let i = 0; i < practiceGameCount; i++) {
@@ -891,18 +902,18 @@ for (let i = 0; i < practiceGameCount; i++) {
     practiceTimelineVariables.push({
       rightStimulus: "tutrocket2",
       leftStimulus: "tutrocket1",
-      trialRow: trialRow,
+      trialRow: practiceTrialRow,
       trialNumber: i + 1,
     });
   } else {
     practiceTimelineVariables.push({
       rightStimulus: "tutrocket1",
       leftStimulus: "tutrocket2",
-      trialRow: trialRow,
+      trialRow: practiceTrialRow,
       trialNumber: i + 1,
     });
   }
-  trialRow++;
+  practiceTrialRow++;
 }
 
 // Insert practice trials into instructions
