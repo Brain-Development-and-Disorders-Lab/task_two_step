@@ -181,18 +181,30 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         .stimulus-container.glide-left { left: 50% !important; top: 35% !important; transform: translate(-50%, -50%) !important; }
         .stimulus-container.glide-right { right: 50% !important; top: 35% !important; transform: translate(50%, -50%) !important; }
         .fade-out { opacity: 0.3; }
+        img {
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          pointer-events: none;
+          -webkit-user-drag: none;
+          -khtml-user-drag: none;
+          -moz-user-drag: none;
+          -o-user-drag: none;
+          user-drag: none;
+        }
       </style>
       <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
-        <img src="${planetStimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+        <img src="${planetStimulus}" draggable="false" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
         <div id="left-stimulus" class="stimulus-container" style="position: absolute; left: 25%; top: 60%; transform: translate(-50%, -50%);">
-          <img src="${leftStimulus}" style="width: 173px; height: 173px; object-fit: contain;" />
+          <img src="${leftStimulus}" draggable="false" style="width: 173px; height: 173px; object-fit: contain;" />
         </div>
         <div id="right-stimulus" class="stimulus-container" style="position: absolute; right: 25%; top: 60%; transform: translate(50%, -50%);">
-          <img src="${rightStimulus}" style="width: 173px; height: 173px; object-fit: contain;" />
+          <img src="${rightStimulus}" draggable="false" style="width: 173px; height: 173px; object-fit: contain;" />
         </div>
         ${showRewardSymbol ? `
           <div id="reward-symbol" style="position: absolute; opacity: 0; transition: opacity 0.2s ease-in-out;">
-            <img src="${rewardStimulus}" style="width: 72px; height: 72px; object-fit: contain;" />
+            <img src="${rewardStimulus}" draggable="false" style="width: 72px; height: 72px; object-fit: contain;" />
           </div>
         ` : ''}
       </div>
