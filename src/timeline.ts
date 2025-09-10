@@ -207,12 +207,13 @@ function createTimeline(): any[] {
   });
 
   // Main trials
+  const mainTrials: any[] = [];
   for (let i = 0; i < config.mainTrials; i++) {
     const probData = fullTrialProbabilities[i % fullTrialProbabilities.length];
-    timeline.push({
+    mainTrials.push({
       type: ChoicePlugin,
       trialType: 'full',
-      trialNumber: trialNumber++,
+      trialNumber: 0, // Updated after shuffling
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
@@ -222,19 +223,29 @@ function createTimeline(): any[] {
         type: NeurocogExtension,
       }],
     });
+  }
 
-    // Fixation after each trial
+  // Shuffle the main trials using Fisher-Yates shuffle
+  for (let i = mainTrials.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [mainTrials[i], mainTrials[j]] = [mainTrials[j], mainTrials[i]];
+  }
+
+  // Add shuffled trials to timeline with updated trial numbers
+  mainTrials.forEach((mainTrial) => {
+    mainTrial.trialNumber = trialNumber++;
+    timeline.push(mainTrial);
     timeline.push({
       type: FixationPlugin,
       stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
       text: '+',
       duration: config.timing.fixation,
-      trialNumber: trialNumber - 1,
+      trialNumber: mainTrial.trialNumber,
       extensions: [{
         type: NeurocogExtension,
       }],
     });
-  }
+  });
 
   // Final instructions
   timeline.push({
