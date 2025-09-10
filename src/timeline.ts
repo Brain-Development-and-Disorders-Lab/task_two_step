@@ -206,14 +206,30 @@ function createTimeline(): any[] {
     button_label_next: 'Start Real Game',
   });
 
-  // Main trials
-  const mainTrials: any[] = [];
-  for (let i = 0; i < config.mainTrials; i++) {
+  // Main trials with block design
+  for (let i = 0; i < config.mainTrials.blockCount; i++) {
+    for (let j = 0; j < config.mainTrials.blockSize; j++) {
+      // Increment trial number
+      const currentTrialNumber = trialNumber++;
+
+      // Add fixation trial
+      timeline.push({
+        type: FixationPlugin,
+        stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+        text: '+',
+        duration: config.timing.fixation,
+        trialNumber: currentTrialNumber,
+        extensions: [{
+          type: NeurocogExtension,
+        }],
+      });
+
+      // Add choice trial
     const probData = fullTrialProbabilities[i % fullTrialProbabilities.length];
-    mainTrials.push({
+      timeline.push({
       type: ChoicePlugin,
       trialType: 'full',
-      trialNumber: 0, // Updated after shuffling
+        trialNumber: currentTrialNumber,
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
@@ -225,27 +241,17 @@ function createTimeline(): any[] {
     });
   }
 
-  // Shuffle the main trials using Fisher-Yates shuffle
-  for (let i = mainTrials.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [mainTrials[i], mainTrials[j]] = [mainTrials[j], mainTrials[i]];
-  }
-
-  // Add shuffled trials to timeline with updated trial numbers
-  mainTrials.forEach((mainTrial) => {
-    mainTrial.trialNumber = trialNumber++;
-    timeline.push(mainTrial);
+    // Add break screen
     timeline.push({
-      type: FixationPlugin,
-      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
-      text: '+',
-      duration: config.timing.fixation,
-      trialNumber: mainTrial.trialNumber,
-      extensions: [{
-        type: NeurocogExtension,
-      }],
-    });
+      type: instructions,
+      pages: [
+        'That is the end of this block!<br><br>' +
+        'Please take a break and then continue with the next block.',
+      ],
+      show_clickable_nav: true,
+      button_label_next: 'Continue',
   });
+  }
 
   // Final instructions
   timeline.push({

@@ -36,11 +36,14 @@ export interface ExperimentConfig {
 
 export const config: ExperimentConfig = {
   trainingTrials: {
-    rocket: 4,
-    alien: 4,
-    full: 4,
+    rocket: 8,
+    alien: 8,
+    full: 8,
   },
-  mainTrials: 4,
+  mainTrials: {
+    blockSize: 10,
+    blockCount: 4,
+  },
 
   timing: {
     fixation: 1000,
@@ -54,7 +57,6 @@ export const config: ExperimentConfig = {
     right: 'j',
   },
 
-  transitionProbability: 0.7,
   transitionLikelihood: 0.7,
 
   name: 'Two-Step Task',

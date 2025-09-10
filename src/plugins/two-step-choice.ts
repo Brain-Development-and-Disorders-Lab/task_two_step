@@ -1,6 +1,5 @@
 /**
- * Two-step choice plugin for the Two-Step Task
- * Handles both rocket selection (stage 1) and alien selection (stage 2)
+ * Choice plugin for the Two-Step Task
  */
 
 // Custom types
