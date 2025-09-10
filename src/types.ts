@@ -2,9 +2,8 @@
  * Type definitions for the Two-Step Task
  */
 
-/**
- * Type definitions for the Two-Step Task
- */
+// Constants
+export type TrialType = 'training-rocket' | 'training-alien' | 'training-full' | 'full';
 
 // Base trial data that all trials share
 export interface BaseTrialData {
@@ -23,19 +22,21 @@ export interface FixationTrialData extends BaseTrialData {
 
 // Choice trial data (for both rocket and alien choices)
 export interface ChoiceTrialData extends BaseTrialData {
-  trialStage: '1' | '2';
-  trialType: 'rocket-only' | 'alien-only' | 'complete';
-  isPractice: boolean;
-  leftStimulus: string;
-  rightStimulus: string;
-  planetStimulus: string;
-  rewardStimulus?: string;
+  trialType: TrialType;
+  trialNumber: number;
+  leftKey: string;
+  rightKey: string;
+  rewardLikelihoods: number[]; // Array of 4 floats representing reward probabilities
+  transitionLikelihood: number; // Probability of common vs rare transitions
+  responseWindow: number;
+  // Response data
   keyPress: string; // empty string if timeout
   choice: 0 | 1 | 2; // 0 = timeout, 1 = left, 2 = right
   rt: number; // 0 if timeout
-  transitionType: 'none' | 'common' | 'rare';
-  wasRewarded: boolean; // false if timeout
   timeout: boolean; // true if trial timed out
+  // Computed data
+  wasRewarded: boolean; // computed from reward logic
+  transitionType: 'none' | 'common' | 'rare'; // computed from transition logic
 }
 
 // Union type for all trial data

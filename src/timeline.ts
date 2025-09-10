@@ -1,21 +1,17 @@
 /**
- * Timeline implementation for the Two-Step Task
- * Creates the simplified timeline as specified
+ * Simplified timeline implementation for the Two-Step Task
+ * Creates trials iteratively without complex blocks
  */
 
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';
 import NeurocogExtension from 'neurocog';
 import { ChoiceTrialData } from './types';
-import { ExperimentLogic } from './experiment';
 import FixationPlugin from './plugins/fixation';
 import ChoicePlugin from './plugins/choice';
 import { config } from './config';
 import { stimuli } from './stimuli';
 import { mainTrialProbabilities, tutorialTrialProbabilities } from './data';
-
-// Initialize experiment logic
-const experimentLogic = new ExperimentLogic();
 
 // Initialize jsPsych instance
 const jsPsych = initJsPsych({
@@ -36,244 +32,6 @@ const jsPsych = initJsPsych({
     }
   ],
 });
-
-/**
- * Create a rocket-only trial (Phase 1 training)
- */
-function createRocketOnlyTrial(
-  trialNumber: number,
-  isPractice: boolean
-): any[] {
-  const trials: any[] = [];
-
-  // Rocket choice only
-  trials.push({
-    type: ChoicePlugin,
-    trialStage: '1',
-    trialType: 'rocket-only',
-    trialNumber: trialNumber,
-    isPractice: isPractice,
-    leftKey: config.controls.left,
-    rightKey: config.controls.right,
-    leftStimulus: jsPsych.extensions.Neurocog.getStimulus(isPractice ? 'tutrocket1_norm.png' : 'rocket1_norm.png'),
-    rightStimulus: jsPsych.extensions.Neurocog.getStimulus(isPractice ? 'tutrocket2_norm.png' : 'rocket2_norm.png'),
-    planetStimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
-    responseWindow: config.timing.choice,
-    onStart: () => {
-      experimentLogic.resetStageState();
-    },
-    onFinish: (data: ChoiceTrialData) => {
-      // Calculate transition and set stage state
-      const chosenStimulus = data.choice === 1 ? data.leftStimulus : data.rightStimulus;
-      const stageState = experimentLogic.calculateTransition(chosenStimulus, isPractice);
-      experimentLogic.setStageState(stageState);
-    },
-    extensions: [{
-      type: NeurocogExtension,
-    }],
-  });
-
-  // Fixation
-  trials.push({
-    type: FixationPlugin,
-    stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
-    text: '+',
-    duration: config.timing.fixation,
-    trialNumber: trialNumber,
-    extensions: [{
-      type: NeurocogExtension,
-    }],
-  });
-
-  return trials;
-}
-
-/**
- * Create an alien-only trial (Phase 2 training)
- */
-function createAlienOnlyTrial(
-  trialNumber: number,
-  isPractice: boolean,
-  probabilityData?: any
-): any[] {
-  const trials: any[] = [];
-
-  // Set up a random stage state for alien-only trials
-  const randomState = experimentLogic.generateRandomStageState(isPractice);
-  experimentLogic.setStageState(randomState);
-
-  // Alien choice only
-  trials.push({
-    type: ChoicePlugin,
-    trialStage: '2',
-    trialType: 'alien-only',
-    trialNumber: trialNumber,
-    isPractice: isPractice,
-    leftKey: config.controls.left,
-    rightKey: config.controls.right,
-    leftStimulus: () => {
-      const state = experimentLogic.getStageState();
-      return state[1] ? jsPsych.extensions.Neurocog.getStimulus(state[1] + '_norm.png') : '';
-    },
-    rightStimulus: () => {
-      const state = experimentLogic.getStageState();
-      return state[0] ? jsPsych.extensions.Neurocog.getStimulus(state[0] + '_norm.png') : '';
-    },
-    planetStimulus: () => {
-      const state = experimentLogic.getStageState();
-      return state[2] ? jsPsych.extensions.Neurocog.getStimulus(state[2]) : '';
-    },
-    rewardStimulus: () => {
-      const state = experimentLogic.getStageState();
-      if (state[3]) {
-        // Determine if reward should be shown
-        const alienChoice = state[3];
-        const probData = probabilityData || tutorialTrialProbabilities[trialNumber % tutorialTrialProbabilities.length];
-        const wasRewarded = experimentLogic.determineReward(alienChoice, probData);
-
-        if (wasRewarded) {
-          experimentLogic.updateReward(isPractice, true);
-          return jsPsych.extensions.Neurocog.getStimulus('t.png');
-        } else {
-          return jsPsych.extensions.Neurocog.getStimulus('nothing.png');
-        }
-      }
-      return '';
-    },
-    responseWindow: config.timing.choice,
-    onFinish: (data: ChoiceTrialData) => {
-      // Determine if was rewarded (only if not a timeout)
-      if (!data.timeout && data.rewardStimulus) {
-        data.wasRewarded = data.rewardStimulus === jsPsych.extensions.Neurocog.getStimulus('t.png');
-      }
-    },
-    extensions: [{
-      type: NeurocogExtension,
-    }],
-  });
-
-  // Fixation
-  trials.push({
-    type: FixationPlugin,
-    stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
-    text: '+',
-    duration: config.timing.fixation,
-    trialNumber: trialNumber,
-    extensions: [{
-      type: NeurocogExtension,
-    }],
-  });
-
-  return trials;
-}
-
-/**
- * Create a complete trial block (rocket choice + alien choice + fixation)
- */
-function createCompleteTrialBlock(
-  trialNumber: number,
-  isPractice: boolean,
-  probabilityData?: any
-): any[] {
-  const trials: any[] = [];
-
-  // Stage 1: Rocket choice
-  trials.push({
-    type: ChoicePlugin,
-    trialStage: '1',
-    trialType: 'complete',
-    trialNumber: trialNumber,
-    isPractice: isPractice,
-    leftKey: config.controls.left,
-    rightKey: config.controls.right,
-    leftStimulus: jsPsych.extensions.Neurocog.getStimulus(isPractice ? 'tutrocket1_norm.png' : 'rocket1_norm.png'),
-    rightStimulus: jsPsych.extensions.Neurocog.getStimulus(isPractice ? 'tutrocket2_norm.png' : 'rocket2_norm.png'),
-    planetStimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
-    responseWindow: config.timing.choice,
-    onStart: () => {
-      experimentLogic.resetStageState();
-    },
-    onFinish: (data: ChoiceTrialData) => {
-      // Calculate transition and set stage state
-      const chosenStimulus = data.choice === 1 ? data.leftStimulus : data.rightStimulus;
-      const stageState = experimentLogic.calculateTransition(chosenStimulus, isPractice);
-      experimentLogic.setStageState(stageState);
-    },
-    extensions: [{
-      type: NeurocogExtension,
-    }],
-  });
-
-  // Stage 2: Alien choice
-  trials.push({
-    type: ChoicePlugin,
-    trialStage: '2',
-    trialType: 'complete',
-    trialNumber: trialNumber,
-    isPractice: isPractice,
-    leftKey: config.controls.left,
-    rightKey: config.controls.right,
-    leftStimulus: () => {
-      const state = experimentLogic.getStageState();
-      return state[1] ? jsPsych.extensions.Neurocog.getStimulus(state[1] + '_norm.png') : '';
-    },
-    rightStimulus: () => {
-      const state = experimentLogic.getStageState();
-      return state[0] ? jsPsych.extensions.Neurocog.getStimulus(state[0] + '_norm.png') : '';
-    },
-    planetStimulus: () => {
-      const state = experimentLogic.getStageState();
-      return state[2] ? jsPsych.extensions.Neurocog.getStimulus(state[2]) : '';
-    },
-    rewardStimulus: () => {
-      const state = experimentLogic.getStageState();
-      if (state[3]) {
-        // Determine if reward should be shown
-        const alienChoice = state[3];
-        const probData = probabilityData || tutorialTrialProbabilities[trialNumber % tutorialTrialProbabilities.length];
-        const wasRewarded = experimentLogic.determineReward(alienChoice, probData);
-
-        if (wasRewarded) {
-          experimentLogic.updateReward(isPractice, true);
-          return jsPsych.extensions.Neurocog.getStimulus('t.png');
-        } else {
-          return jsPsych.extensions.Neurocog.getStimulus('nothing.png');
-        }
-      }
-      return '';
-    },
-    responseWindow: config.timing.choice,
-    onFinish: (data: ChoiceTrialData) => {
-      // Add transition and reward data
-      const state = experimentLogic.getStageState();
-      if (state[4] !== undefined) {
-        data.transitionType = state[4] ? 'common' : 'rare';
-      }
-
-      // Determine if was rewarded (only if not a timeout)
-      if (!data.timeout && data.rewardStimulus) {
-        data.wasRewarded = data.rewardStimulus === jsPsych.extensions.Neurocog.getStimulus('t.png');
-      }
-    },
-    extensions: [{
-      type: NeurocogExtension,
-    }],
-  });
-
-  // Fixation
-  trials.push({
-    type: FixationPlugin,
-    stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
-    text: '+',
-    duration: config.timing.fixation,
-    trialNumber: trialNumber,
-    extensions: [{
-      type: NeurocogExtension,
-    }],
-  });
-
-  return trials;
-}
 
 /**
  * Create the experiment timeline
@@ -299,7 +57,7 @@ function createTimeline(): any[] {
     button_label_next: 'Continue',
   });
 
-  // Training Phase 1: Rocket to Alien (4 trials)
+  // Training Phase 1: Rocket training (4 trials)
   timeline.push({
     type: instructions,
     pages: [
@@ -314,10 +72,34 @@ function createTimeline(): any[] {
   });
 
   for (let i = 0; i < config.trainingTrials.rocketToAlien; i++) {
-    timeline.push(...createRocketOnlyTrial(trialNumber++, true));
+    timeline.push({
+      type: ChoicePlugin,
+      trialType: 'training-rocket',
+      trialNumber: trialNumber++,
+      leftKey: config.controls.left,
+      rightKey: config.controls.right,
+      rewardLikelihoods: [0.5, 0.5, 0.5, 0.5], // Not used in rocket training
+      transitionLikelihood: 1.0,
+      responseWindow: config.timing.choice,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
+
+    // Fixation after each trial
+    timeline.push({
+      type: FixationPlugin,
+      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      text: '+',
+      duration: config.timing.fixation,
+      trialNumber: trialNumber - 1,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
   }
 
-  // Training Phase 2: Alien to Reward (4 trials)
+  // Training Phase 2: Alien training (4 trials)
   timeline.push({
     type: instructions,
     pages: [
@@ -332,10 +114,35 @@ function createTimeline(): any[] {
   });
 
   for (let i = 0; i < config.trainingTrials.alienToReward; i++) {
-    timeline.push(...createAlienOnlyTrial(trialNumber++, true));
+    const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
+    timeline.push({
+      type: ChoicePlugin,
+      trialType: 'training-alien',
+      trialNumber: trialNumber++,
+      leftKey: config.controls.left,
+      rightKey: config.controls.right,
+      rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
+      transitionLikelihood: 1.0,
+      responseWindow: config.timing.choice,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
+
+    // Fixation after each trial
+    timeline.push({
+      type: FixationPlugin,
+      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      text: '+',
+      duration: config.timing.fixation,
+      trialNumber: trialNumber - 1,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
   }
 
-  // Training Phase 3: Complete trials (4 trials)
+  // Training Phase 3: Complete training (4 trials)
   timeline.push({
     type: instructions,
     pages: [
@@ -352,7 +159,32 @@ function createTimeline(): any[] {
   });
 
   for (let i = 0; i < config.trainingTrials.complete; i++) {
-    timeline.push(...createCompleteTrialBlock(trialNumber++, true));
+    const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
+    timeline.push({
+      type: ChoicePlugin,
+      trialType: 'training-full',
+      trialNumber: trialNumber++,
+      leftKey: config.controls.left,
+      rightKey: config.controls.right,
+      rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
+      transitionLikelihood: 1.0,
+      responseWindow: config.timing.choice,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
+
+    // Fixation after each trial
+    timeline.push({
+      type: FixationPlugin,
+      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      text: '+',
+      duration: config.timing.fixation,
+      trialNumber: trialNumber - 1,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
   }
 
   // Pre-main instructions
@@ -373,16 +205,38 @@ function createTimeline(): any[] {
   // Main trials (4 trials)
   for (let i = 0; i < config.mainTrials; i++) {
     const probData = mainTrialProbabilities[i % mainTrialProbabilities.length];
-    timeline.push(...createCompleteTrialBlock(trialNumber++, false, probData));
+    timeline.push({
+      type: ChoicePlugin,
+      trialType: 'full',
+      trialNumber: trialNumber++,
+      leftKey: config.controls.left,
+      rightKey: config.controls.right,
+      rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
+      transitionLikelihood: 1.0, // Will be updated later for transition logic
+      responseWindow: config.timing.choice,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
+
+    // Fixation after each trial
+    timeline.push({
+      type: FixationPlugin,
+      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      text: '+',
+      duration: config.timing.fixation,
+      trialNumber: trialNumber - 1,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
   }
 
-  // Final instructions with score
-  const rewards = experimentLogic.getRewards();
+  // Final instructions
   timeline.push({
     type: instructions,
     pages: [
       'Congratulations! You\'ve completed all missions!<br><br>' +
-      `You collected: <strong>${rewards.realReward} space resources</strong><br><br>` +
       'Thank you for participating in this research.',
     ],
     show_clickable_nav: true,
@@ -396,5 +250,3 @@ function createTimeline(): any[] {
 const timeline = createTimeline();
 
 jsPsych.run(timeline);
-
-export { experimentLogic };
