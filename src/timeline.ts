@@ -9,8 +9,8 @@ import instructions from '@jspsych/plugin-instructions';
 
 // Custom plugins and extensions
 import NeurocogExtension from 'neurocog';
-import FixationPlugin from './plugins/fixation';
-import ChoicePlugin from './plugins/choice';
+import FixationPlugin from './plugins/two-step-fixation';
+import ChoicePlugin from './plugins/two-step-choice';
 
 // Configuration and data
 import { config } from './config';

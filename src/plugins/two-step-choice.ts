@@ -151,14 +151,14 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
         <img src="${planetStimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
         <div id="left-stimulus" class="stimulus-container" style="position: absolute; left: 25%; top: 60%; transform: translate(-50%, -50%);">
-          <img src="${leftStimulus}" style="width: 144px; height: 144px; object-fit: contain;" />
+          <img src="${leftStimulus}" style="width: 173px; height: 173px; object-fit: contain;" />
         </div>
         <div id="right-stimulus" class="stimulus-container" style="position: absolute; right: 25%; top: 60%; transform: translate(50%, -50%);">
-          <img src="${rightStimulus}" style="width: 144px; height: 144px; object-fit: contain;" />
+          <img src="${rightStimulus}" style="width: 173px; height: 173px; object-fit: contain;" />
         </div>
         ${showRewardSymbol ? `
           <div id="reward-symbol" style="position: absolute; opacity: 0; transition: opacity 0.2s ease-in-out;">
-            <img src="${rewardStimulus}" style="width: 60px; height: 60px; object-fit: contain;" />
+            <img src="${rewardStimulus}" style="width: 72px; height: 72px; object-fit: contain;" />
           </div>
         ` : ''}
       </div>
