@@ -58,6 +58,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   private jsPsych: JsPsych;
   private data: ChoiceTrialData;
   private currentStage: 'rocket' | 'alien' = 'rocket';
+  private levelOneStartTime: number = 0;
+  private levelTwoStartTime: number = 0;
 
   constructor(jsPsych: JsPsych) {
     this.jsPsych = jsPsych;
@@ -75,9 +77,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
       transitionLikelihood: 1.0,
       responseWindow: 3000,
-      keyPress: '',
-      choice: 0,
-      rt: 0,
+      levelOneChoice: 0,
+      levelTwoChoice: 0,
+      levelOneRT: 0,
+      levelTwoRT: 0,
       timeout: false,
       wasRewarded: false,
       transitionType: 'none',
@@ -128,7 +131,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       if (this.currentStage === 'rocket') {
         return this.getRocketStimuli(isPractice);
       } else {
-        return this.getAlienStimuli(isPractice, this.data.choice === 1);
+        return this.getAlienStimuli(isPractice, this.data.levelOneChoice === 1);
       }
     }
     return this.getRocketStimuli(false);
@@ -174,7 +177,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
     rewardSymbolElement.style.left = '50%';
-    rewardSymbolElement.style.top = '22%';
+    rewardSymbolElement.style.top = '20%';
     rewardSymbolElement.style.transform = 'translate(-50%, -50%)';
     rewardSymbolElement.style.opacity = '1';
     this.data.wasRewarded = wasRewarded;
@@ -207,9 +210,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
   private handleStageTransition(isLeftChoice: boolean, trialType: string, isPractice: boolean, displayElement: HTMLElement): void {
     this.currentStage = 'alien';
-    this.data.choice = isLeftChoice ? 1 : 2;
-    this.data.keyPress = isLeftChoice ? this.data.leftKey : this.data.rightKey;
-    this.data.rt = Date.now() - this.data.trialStartTime;
+    // Note: levelOneChoice and levelOneRT are now set immediately when key is pressed
 
     const alienStimuli = this.generateStimuli(trialType, isPractice);
     const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
@@ -217,33 +218,57 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     const planetStimulus = this.getStimulusPath(alienStimuli.planetStimulus);
 
     displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialType);
+
+    // Set start time for level two (alien choice)
+    this.levelTwoStartTime = Date.now();
   }
 
   private finalizeTrialData(response: { key: string; rt: number } | null, trialType: string): void {
     this.data.trialEndTime = Date.now();
 
     if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'alien') {
+      // Level 2 (alien) choice in two-stage trials
       if (response) {
-        this.data.keyPress = response.key;
-        this.data.rt = response.rt;
+        this.data.levelTwoRT = response.rt;
         this.data.timeout = false;
-        this.data.choice = response.key === this.data.leftKey ? 1 : 2;
+        this.data.levelTwoChoice = response.key === this.data.leftKey ? 1 : 2;
       } else {
-        this.data.keyPress = '';
-        this.data.choice = 0;
-        this.data.rt = 0;
+        this.data.levelTwoChoice = 0;
+        this.data.levelTwoRT = 0;
         this.data.timeout = true;
       }
     } else if (response) {
-      this.data.keyPress = response.key;
-      this.data.rt = response.rt;
+      // Single-stage trials (training-rocket or training-alien)
       this.data.timeout = false;
-      this.data.choice = response.key === this.data.leftKey ? 1 : 2;
+
+      if (trialType === 'training-rocket') {
+        // Level 1 only
+        this.data.levelOneChoice = response.key === this.data.leftKey ? 1 : 2;
+        this.data.levelOneRT = response.rt;
+        this.data.levelTwoChoice = 0;
+        this.data.levelTwoRT = 0;
+      } else if (trialType === 'training-alien') {
+        // Level 2 only
+        this.data.levelOneChoice = 0;
+        this.data.levelOneRT = 0;
+        this.data.levelTwoChoice = response.key === this.data.leftKey ? 1 : 2;
+        this.data.levelTwoRT = response.rt;
+      }
     } else {
-      this.data.keyPress = '';
-      this.data.choice = 0;
-      this.data.rt = 0;
+      // Timeout case
       this.data.timeout = true;
+
+      if (trialType === 'training-rocket') {
+        this.data.levelOneChoice = 0;
+        this.data.levelOneRT = 0;
+        this.data.levelTwoChoice = 0;
+        this.data.levelTwoRT = 0;
+      } else if (trialType === 'training-alien') {
+        this.data.levelOneChoice = 0;
+        this.data.levelOneRT = 0;
+        this.data.levelTwoChoice = 0;
+        this.data.levelTwoRT = 0;
+      }
     }
   }
 
@@ -255,7 +280,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     let isAnimating = false;
     const trialType = trial.trialType || 'full';
     const isPractice = trialType.startsWith('training-');
-    this.currentStage = 'rocket';
+    this.currentStage = trialType === 'training-alien' ? 'alien' : 'rocket';
 
     // Generate initial stimuli
     let { leftStimulus, rightStimulus, planetStimulus } = this.generateStimuli(trialType, isPractice);
@@ -267,6 +292,15 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     planetStimulus = this.getStimulusPath(planetStimulus);
 
     displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, rewardStimulus, trialType);
+
+    // Set start time based on trial type
+    if (trialType === 'training-alien') {
+      // Only level two (alien choice) for training-alien trials
+      this.levelTwoStartTime = Date.now();
+    } else {
+      // Level one (rocket choice) for all other trials
+      this.levelOneStartTime = Date.now();
+    }
 
     // Animation handler for two-stage flow
     const animateSelection = (isLeftChoice: boolean) => {
@@ -364,13 +398,30 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       const key = event.key.toLowerCase();
 
       if (key === trial.leftKey || key === trial.rightKey) {
-        response = {
-          key: key,
-          rt: Date.now() - this.data.trialStartTime,
-        };
+        // Calculate RT based on current stage
+        const currentStartTime = this.currentStage === 'rocket' ? this.levelOneStartTime : this.levelTwoStartTime;
+        const calculatedRT = Date.now() - currentStartTime;
 
-        // Trigger animation
-        animateSelection(key === trial.leftKey);
+        // Check if response is within the response window
+        if (calculatedRT <= this.data.responseWindow) {
+          response = {
+            key: key,
+            rt: calculatedRT,
+          };
+
+          // For full trials, store level one RT immediately when rocket key is pressed
+          if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'rocket') {
+            this.data.levelOneChoice = key === trial.leftKey ? 1 : 2;
+            this.data.levelOneRT = calculatedRT;
+          }
+
+          // Clear timeout only if response is valid
+          this.jsPsych.pluginAPI.clearAllTimeouts();
+
+          // Trigger animation
+          animateSelection(key === trial.leftKey);
+        }
+        // If response is after timeout window, ignore it (timeout will handle it)
       }
     };
 

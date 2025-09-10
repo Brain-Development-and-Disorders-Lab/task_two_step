@@ -30,9 +30,10 @@ export interface ChoiceTrialData extends BaseTrialData {
   responseWindow: number;
 
   // Response data
-  keyPress: string; // empty string if timeout
-  choice: 0 | 1 | 2; // 0 = timeout, 1 = left, 2 = right
-  rt: number; // 0 if timeout
+  levelOneChoice: 0 | 1 | 2; // 0 = timeout, 1 = left, 2 = right
+  levelTwoChoice: 0 | 1 | 2; // 0 = timeout, 1 = left, 2 = right
+  levelOneRT: number; // 0 if timeout
+  levelTwoRT: number; // 0 if timeout
   timeout: boolean; // true if trial timed out
 
   // Computed data
