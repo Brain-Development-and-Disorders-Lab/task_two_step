@@ -123,6 +123,9 @@ function createTrialBlock(
         data.wasRewarded = data.rewardStimulus === jsPsych.extensions.Neurocog.getStimulus('t.png');
       }
     },
+    extensions: [{
+      type: NeurocogExtension,
+    }],
   });
 
   // Fixation
@@ -132,6 +135,9 @@ function createTrialBlock(
     text: '+',
     duration: config.timing.fixation,
     trialNumber: trialNumber,
+    extensions: [{
+      type: NeurocogExtension,
+    }],
   });
 
   return trials;

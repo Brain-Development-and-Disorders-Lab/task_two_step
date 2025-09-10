@@ -6,73 +6,72 @@
 import { ChoiceTrialData } from '../types';
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
-const info = {
-  name: 'two-step-choice' as const,
-  parameters: {
-    trialStage: {
-      type: ParameterType.COMPLEX,
-      default: undefined,
+class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
+  static info = {
+    name: 'two-step-choice' as const,
+    parameters: {
+      trialStage: {
+        type: ParameterType.COMPLEX,
+        default: undefined,
+      },
+      trialNumber: {
+        type: ParameterType.INT,
+        default: undefined,
+      },
+      isPractice: {
+        type: ParameterType.BOOL,
+        default: undefined,
+      },
+      leftKey: {
+        type: ParameterType.KEY,
+        default: 'f',
+      },
+      rightKey: {
+        type: ParameterType.KEY,
+        default: 'j',
+      },
+      leftStimulus: {
+        type: ParameterType.STRING,
+        default: undefined,
+      },
+      rightStimulus: {
+        type: ParameterType.STRING,
+        default: undefined,
+      },
+      planetStimulus: {
+        type: ParameterType.STRING,
+        default: undefined,
+      },
+      rewardStimulus: {
+        type: ParameterType.STRING,
+        default: undefined,
+      },
+      probabilityData: {
+        type: ParameterType.OBJECT,
+        default: undefined,
+      },
+      responseWindow: {
+        type: ParameterType.INT,
+        default: undefined,
+      },
+      onStart: {
+        type: ParameterType.FUNCTION,
+        default: undefined,
+      },
+      onFinish: {
+        type: ParameterType.FUNCTION,
+        default: undefined,
+      },
     },
-    trialNumber: {
-      type: ParameterType.INT,
-      default: undefined,
-    },
-    isPractice: {
-      type: ParameterType.BOOL,
-      default: undefined,
-    },
-    leftKey: {
-      type: ParameterType.KEY,
-      default: 'f',
-    },
-    rightKey: {
-      type: ParameterType.KEY,
-      default: 'j',
-    },
-    leftStimulus: {
-      type: ParameterType.STRING,
-      default: undefined,
-    },
-    rightStimulus: {
-      type: ParameterType.STRING,
-      default: undefined,
-    },
-    planetStimulus: {
-      type: ParameterType.STRING,
-      default: undefined,
-    },
-    rewardStimulus: {
-      type: ParameterType.STRING,
-      default: undefined,
-    },
-    probabilityData: {
-      type: ParameterType.OBJECT,
-      default: undefined,
-    },
-    responseWindow: {
-      type: ParameterType.INT,
-      default: undefined,
-    },
-    onStart: {
-      type: ParameterType.FUNCTION,
-      default: undefined,
-    },
-    onFinish: {
-      type: ParameterType.FUNCTION,
-      default: undefined,
-    },
-  },
-} as const;
-type Info = typeof info;
+  } as const;
 
-class ChoicePlugin implements JsPsychPlugin<Info> {
   private jsPsych: JsPsych;
 
   constructor(jsPsych: JsPsych) {
     this.jsPsych = jsPsych;
   }
 
-  trial(displayElement: HTMLElement, trial: TrialType<Info>) {
+  trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
     // Call onStart callback if provided
     if (trial.onStart) {
       trial.onStart();

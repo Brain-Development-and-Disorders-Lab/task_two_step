@@ -6,33 +6,32 @@
 import { FixationTrialData } from '../types';
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
-const info = {
-  name: 'fixation' as const,
-  parameters: {
-    stimulus: {
-      type: ParameterType.STRING,
-      default: undefined,
+class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
+  static info = {
+    name: 'fixation' as const,
+    parameters: {
+      stimulus: {
+        type: ParameterType.STRING,
+        default: undefined,
+      },
+      duration: {
+        type: ParameterType.INT,
+        default: undefined,
+      },
+      trialNumber: {
+        type: ParameterType.INT,
+        default: undefined,
+      },
     },
-    duration: {
-      type: ParameterType.INT,
-      default: undefined,
-    },
-    trialNumber: {
-      type: ParameterType.INT,
-      default: undefined,
-    },
-  },
-} as const;
-type Info = typeof info;
+  } as const;
 
-class FixationPlugin implements JsPsychPlugin<Info> {
   private jsPsych: JsPsych;
 
   constructor(jsPsych: JsPsych) {
     this.jsPsych = jsPsych;
   }
 
-  trial(displayElement: HTMLElement, trial: TrialType<typeof info>) {
+  trial(displayElement: HTMLElement, trial: TrialType<typeof FixationPlugin.info>) {
     // Create the display
     const html = `
       <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">

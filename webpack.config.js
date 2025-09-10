@@ -26,7 +26,7 @@ module.exports = {
         test: /\.(png|jpg|jpeg|gif|svg)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[name][ext]',
+          filename: 'stimuli/[name][ext]',
         },
       },
     ],
@@ -43,8 +43,8 @@ module.exports = {
         directory: path.join(__dirname, 'dist'),
       },
       {
-        directory: path.join(__dirname, 'src/images'),
-        publicPath: '/images',
+        directory: path.join(__dirname, 'src/stimuli'),
+        publicPath: '/stimuli',
       },
     ],
     compress: true,
