@@ -191,7 +191,7 @@ jsPsych.plugins["two-step-instructions"] = (() => {
     // Set button dimensions and positioning
     const buttonWidth = sizeButton * 3.6;
     const buttonHeight = sizeButton * 1.8;
-    const buttonX = choiceXRight + sizeMonster - buttonWidth / 2;
+    const buttonX = choiceXRight + 20 + sizeMonster - buttonWidth / 2;
     const buttonY = choiceY + sizeMonster - 50 - buttonHeight / 2;
 
     const imageButton = svg
@@ -218,7 +218,7 @@ jsPsych.plugins["two-step-instructions"] = (() => {
       .attr("y", buttonY + buttonHeight / 2 + 1)
       .style("text-anchor", "middle")
       .style("dominant-baseline", "central")
-      .style("font-size", (sizeFont * 0.6) + "px")
+      .style("font-size", (sizeFont * 0.8) + "px")
       .style("font-family", "Arial")
       .style("font-weight", "bold")
       .style("fill", "white")

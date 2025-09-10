@@ -390,9 +390,9 @@ jsPsych.plugins["two-step-choice"] = (() => {
         // Set the 'validResponse' flag
         validResponse = true;
 
-        // Hide all prompt lines except the first one after response
+        // Hide all prompt lines after response
         if (trial.promptTextElements && trial.promptTextElements.length > 1) {
-          for (let i = 1; i < trial.promptTextElements.length; i++) {
+          for (let i = 0; i < trial.promptTextElements.length; i++) {
             trial.promptTextElements[i].style("opacity", "0");
           }
         }
@@ -463,15 +463,8 @@ jsPsych.plugins["two-step-choice"] = (() => {
 
                       frames++;
 
-                      // Deactivate the image after 5 frames
+                      // Add the reward image after 5 frames
                       if (frames == 5) {
-                        imageChosen.attr(
-                          "xlink:href",
-                          experiment
-                            .getStimuli()
-                            .getImage(chosenStimulus + "_deact.png")
-                        );
-
                         if (trial.trialRow !== null) {
                           // Determine the reward and add the reward image
                           trial.rewardStimulus = calculateReward(
@@ -536,14 +529,8 @@ jsPsych.plugins["two-step-choice"] = (() => {
 
                   frames++;
 
-                  // Deactivate the image after 5 frames
+                  // Add the reward image after 5 frames
                   if (frames == 5) {
-                    imageChosen.attr(
-                      "xlink:href",
-                      experiment
-                        .getStimuli()
-                        .getImage(chosenStimulus + "_deact.png")
-                    );
                     if (trial.trialRow !== null) {
                       // Determine the reward and add the reward image
                       trial.rewardStimulus = calculateReward(
