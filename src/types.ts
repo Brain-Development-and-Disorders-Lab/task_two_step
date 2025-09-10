@@ -14,8 +14,6 @@ export interface BaseTrialData {
 
 // Fixation plugin data
 export interface FixationTrialData extends BaseTrialData {
-  trialStage: 'fixation';
-  stimulus: string;
   duration: number;
 }
 

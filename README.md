@@ -34,7 +34,6 @@ The experiment collects comprehensive data for each trial:
 ### Trial Information
 
 - `trialNumber`: Sequential trial number
-- `trialStage`: '1' (rocket choice), '2' (alien choice), or 'fixation'
 - `isPractice`: Boolean indicating practice vs. main trial
 
 ### Stimuli

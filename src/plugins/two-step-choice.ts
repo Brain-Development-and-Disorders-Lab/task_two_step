@@ -87,6 +87,29 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     };
   }
 
+  private convertKeyToChoice(key: string): 0 | 1 | 2 {
+    if (key === this.data.leftKey) return 1;
+    if (key === this.data.rightKey) return 2;
+    return 0; // timeout or invalid key
+  }
+
+  private resetAllLevelData(): void {
+    this.data.levelOneChoice = 0;
+    this.data.levelOneRT = 0;
+    this.data.levelTwoChoice = 0;
+    this.data.levelTwoRT = 0;
+  }
+
+  private resetCurrentLevelData(): void {
+    if (this.currentStage === 'rocket') {
+      this.data.levelOneChoice = 0;
+      this.data.levelOneRT = 0;
+    } else {
+      this.data.levelTwoChoice = 0;
+      this.data.levelTwoRT = 0;
+    }
+  }
+
   private getStimulusPath(filename: string): string {
     return this.jsPsych.extensions.Neurocog.getStimulus(filename);
   }
@@ -226,24 +249,17 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   private finalizeTrialData(response: { key: string; rt: number } | null, trialType: string): void {
     this.data.trialEndTime = Date.now();
 
-    if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'alien') {
-      // Level 2 (alien) choice in two-stage trials
-      if (response) {
-        this.data.levelTwoRT = response.rt;
-        this.data.timeout = false;
-        this.data.levelTwoChoice = response.key === this.data.leftKey ? 1 : 2;
-      } else {
-        this.data.levelTwoChoice = 0;
-        this.data.levelTwoRT = 0;
-        this.data.timeout = true;
-      }
-    } else if (response) {
-      // Single-stage trials (training-rocket or training-alien)
+    if (response) {
       this.data.timeout = false;
+      const choice = this.convertKeyToChoice(response.key);
 
-      if (trialType === 'training-rocket') {
+      if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'alien') {
+        // Level 2 (alien) choice in two-stage trials
+        this.data.levelTwoChoice = choice;
+        this.data.levelTwoRT = response.rt;
+      } else if (trialType === 'training-rocket') {
         // Level 1 only
-        this.data.levelOneChoice = response.key === this.data.leftKey ? 1 : 2;
+        this.data.levelOneChoice = choice;
         this.data.levelOneRT = response.rt;
         this.data.levelTwoChoice = 0;
         this.data.levelTwoRT = 0;
@@ -251,23 +267,20 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         // Level 2 only
         this.data.levelOneChoice = 0;
         this.data.levelOneRT = 0;
-        this.data.levelTwoChoice = response.key === this.data.leftKey ? 1 : 2;
+        this.data.levelTwoChoice = choice;
         this.data.levelTwoRT = response.rt;
       }
     } else {
-      // Timeout case
+      // Timeout case - reset appropriate level data
       this.data.timeout = true;
 
-      if (trialType === 'training-rocket') {
-        this.data.levelOneChoice = 0;
-        this.data.levelOneRT = 0;
+      if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'alien') {
+        // Timeout on alien stage - only reset level two data, preserve level one
         this.data.levelTwoChoice = 0;
         this.data.levelTwoRT = 0;
-      } else if (trialType === 'training-alien') {
-        this.data.levelOneChoice = 0;
-        this.data.levelOneRT = 0;
-        this.data.levelTwoChoice = 0;
-        this.data.levelTwoRT = 0;
+      } else {
+        // Timeout on rocket stage or single-stage trials - reset all data
+        this.resetAllLevelData();
       }
     }
   }
@@ -402,8 +415,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         const currentStartTime = this.currentStage === 'rocket' ? this.levelOneStartTime : this.levelTwoStartTime;
         const calculatedRT = Date.now() - currentStartTime;
 
-        // Check if response is within the response window
-        if (calculatedRT <= this.data.responseWindow) {
+        // Check if response is within the response window (only for full trials)
+        const isWithinResponseWindow = trialType === 'full' ? calculatedRT <= this.data.responseWindow : true;
+
+        if (isWithinResponseWindow) {
           response = {
             key: key,
             rt: calculatedRT,
@@ -411,7 +426,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
           // For full trials, store level one RT immediately when rocket key is pressed
           if ((trialType === 'training-full' || trialType === 'full') && this.currentStage === 'rocket') {
-            this.data.levelOneChoice = key === trial.leftKey ? 1 : 2;
+            this.data.levelOneChoice = this.convertKeyToChoice(key);
             this.data.levelOneRT = calculatedRT;
           }
 
@@ -440,14 +455,17 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
             this.data.timeout = true;
             this.data.trialEndTime = Date.now();
+            this.resetCurrentLevelData();
             setTimeout(() => finishTrial(), config.timing.reward);
           }
         }, this.data.responseWindow);
       }
     };
 
-    // Set up initial timeout
-    setupTimeout();
+    // Set up initial timeout (only for full trials, not training trials)
+    if (trialType === 'full') {
+      setupTimeout();
+    }
 
     // Add keyboard listener
     document.addEventListener('keydown', keyboardListener);
