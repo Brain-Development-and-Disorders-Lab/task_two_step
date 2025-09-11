@@ -39,8 +39,20 @@ export interface ChoiceTrialData extends BaseTrialData {
   transitionType: 'none' | 'common' | 'rare'; // computed from transition logic
 }
 
+// Comprehension trial data
+export interface ComprehensionTrialData extends BaseTrialData {
+  question: {
+    prompt: string;
+    correct: string; // 'true' or 'false'
+  };
+  response: string;
+  correctAnswer: string;
+  responseTime: number;
+  isCorrect: boolean;
+}
+
 // Union type for all trial data
-export type TrialData = FixationTrialData | ChoiceTrialData;
+export type TrialData = FixationTrialData | ChoiceTrialData | ComprehensionTrialData;
 
 export interface ProbabilityData {
   alien1: number;

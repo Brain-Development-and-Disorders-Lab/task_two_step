@@ -11,6 +11,7 @@ import instructions from '@jspsych/plugin-instructions';
 import NeurocogExtension from 'neurocog';
 import FixationPlugin from './plugins/two-step-fixation';
 import ChoicePlugin from './plugins/two-step-choice';
+import ComprehensionPlugin from './plugins/two-step-comprehension';
 
 // Configuration and data
 import { config } from './config';
@@ -19,7 +20,7 @@ import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
 
 // Initialize jsPsych instance
 const jsPsych = initJsPsych({
-  plugins: [FixationPlugin, ChoicePlugin],
+  plugins: [FixationPlugin, ChoicePlugin, ComprehensionPlugin],
   extensions: [
     {
       type: NeurocogExtension,
@@ -52,7 +53,8 @@ function createTimeline(): any[] {
   timeline.push({
     type: instructions,
     pages: [
-      '<b>Before commencing the task, please review these instructions carefully.</b><br><br>' +
+      '<b>Task Overview</b><br><br>' +
+      'Before commencing the task, please review these instructions carefully.<br><br>' +
       'This task requires access to a keyboard and mouse.<br>' +
       'Ensure you are in a quiet environment with no distractions.<br><br>' +
       'Click "Continue >" to proceed.',
@@ -64,7 +66,8 @@ function createTimeline(): any[] {
       'the task and the controls.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 1: Rockets</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'At the start of each mission, you will be on Earth and select a rocket to travel to a planet.<br>' +
       'After selecting a rocket, that rocket will take you to a planet inhabited by two aliens.<br><br>' +
       'In the <i>training missions</i>, the rockets will look like this:<br>' +
@@ -73,39 +76,52 @@ function createTimeline(): any[] {
       'The rockets in the <i>actual missions</i> will look slightly different.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 1: Rockets</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'For the first set of training missions, you will select a rocket to fly from Earth.<br>' +
       'To select the left rocket, press the "F" key on your keyboard.<br>' +
       'To select the right rocket, press the "J" key on your keyboard.<br><br>' +
       'After selecting a rocket, you will briefly see the planet you will fly to.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 1: Rockets</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'The green planet will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutgreenplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 1: Rockets</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'The yellow planet will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutyellowplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
       'The planets in the <i>actual missions</i> will be different.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 1: Rockets</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
+      'The rockets can fly to either planet, but one rocket will fly mostly to the green planet,<br>' +
+      'and the other rocket will fly mostly to the yellow planet.<br><br>' +
+      'The planet a spaceship flies to most often won\'t change during the game.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'At each planet, there will be two aliens.<br>' +
       'The aliens on the green planet in the <i>training missions</i> will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien1_norm.png')}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien2_norm.png')}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 1: Rockets</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'The aliens on the yellow planet in the <i>training missions</i> will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien3_norm.png')}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien4_norm.png')}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'The aliens in the <i>actual missions</i> will look slightly different.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 1: Rockets</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'You are about to begin the first set of training missions!<br>' +
       'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
       'Click "Continue >" to begin the training missions.',
@@ -150,46 +166,59 @@ function createTimeline(): any[] {
   timeline.push({
     type: instructions,
     pages: [
-      '<b>Training Stage 2: Aliens</b><br><br>' +
-      'Now that you know how to travel to planets, the next training missions focus on the aliens.<br>' +
-      'As mentioned at the start of these instructions, the aliens may have valuable <b>space resources</b> to share.<br><br>' +
-      'For the second set of training missions, you will select an alien to ask for their space resources.<br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
+      'Now that you know how to travel to planets, the next training missions focus<br>' +
+      'on the aliens. As mentioned at the start of these instructions, the aliens<br>' +
+      'may have valuable <b>space resources</b> to share.<br><br>' +
+      'For the second set of training missions, you will practice selecting an alien<br>' +
+      'to see if they have space resources to share.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 2: Aliens</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
+      'Each alien is responsible for their own mine that they use to mine for space<br>' +
+      'resources on the planet. If they have any space resources to share, an alien<br>' +
+      'will share them with you when asked.<br><br>' +
+      'If an alien has a good mine right now, they will have plenty of space resources<br>' +
+      'to share with you. At other times, an alien may not have a good mine, so they<br>' +
+      'have not found any space resources to share with you.<br><br>' +
+      'The quality of an alien\'s mine changes slowly across missions.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
       'To select the left alien, press the "F" key on your keyboard.<br>' +
       'To select the right alien, press the "J" key on your keyboard.<br><br>' +
-      'After selecting an alien, you will briefly see if they shared their space resources with you.<br><br>' +
+      'After selecting an alien, you will briefly see if they had space resources to share.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 2: Aliens</b><br><br>' +
-      'Each alien is responsible for a mine on their planet that they use to mine for space resources.<br>' +
-      'If they have any space resources to share, an alien will share them with you when asked.<br><br>' +
-      'If an alien has a good mine right now, they will have plenty of space resources to share with you.<br>' +
-      'At other times, an alien may not have a good mine, so they will not have space resources to share with you.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Training Stage 2: Aliens</b><br><br>' +
-      'If an alien shares space resources with you, a space resource will appear above them.<br>' +
-      'A space resource will look like this:<br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
+      'If an alien shares space resources with you, a space resource will appear<br>' +
+      'above them. A space resource will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('t.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 2: Aliens</b><br><br>' +
-      'If an alien does not share space resources with you, an empty circle will appear above them.<br>' +
-      'The empty circle will look like this:<br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
+      'If an alien does not share space resources with you, an empty circle will<br>' +
+      'appear above them. The empty circle will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('nothing.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 2: Aliens</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
       'The amount of resources an alien can share will change during the missions.<br>' +
-      'An alien with a good mine in previous missions may dig in a part of their mine that has few resources.<br>' +
-      'Another alien with few resources in previous missions may discover a lot of resources.<br><br>' +
+      'An alien with a good mine in previous missions may dig in a part of their<br>' +
+      'mine that has few resources. Another alien with few resources in previous missions<br>' +
+      'may discover a lot of resources.<br><br>' +
       'Any changes in an alien\'s mine will happen slowly across multiple missions.<br>' +
       'It is best to focus on retrieving as many resources as possible.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Training Stage 2: Aliens</b><br><br>' +
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
       'You are about to begin the second set of training missions!<br>' +
       'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
       'Click "Continue >" to begin the training missions.',
@@ -231,16 +260,33 @@ function createTimeline(): any[] {
   timeline.push({
     type: instructions,
     pages: [
-      'Practice Phase 3: Complete Missions<br><br>' +
-      'Now you\'ll do the full sequence:<br>' +
-      '1. Choose a rocket on Earth<br>' +
-      '2. Fly to a planet<br>' +
-      '3. Choose an alien<br>' +
-      '4. See if you get resources<br><br>' +
-      'Pay attention to which rockets take you to better planets!',
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 3: Full Missions</i></b><br><br>' +
+      'Now that you know how to travel to planets and how to ask aliens for space resources,<br>' +
+      'the last training missions will combine both of the previous training stages!<br><br>' +
+      'You will start on Earth, choose a rocket, arrive at a planet, and then choose<br>' +
+      'an alien to ask to share their space resources.<br><br>' +
+      'The space resource you receive during the training missions will not count<br>' +
+      'towards your final score.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 3: Full Missions</i></b><br><br>' +
+      'During the last <i>training missions</i> and the <i>actual missions</i>, you will<br>' +
+      'have <b>3 seconds</b> to select a rocket and <b>3 seconds</b> to select an alien.<br>' +
+      'If you do not make a choice within 3 seconds, the mission will fail. A red "X" will<br>' +
+      'appear on the rockets or aliens briefly before the next mission commences.<br><br>' +
+      'Remember, you still want to find as many space resources as possible!<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 3: Full Missions</i></b><br><br>' +
+      'You are about to begin the last set of training missions!<br>' +
+      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
+      'Click "Continue >" to begin the training missions.',
     ],
     show_clickable_nav: true,
-    button_label_next: 'Start Practice',
+    button_label_next: 'Continue',
   });
 
   for (let i = 0; i < config.trainingTrials.full; i++) {
@@ -252,7 +298,7 @@ function createTimeline(): any[] {
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: 1.0,
+      transitionLikelihood: 0.7,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,
@@ -276,15 +322,94 @@ function createTimeline(): any[] {
   timeline.push({
     type: instructions,
     pages: [
-      'Great job with practice!<br><br>' +
-      'Now for the real game:<br>' +
-      '- New rocket and alien colors<br>' +
-      '- Same rules as practice<br>' +
-      '- We\'ll count your total resources<br><br>' +
-      'Ready to begin the real missions?',
+      '<b>Instructions</b><br>' +
+      '<b><i>Main Missions</i></b><br><br>' +
+      'You have completed the training missions! In the main missions,<br>' +
+      'the planets, aliens, and rockets will be new colors, but the rules<br>' +
+      'will be the same.<br><br>' +
+      'These missions are hard, so you will need to concentrate. Don\'t be<br>' +
+      'afraid to trust your instincts!<br><br>' +
+      'Here are three hints as you complete the main missions.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Main Missions: Hint 1</i></b><br><br>' +
+      'Remember which aliens have space resources to share. An alien that<br>' +
+      'has many space resources to share now will probably be able to share<br>' +
+      'more in the near future, since the quality of their mine changes slowly.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Main Missions: Hint 2</i></b><br><br>' +
+      'Remember that each alien has their own mine. Just because one alien currently<br>' +
+      'has a bad mine and can\'t share space resources often, doesn\'t mean that<br>' +
+      'another alien has a good mine.<br><br>' +
+      'The aliens are not trying to trick you! Your choices do not change the<br>' +
+      'quality of a mine, and the aliens do not hide space resources from you<br>' +
+      'if they have any to share.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Main Missions: Hint 3</i></b><br><br>' +
+      'The rocket you choose is important because often an alien on one planet<br>' +
+      'may have a better mine right now than the aliens on another planet.<br><br>' +
+      'You can find more resources by finding the rocket that will fly to the<br>' +
+      'planet that has the alien with a better mine right now.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Main Missions</i></b><br><br>' +
+      'You are about to commence the main missions!<br>' +
+      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
+      'You will answer three questions before the main missions commence<br>' +
+      'to confirm that you understand how to play.<br><br>' +
+      'Click "Continue >" to answer the questions.',
     ],
     show_clickable_nav: true,
-    button_label_next: 'Start Real Game',
+    button_label_next: 'Continue',
+  });
+
+  // Comprehension Questions
+  timeline.push({
+    type: ComprehensionPlugin,
+    question: {
+      prompt: 'Each spaceship always flies to the same planet.',
+      correct: 'false'
+    },
+    preamble: 'Please answer the following question:',
+    button_label: 'Continue',
+    feedback: 'Incorrect. Spaceships may sometimes fly to the planet you don\'t expect.',
+    extensions: [{
+      type: NeurocogExtension,
+    }],
+  });
+
+  timeline.push({
+    type: ComprehensionPlugin,
+    question: {
+      prompt: 'If an alien has a lot of resources to share now, then they will probably have a lot of resources to share in the near future.',
+      correct: 'true'
+    },
+    preamble: 'Please answer the following question:',
+    button_label: 'Continue',
+    feedback: 'Incorrect. Some aliens have more resources than others.',
+    extensions: [{
+      type: NeurocogExtension,
+    }],
+  });
+
+  timeline.push({
+    type: ComprehensionPlugin,
+    question: {
+      prompt: 'You will have as much time as you want to make each choice.',
+      correct: 'false'
+    },
+    preamble: 'Please answer the following question:',
+    button_label: 'Continue',
+    feedback: 'Incorrect. You will have 3 seconds to make each choice.',
+    extensions: [{
+      type: NeurocogExtension,
+    }],
   });
 
   // Main trials with block design

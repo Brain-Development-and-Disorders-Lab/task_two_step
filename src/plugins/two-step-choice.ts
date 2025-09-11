@@ -122,7 +122,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   }
 
   private getAlienStimuli(isPractice: boolean, rocketChoice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
-    if (isPractice) {
+    if (isPractice && !this.data.trialType.includes('full')) {
+      // Only training-rocket and training-alien use deterministic transitions
       const planet = rocketChoice ? 'tutgreenplanet.png' : 'tutyellowplanet.png';
       return {
         leftStimulus: planet.includes('green') ? 'tutalien1_norm.png' : 'tutalien3_norm.png',
@@ -130,6 +131,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         planetStimulus: planet
       };
     } else {
+      // training-full and full trials use probabilistic transitions
       const isCommonTransition = this.jsPsych.extensions.Neurocog.random() < this.data.transitionLikelihood;
       let planet: string;
       if (isCommonTransition) {
@@ -169,7 +171,6 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   }
 
   private setInstructions(displayElement: HTMLElement, text: string): void {
-    console.log('Setting instructions:', text);
     const instructionsElement = displayElement.querySelector('#instructions') as HTMLElement;
     if (instructionsElement) {
       instructionsElement.innerHTML = text;
@@ -441,7 +442,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             document.addEventListener('keydown', keyboardListener);
 
             // Set up timeout for alien stage
-            if (trialType === 'full') {
+            if (trialType === 'full' || trialType === 'training-full') {
               setupTimeout();
             }
           }, config.timing.transition);
@@ -464,8 +465,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         const currentStartTime = this.currentStage === 'rocket' ? this.levelOneStartTime : this.levelTwoStartTime;
         const calculatedRT = Date.now() - currentStartTime;
 
-        // Check if response is within the response window (only for full trials)
-        const isWithinResponseWindow = trialType === 'full' ? calculatedRT <= this.data.responseWindow : true;
+        // Check if response is within the response window (for full and training-full trials)
+        const isWithinResponseWindow = (trialType === 'full' || trialType === 'training-full') ? calculatedRT <= this.data.responseWindow : true;
 
         if (isWithinResponseWindow) {
           response = {
@@ -489,9 +490,9 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       }
     };
 
-    // Timeout handler function - only for full trials, works for both stages
+    // Timeout handler function
     const setupTimeout = () => {
-      if (trialType === 'full') {
+      if (trialType === 'full' || trialType === 'training-full') {
         this.jsPsych.pluginAPI.setTimeout(() => {
           if (!isAnimating) {
             document.removeEventListener('keydown', keyboardListener);
@@ -511,8 +512,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       }
     };
 
-    // Set up initial timeout (only for full trials, not training trials)
-    if (trialType === 'full') {
+    // Set up initial timeout (for full and training-full trials)
+    if (trialType === 'full' || trialType === 'training-full') {
       setupTimeout();
     }
 
