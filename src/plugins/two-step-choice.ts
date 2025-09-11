@@ -417,6 +417,15 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         // Single stage with reward
         setTimeout(() => {
           this.calculateAndShowReward(isLeftChoice, rewardSymbolElement);
+
+          // Update instructions
+          if (this.data.wasRewarded) {
+            this.setInstructions(displayElement, 'The alien shared their space resources with you!');
+          } else {
+            this.setInstructions(displayElement, 'The alien did not have space resources to share with you.');
+          }
+
+          // Wait for reward display, then finish
           setTimeout(() => finishTrial(), config.timing.reward);
         }, config.timing.reward);
       } else if (trialType === 'training-full' || trialType === 'full') {

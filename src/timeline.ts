@@ -59,7 +59,7 @@ function createTimeline(): any[] {
 
       '<b>Task Overview</b><br><br>' +
       'Welcome Astronaut! You are in charge of space missions to explore planets<br>' +
-      'with aliens who may have valuable space resources to share.<br><br>' +
+      'with aliens who may have valuable <b>space resources</b> to share.<br><br>' +
       'There will be a series of <i>training missions</i> to help you become familiar with<br>' +
       'the task and the controls.<br><br>' +
       'Click "Continue >" to proceed.',
@@ -150,14 +150,52 @@ function createTimeline(): any[] {
   timeline.push({
     type: instructions,
     pages: [
-      'Practice Phase 2: Alien Selection<br><br>' +
-      'You\'ll land directly on a planet with two aliens.<br>' +
-      'Choose one alien and see if they share resources.<br><br>' +
-      'Some aliens share resources more often than others.<br>' +
-      'Pay attention to which aliens are more generous!',
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'Now that you know how to travel to planets, the next training missions focus on the aliens.<br>' +
+      'As mentioned at the start of these instructions, the aliens may have valuable <b>space resources</b> to share.<br><br>' +
+      'For the second set of training missions, you will select an alien to ask for their space resources.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'To select the left alien, press the "F" key on your keyboard.<br>' +
+      'To select the right alien, press the "J" key on your keyboard.<br><br>' +
+      'After selecting an alien, you will briefly see if they shared their space resources with you.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'Each alien is responsible for a mine on their planet that they use to mine for space resources.<br>' +
+      'If they have any space resources to share, an alien will share them with you when asked.<br><br>' +
+      'If an alien has a good mine right now, they will have plenty of space resources to share with you.<br>' +
+      'At other times, an alien may not have a good mine, so they will not have space resources to share with you.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'If an alien shares space resources with you, a space resource will appear above them.<br>' +
+      'A space resource will look like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('t.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'If an alien does not share space resources with you, an empty circle will appear above them.<br>' +
+      'The empty circle will look like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('nothing.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'The amount of resources an alien can share will change during the missions.<br>' +
+      'An alien with a good mine in previous missions may dig in a part of their mine that has few resources.<br>' +
+      'Another alien with few resources in previous missions may discover a lot of resources.<br><br>' +
+      'Any changes in an alien\'s mine will happen slowly across multiple missions.<br>' +
+      'It is best to focus on retrieving as many resources as possible.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'You are about to begin the second set of training missions!<br>' +
+      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
+      'Click "Continue >" to begin the training missions.',
     ],
     show_clickable_nav: true,
-    button_label_next: 'Start Practice',
+    button_label_next: 'Continue',
   });
 
   for (let i = 0; i < config.trainingTrials.alien; i++) {
