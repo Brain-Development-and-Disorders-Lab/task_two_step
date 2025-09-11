@@ -168,6 +168,14 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     return this.getRocketStimuli(false);
   }
 
+  private setInstructions(displayElement: HTMLElement, text: string): void {
+    console.log('Setting instructions:', text);
+    const instructionsElement = displayElement.querySelector('#instructions') as HTMLElement;
+    if (instructionsElement) {
+      instructionsElement.innerHTML = text;
+    }
+  }
+
   private createDisplayHTML(leftStimulus: string, rightStimulus: string, planetStimulus: string, rewardStimulus: string, trialType: string): string {
     const showRewardSymbol = trialType === 'training-alien' || trialType === 'training-full' || trialType === 'full';
 
@@ -207,6 +215,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             <img src="${rewardStimulus}" draggable="false" style="width: 72px; height: 72px; object-fit: contain;" />
           </div>
         ` : ''}
+        <div id="instructions" style="position: absolute; bottom: 15%; left: 50%; width: 100%; transform: translateX(-50%); color: #fff; font-size: 24px; text-align: center; font-weight: semibold;"></div>
       </div>
     `;
   }
@@ -324,7 +333,16 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     rightStimulus = this.getStimulusPath(rightStimulus);
     planetStimulus = this.getStimulusPath(planetStimulus);
 
+    // Render the initial display
     displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, rewardStimulus, trialType);
+
+    // Set the initial instructions if applicable
+    this.setInstructions(displayElement, ''); // Clear any previous instructions
+    if (trialType === 'training-rocket') {
+      this.setInstructions(displayElement, 'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.');
+    } else if (trialType === 'training-alien') {
+      this.setInstructions(displayElement, 'Press <b>"F"</b> to select the left alien, or <b>"J"</b> to select the right alien.');
+    }
 
     // Set start time based on trial type
     if (trialType === 'training-alien') {
@@ -388,6 +406,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             const rightStimulus = this.getStimulusPath(rightAlien);
 
             displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialType);
+
+            this.setInstructions(displayElement, `You have arrived at the <b>${planet.includes('green') ? 'green' : 'yellow'}</b> planet!`);
 
             // Wait for preview duration (same as reward display), then finish
             setTimeout(() => finishTrial(), config.timing.reward);

@@ -33,8 +33,12 @@ const jsPsych = initJsPsych({
         stimuli: stimuli,
         seed: 0.2846,
       }
-    }
+    },
   ],
+  on_finish: () => {
+    // For testing purposes
+    jsPsych.data.get().localSave('csv',`${config.studyName}_data.csv`);
+  }
 });
 
 /**
@@ -48,34 +52,85 @@ function createTimeline(): any[] {
   timeline.push({
     type: instructions,
     pages: [
-      'Welcome to the Two-Step Task!<br><br>' +
-      'This is a space exploration game where you will:<br>' +
-      '1. Choose between two rockets on Earth<br>' +
-      '2. Fly to a planet and choose between two aliens<br>' +
-      '3. See if the alien shares space resources with you<br><br>' +
-      'Use F for left choices and J for right choices.<br>' +
-      'You have limited time to make each choice.<br><br>' +
-      'Let\'s start with some practice trials!',
+      '<b>Before commencing the task, please review these instructions carefully.</b><br><br>' +
+      'This task requires access to a keyboard and mouse.<br>' +
+      'Ensure you are in a quiet environment with no distractions.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Task Overview</b><br><br>' +
+      'Welcome Astronaut! You are in charge of space missions to explore planets<br>' +
+      'with aliens who may have valuable space resources to share.<br><br>' +
+      'There will be a series of <i>training missions</i> to help you become familiar with<br>' +
+      'the task and the controls.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'At the start of each mission, you will be on Earth and select a rocket to travel to a planet.<br>' +
+      'After selecting a rocket, that rocket will take you to a planet inhabited by two aliens.<br><br>' +
+      'In the <i>training missions</i>, the rockets will look like this:<br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutrocket1_norm.png')}" alt="Rocket" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutrocket2_norm.png')}" alt="Rocket" style="width: 100px; height: 100px;"><br>` +
+      'The rockets in the <i>actual missions</i> will look slightly different.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'For the first set of training missions, you will select a rocket to fly from Earth.<br>' +
+      'To select the left rocket, press the "F" key on your keyboard.<br>' +
+      'To select the right rocket, press the "J" key on your keyboard.<br><br>' +
+      'After selecting a rocket, you will briefly see the planet you will fly to.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'The green planet will look like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutgreenplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'The yellow planet will look like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutyellowplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
+      'The planets in the <i>actual missions</i> will be different.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'At each planet, there will be two aliens.<br>' +
+      'The aliens on the green planet in the <i>training missions</i> will look like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien1_norm.png')}" alt="Alien" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien2_norm.png')}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'The aliens on the yellow planet in the <i>training missions</i> will look like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien3_norm.png')}" alt="Alien" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien4_norm.png')}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+      'The aliens in the <i>actual missions</i> will look slightly different.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'You are about to begin the first set of training missions!<br>' +
+      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
+      'Click "Continue >" to begin the training missions.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
+    extensions: [{
+      type: NeurocogExtension,
+    }],
   });
 
   // Training Phase 1: Select a rocket and preview the planet
-  timeline.push({
-    type: instructions,
-    pages: [
-      'Practice Phase 1: Rocket Selection<br><br>' +
-      'Choose between two rockets on Earth.<br>' +
-      'After your choice, you\'ll see which planet you fly to.<br>' +
-      'This helps you learn which rocket goes where.<br><br>' +
-      'Press F for left rocket, J for right rocket.',
-    ],
-    show_clickable_nav: true,
-    button_label_next: 'Start Practice',
-  });
-
   for (let i = 0; i < config.trainingTrials.rocket; i++) {
+    // Fixation before each trial
+    timeline.push({
+      type: FixationPlugin,
+      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      text: '+',
+      duration: config.timing.fixation,
+      trialNumber: trialNumber - 1,
+      extensions: [{
+        type: NeurocogExtension,
+      }],
+    });
+
     timeline.push({
       type: ChoicePlugin,
       trialType: 'training-rocket',
@@ -85,18 +140,6 @@ function createTimeline(): any[] {
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
       transitionLikelihood: 1.0,
       responseWindow: config.timing.choice,
-      extensions: [{
-        type: NeurocogExtension,
-      }],
-    });
-
-    // Fixation after each trial
-    timeline.push({
-      type: FixationPlugin,
-      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
-      text: '+',
-      duration: config.timing.fixation,
-      trialNumber: trialNumber - 1,
       extensions: [{
         type: NeurocogExtension,
       }],
@@ -225,21 +268,21 @@ function createTimeline(): any[] {
       });
 
       // Add choice trial
-    const probData = fullTrialProbabilities[i % fullTrialProbabilities.length];
+      const probData = fullTrialProbabilities[i % fullTrialProbabilities.length];
       timeline.push({
-      type: ChoicePlugin,
-      trialType: 'full',
+        type: ChoicePlugin,
+        trialType: 'full',
         trialNumber: currentTrialNumber,
-      leftKey: config.controls.left,
-      rightKey: config.controls.right,
-      rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: config.transitionLikelihood,
-      responseWindow: config.timing.choice,
-      extensions: [{
-        type: NeurocogExtension,
-      }],
-    });
-  }
+        leftKey: config.controls.left,
+        rightKey: config.controls.right,
+        rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
+        transitionLikelihood: config.transitionLikelihood,
+        responseWindow: config.timing.choice,
+        extensions: [{
+          type: NeurocogExtension,
+        }],
+      });
+    }
 
     // Add break screen
     timeline.push({
@@ -250,7 +293,7 @@ function createTimeline(): any[] {
       ],
       show_clickable_nav: true,
       button_label_next: 'Continue',
-  });
+    });
   }
 
   // Final instructions

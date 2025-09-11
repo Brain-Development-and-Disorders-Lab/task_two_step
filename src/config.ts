@@ -9,7 +9,10 @@ export interface ExperimentConfig {
     alien: number;
     full: number;
   };
-  mainTrials: number;
+  mainTrials: {
+    blockSize: number;
+    blockCount: number;
+  };
 
   // Timing (in milliseconds)
   timing: {
