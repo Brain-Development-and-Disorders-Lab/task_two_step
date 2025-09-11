@@ -228,16 +228,38 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   private calculateAndShowReward(isLeftChoice: boolean, rewardSymbolElement: HTMLElement | null): void {
     if (!rewardSymbolElement) return;
 
-    const probability = isLeftChoice ? (this.data.rewardLikelihoods[0] || 0.5) : (this.data.rewardLikelihoods[1] || 0.5);
-    const wasRewarded = this.jsPsych.extensions.Neurocog.random() < probability;
+    // Determine which alien was selected based on planet and choice
+    const alienIndex = this.getAlienIndex(isLeftChoice);
+    const probability = this.data.rewardLikelihoods[alienIndex] || 0.5;
+    const randomNumber = this.jsPsych.extensions.Neurocog.random();
+
+    // Include debugging information
+    console.debug("---- Reward Calculation ----\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);
+
+    const wasRewarded = randomNumber < probability;
     const rewardStimulus = this.getStimulusPath(wasRewarded ? 't.png' : 'nothing.png');
 
+    // Show reward stimulus
     rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
     rewardSymbolElement.style.left = '50%';
     rewardSymbolElement.style.top = '20%';
     rewardSymbolElement.style.transform = 'translate(-50%, -50%)';
     rewardSymbolElement.style.opacity = '1';
     this.data.wasRewarded = wasRewarded;
+  }
+
+  private getAlienIndex(isLeftChoice: boolean): number {
+    // Determine planet type based on rocket choice and transition
+    const isCommonTransition = this.data.transitionType === 'common';
+    const isFirstPlanet = isCommonTransition ?
+      (this.data.levelOneChoice === 1) : (this.data.levelOneChoice === 2);
+
+    // Map to alien index
+    if (isFirstPlanet) {
+      return isLeftChoice ? 0 : 1;
+    } else {
+      return isLeftChoice ? 2 : 3;
+    }
   }
 
   private createTimeoutOverlay(element: HTMLElement): void {
@@ -320,6 +342,9 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   }
 
   trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
+    // Debugging information
+    console.debug("---- Trial Information ----\nTrial Type:", trial.trialType, "\nProbability Data:", trial.rewardLikelihoods, "\nTransition Likelihood:", trial.transitionLikelihood);
+
     if (trial.onStart) trial.onStart();
     this.updateTrialData(trial);
 

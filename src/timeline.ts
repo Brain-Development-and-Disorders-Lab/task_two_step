@@ -473,11 +473,18 @@ function createTimeline(): any[] {
         pages: [
           '<b>Complete</b><br><br>' +
           'You have completed all the missions.<br><br>' +
-          'You collected <b>' + jsPsych.data.get().filter({trialType: 'full', wasRewarded: true}).count() + ' space resources</b>!<br><br>' +
+          'You collected <b><span id="reward-count">0</span> space resources</b>!<br><br>' +
           'Click "Continue >" to answer a final question.',
         ],
         show_clickable_nav: true,
         button_label_next: 'Continue',
+        on_load: () => {
+          const rewardCount = jsPsych.data.get().filter({trialType: 'full', wasRewarded: true}).values().length;
+          const countElement = document.getElementById('reward-count');
+          if (countElement) {
+            countElement.textContent = rewardCount.toString();
+          }
+        },
       });
     }
   }
