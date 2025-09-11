@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@jspsych/plugin-instructions": "^1.1.4",
+    "@jspsych/plugin-survey-html-form": "^2.1.0",
     "jspsych": "^7.3.4",
     "neurocog": "^1.1.1"
   },

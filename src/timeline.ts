@@ -6,6 +6,7 @@
 // jsPsych
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';
+import surveyHtmlForm from '@jspsych/plugin-survey-html-form';
 
 // Custom plugins and extensions
 import NeurocogExtension from 'neurocog';
@@ -353,16 +354,15 @@ function createTimeline(): any[] {
       '<b><i>Main Missions: Hint 3</i></b><br><br>' +
       'The rocket you choose is important because often an alien on one planet<br>' +
       'may have a better mine right now than the aliens on another planet.<br><br>' +
-      'You can find more resources by finding the rocket that will fly to the<br>' +
-      'planet that has the alien with a better mine right now.<br><br>' +
+      'You can find more resources by choosing the rocket that will take<br>' +
+      'you to the planet where an alien currently has a good mine.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
       '<b><i>Main Missions</i></b><br><br>' +
-      'You are about to commence the main missions!<br>' +
-      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
       'You will answer three questions before the main missions commence<br>' +
       'to confirm that you understand how to play.<br><br>' +
+      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
       'Click "Continue >" to answer the questions.',
     ],
     show_clickable_nav: true,
@@ -412,6 +412,21 @@ function createTimeline(): any[] {
     }],
   });
 
+  // Pre-main instructions
+  timeline.push({
+    type: instructions,
+    pages: [
+      '<b>Instructions</b><br>' +
+      '<b><i>Main Missions</i></b><br><br>' +
+      'You are about to commence the main missions!<br><br>' +
+      'The number of space resources you collect during these missions will be<br>' +
+      'counted and shown to you at the end of all the missions.<br><br>' +
+      'Click "Continue >" to commence the main missions.',
+    ],
+    show_clickable_nav: true,
+    button_label_next: 'Continue',
+  });
+
   // Main trials with block design
   for (let i = 0; i < config.mainTrials.blockCount; i++) {
     for (let j = 0; j < config.mainTrials.blockSize; j++) {
@@ -447,24 +462,61 @@ function createTimeline(): any[] {
       });
     }
 
-    // Add break screen
-    timeline.push({
-      type: instructions,
-      pages: [
-        'That is the end of this block!<br><br>' +
-        'Please take a break and then continue with the next block.',
-      ],
-      show_clickable_nav: true,
-      button_label_next: 'Continue',
-    });
+    // Add break screen at the end of all but the last block
+    if (i < config.mainTrials.blockCount - 1) {
+      timeline.push({
+        type: instructions,
+        pages: [
+          '<b>Break</b><br>' +
+          'That is the end of block ' + (i + 1) + ' of ' + config.mainTrials.blockCount + '!<br>' +
+          (i === 1 ? 'You are halfway through the main missions!<br><br>' : '') +
+          (i === 2 ? 'One last block to go!<br><br>' : '') +
+          'Please take a break if you need to, and when you are ready,<br>' +
+          'continue with the next block.<br><br>' +
+          'Click "Continue >" to commence the next block.',
+        ],
+        show_clickable_nav: true,
+        button_label_next: 'Continue',
+      });
+    }
   }
+
+  // Add survey question about the rocket behavior
+  timeline.push({
+    type: surveyHtmlForm,
+    preamble: '<p><b>Please answer the following question:</b></p>',
+    html: `
+      <p>Select the rocket you think went to the red planet most frequently.</p>
+      <div style="display: flex; justify-content: center; gap: 50px; margin: 20px 0;">
+        <div style="text-align: center;">
+          <label for="rocket1">
+            <img src="${jsPsych.extensions.Neurocog.getStimulus('rocket1_norm.png')}" alt="Rocket 1" style="width: 150px; height: 150px;">
+          </label>
+          <br>
+          <input type="radio" id="rocket1" name="rocket_choice" value="rocket1" required>
+        </div>
+        <div style="text-align: center;">
+          <label for="rocket2">
+            <img src="${jsPsych.extensions.Neurocog.getStimulus('rocket2_norm.png')}" alt="Rocket 2" style="width: 150px; height: 150px;">
+          </label>
+          <br>
+          <input type="radio" id="rocket2" name="rocket_choice" value="rocket2" required>
+        </div>
+      </div>
+    `,
+    button_label: 'Continue',
+    extensions: [{
+      type: NeurocogExtension,
+    }],
+  });
 
   // Final instructions
   timeline.push({
     type: instructions,
     pages: [
-      'Congratulations! You\'ve completed all missions!<br><br>' +
-      'Thank you for participating in this research.',
+      '<b>Complete</b><br><br>' +
+      'Thank you for participating in this research!<br><br>' +
+      'Click "Finish >" to end the experiment.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Finish',
