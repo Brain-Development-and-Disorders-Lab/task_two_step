@@ -478,6 +478,19 @@ function createTimeline(): any[] {
         show_clickable_nav: true,
         button_label_next: 'Continue',
       });
+    } else {
+      // Final instructions
+      timeline.push({
+        type: instructions,
+        pages: [
+          '<b>Complete</b><br><br>' +
+          'You have completed all the missions.<br><br>' +
+          'You collected <b>' + jsPsych.data.get().filter({trialType: 'full', wasRewarded: true}).count() + ' space resources</b>!<br><br>' +
+          'Click "Continue >" to answer a final question.',
+        ],
+        show_clickable_nav: true,
+        button_label_next: 'Continue',
+      });
     }
   }
 
