@@ -33,7 +33,7 @@ The experiment collects comprehensive data for each trial:
 
 ### Trial Information
 
-- `isPractice`: Boolean indicating practice vs. main trial
+- `isTraining`: Boolean indicating training vs. main trial
 
 ### Stimuli
 

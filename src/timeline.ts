@@ -14,6 +14,9 @@ import FixationPlugin from './plugins/two-step-fixation';
 import ChoicePlugin from './plugins/two-step-choice';
 import ComprehensionPlugin from './plugins/two-step-comprehension';
 
+// Counterbalancing
+import { getRocketStimuli, getAlienStimuli } from './counterbalancing';
+
 // Configuration and data
 import { config } from './config';
 import { stimuli } from './stimuli';
@@ -38,6 +41,11 @@ const jsPsych = initJsPsych({
     },
   ],
   on_finish: () => {
+    // Store counterbalancing configuration in jsPsych data
+    jsPsych.data.addProperties({
+      counterbalancing: config.counterbalancing
+    });
+
     // For testing purposes
     jsPsych.data.get().localSave('csv',`${config.studyName}_data.csv`);
   }
@@ -48,6 +56,16 @@ const jsPsych = initJsPsych({
  */
 function createTimeline(): any[] {
   const timeline: any[] = [];
+
+  // Debug counterbalancing state
+  console.debug("---- Counterbalancing Configuration ----\n",
+    "Swap Main Rockets:", config.counterbalancing.swapMainRockets, "\n",
+    "Swap Training Rockets:", config.counterbalancing.swapTrainingRockets, "\n",
+    "Swap Red Aliens:", config.counterbalancing.swapRedAliens, "\n",
+    "Swap Purple Aliens:", config.counterbalancing.swapPurpleAliens, "\n",
+    "Swap Green Aliens:", config.counterbalancing.swapGreenAliens, "\n",
+    "Swap Yellow Aliens:", config.counterbalancing.swapYellowAliens, "\n",
+    "Swap Rocket Preference:", config.counterbalancing.swapRocketPreference);
 
   // Initial instructions
   timeline.push({
@@ -71,8 +89,8 @@ function createTimeline(): any[] {
       'At the start of each mission, you will be on Earth and select a rocket to travel to a planet.<br>' +
       'After selecting a rocket, that rocket will take you to a planet inhabited by two aliens.<br><br>' +
       'In the <i>training missions</i>, the rockets will look like this:<br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutrocket1_norm.png')}" alt="Rocket" style="width: 100px; height: 100px;">` +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutrocket2_norm.png')}" alt="Rocket" style="width: 100px; height: 100px;"><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).leftStimulus)}" alt="Rocket" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br>` +
       'The rockets in the <i>actual missions</i> will look slightly different.<br><br>' +
       'Click "Continue >" to proceed.',
 
@@ -108,15 +126,15 @@ function createTimeline(): any[] {
       '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'At each planet, there will be two aliens.<br>' +
       'The aliens on the green planet in the <i>training missions</i> will look like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien1_norm.png')}" alt="Alien" style="width: 100px; height: 100px;">` +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien2_norm.png')}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('green', config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('green', config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'The aliens on the yellow planet in the <i>training missions</i> will look like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien3_norm.png')}" alt="Alien" style="width: 100px; height: 100px;">` +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutalien4_norm.png')}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('yellow', config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('yellow', config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'The aliens in the <i>actual missions</i> will look slightly different.<br><br>' +
       'Click "Continue >" to proceed.',
 
@@ -498,14 +516,14 @@ function createTimeline(): any[] {
       <div style="display: flex; justify-content: center; gap: 50px; margin: 20px 0;">
         <div style="text-align: center;">
           <label for="rocket1">
-            <img src="${jsPsych.extensions.Neurocog.getStimulus('rocket1_norm.png')}" alt="Rocket 1" style="width: 150px; height: 150px;">
+            <img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(false, config.counterbalancing.swapMainRockets).leftStimulus)}" alt="Rocket 1" style="width: 150px; height: 150px;">
           </label>
           <br>
           <input type="radio" id="rocket1" name="rocket_choice" value="rocket1" required>
         </div>
         <div style="text-align: center;">
           <label for="rocket2">
-            <img src="${jsPsych.extensions.Neurocog.getStimulus('rocket2_norm.png')}" alt="Rocket 2" style="width: 150px; height: 150px;">
+            <img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(false, config.counterbalancing.swapMainRockets).rightStimulus)}" alt="Rocket 2" style="width: 150px; height: 150px;">
           </label>
           <br>
           <input type="radio" id="rocket2" name="rocket_choice" value="rocket2" required>

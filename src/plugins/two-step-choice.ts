@@ -8,6 +8,14 @@ import { ChoiceTrialData } from '../types';
 // Configuration
 import { config } from '../config';
 
+// Counterbalancing
+import {
+  getPlanetFromRocketChoice,
+  getAlienStimuli,
+  getRocketStimuli,
+  getPlanetStimulus
+} from '../counterbalancing';
+
 // jsPsych
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
@@ -108,67 +116,91 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     return this.jsPsych.extensions.Neurocog.getStimulus(filename);
   }
 
-  private getRocketStimuli(isPractice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+  private getRocketStimuli(isTraining: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+    const swapSides = isTraining ? config.counterbalancing.swapTrainingRockets : config.counterbalancing.swapMainRockets;
+    const rocketStimuli = getRocketStimuli(isTraining, swapSides);
     return {
-      leftStimulus: isPractice ? 'tutrocket1_norm.png' : 'rocket1_norm.png',
-      rightStimulus: isPractice ? 'tutrocket2_norm.png' : 'rocket2_norm.png',
+      leftStimulus: rocketStimuli.leftStimulus,
+      rightStimulus: rocketStimuli.rightStimulus,
       planetStimulus: 'earth.png'
     };
   }
 
-  private getAlienStimuli(isPractice: boolean, rocketChoice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
-    if (isPractice && !this.data.trialType.includes('full')) {
+  private getAlienStimuli(isTraining: boolean, rocketChoice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+    if (isTraining && !this.data.trialType.includes('full')) {
       // Only training-rocket and training-alien use deterministic transitions
-      const planet = rocketChoice ? 'tutgreenplanet.png' : 'tutyellowplanet.png';
+      const planet = rocketChoice ? 'green' : 'yellow';
+      const swapSides = planet === 'green' ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+      const alienStimuli = getAlienStimuli(planet, swapSides);
       return {
-        leftStimulus: planet.includes('green') ? 'tutalien1_norm.png' : 'tutalien3_norm.png',
-        rightStimulus: planet.includes('green') ? 'tutalien2_norm.png' : 'tutalien4_norm.png',
-        planetStimulus: planet
+        leftStimulus: alienStimuli.leftStimulus,
+        rightStimulus: alienStimuli.rightStimulus,
+        planetStimulus: getPlanetStimulus(planet)
       };
     } else {
       // training-full and full trials use probabilistic transitions
+      const rocketChoiceNum = this.data.levelOneChoice === 1 ? 1 : 2;
       const isCommonTransition = this.jsPsych.extensions.Neurocog.random() < this.data.transitionLikelihood;
-      let planet: string;
+
+      // Determine planet based on counterbalancing and transition
+      let planet: 'red' | 'purple' | 'green' | 'yellow';
       if (isCommonTransition) {
-        planet = rocketChoice ? 'purpleplanet.png' : 'redplanet1.png';
+        planet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
       } else {
-        planet = rocketChoice ? 'redplanet1.png' : 'purpleplanet.png';
+        // Rare transition: opposite planet
+        const commonPlanet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
+        planet = commonPlanet === 'red' ? 'purple' : 'red';
       }
 
       // Set transition type for data logging
       this.data.transitionType = isCommonTransition ? 'common' : 'rare';
 
+      // Debug transition computation
+      console.debug("---- Transition Computation ----\n",
+        "Rocket Choice:", rocketChoiceNum === 1 ? "Left" : "Right", "\n",
+        "Swap Preference:", config.counterbalancing.swapRocketPreference, "\n",
+        "Common Planet:", getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false), "\n",
+        "Transition Type:", this.data.transitionType, "\n",
+        "Final Destination Planet:", planet);
+
       // Use training stimuli for training-full trials, main stimuli for full trials
       if (this.data.trialType === 'training-full') {
+        // Map main planets to training planets for training-full trials
+        const trainingPlanet = planet === 'red' ? 'green' : 'yellow';
+        const swapSides = trainingPlanet === 'green' ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+        const alienStimuli = getAlienStimuli(trainingPlanet, swapSides);
         return {
-          leftStimulus: planet.includes('red') ? 'tutalien1_norm.png' : 'tutalien3_norm.png',
-          rightStimulus: planet.includes('red') ? 'tutalien2_norm.png' : 'tutalien4_norm.png',
-          planetStimulus: planet.includes('red') ? 'tutgreenplanet.png' : 'tutyellowplanet.png'
+          leftStimulus: alienStimuli.leftStimulus,
+          rightStimulus: alienStimuli.rightStimulus,
+          planetStimulus: getPlanetStimulus(trainingPlanet)
         };
       } else {
+        const swapSides = planet === 'red' ? config.counterbalancing.swapRedAliens : config.counterbalancing.swapPurpleAliens;
+        const alienStimuli = getAlienStimuli(planet, swapSides);
         return {
-          leftStimulus: planet.includes('red') ? 'alien1_norm.png' : 'alien3_norm.png',
-          rightStimulus: planet.includes('red') ? 'alien2_norm.png' : 'alien4_norm.png',
-          planetStimulus: planet
+          leftStimulus: alienStimuli.leftStimulus,
+          rightStimulus: alienStimuli.rightStimulus,
+          planetStimulus: getPlanetStimulus(planet)
         };
       }
     }
   }
 
-  private generateStimuli(trialType: string, isPractice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+  private generateStimuli(trialType: string, isTraining: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
     if (trialType === 'training-rocket') {
-      return this.getRocketStimuli(isPractice);
+      return this.getRocketStimuli(isTraining);
     } else if (trialType === 'training-alien') {
+      const alienStimuli = getAlienStimuli('green', config.counterbalancing.swapGreenAliens);
       return {
-        leftStimulus: isPractice ? 'tutalien1_norm.png' : 'alien1_norm.png',
-        rightStimulus: isPractice ? 'tutalien2_norm.png' : 'alien2_norm.png',
-        planetStimulus: isPractice ? 'tutgreenplanet.png' : 'redplanet1.png'
+        leftStimulus: alienStimuli.leftStimulus,
+        rightStimulus: alienStimuli.rightStimulus,
+        planetStimulus: getPlanetStimulus('green')
       };
     } else if (trialType === 'training-full' || trialType === 'full') {
       if (this.currentStage === 'rocket') {
-        return this.getRocketStimuli(isPractice);
+        return this.getRocketStimuli(isTraining);
       } else {
-        return this.getAlienStimuli(isPractice, this.data.levelOneChoice === 1);
+        return this.getAlienStimuli(isTraining, this.data.levelOneChoice === 1);
       }
     }
     return this.getRocketStimuli(false);
@@ -251,15 +283,30 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   private getAlienIndex(isLeftChoice: boolean): number {
     // Determine planet type based on rocket choice and transition
     const isCommonTransition = this.data.transitionType === 'common';
-    const isFirstPlanet = isCommonTransition ?
-      (this.data.levelOneChoice === 1) : (this.data.levelOneChoice === 2);
+    const rocketChoiceNum = this.data.levelOneChoice === 1 ? 1 : 2;
 
-    // Map to alien index
-    if (isFirstPlanet) {
-      return isLeftChoice ? 0 : 1;
+    // Get the actual planet based on counterbalancing and transition
+    let planet: 'red' | 'purple' | 'green' | 'yellow';
+    if (isCommonTransition) {
+      planet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
     } else {
-      return isLeftChoice ? 2 : 3;
+      // Rare transition: opposite planet
+      const commonPlanet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
+      planet = commonPlanet === 'red' ? 'purple' : 'red';
     }
+
+    // Map planet to alien index based on counterbalancing
+    if (planet === 'red') {
+      return isLeftChoice ? 0 : 1;
+    } else if (planet === 'purple') {
+      return isLeftChoice ? 2 : 3;
+    } else if (planet === 'green') {
+      return isLeftChoice ? 0 : 1; // Training planets map to same indices as red
+    } else if (planet === 'yellow') {
+      return isLeftChoice ? 2 : 3; // Training planets map to same indices as purple
+    }
+
+    return 0; // fallback
   }
 
   private createTimeoutOverlay(element: HTMLElement): void {
@@ -287,11 +334,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.data.responseWindow = trial.responseWindow || 3000;
   }
 
-  private handleStageTransition(isLeftChoice: boolean, trialType: string, isPractice: boolean, displayElement: HTMLElement): void {
+  private handleStageTransition(isLeftChoice: boolean, trialType: string, isTraining: boolean, displayElement: HTMLElement): void {
     this.currentStage = 'alien';
     // Note: levelOneChoice and levelOneRT are now set immediately when key is pressed
 
-    const alienStimuli = this.generateStimuli(trialType, isPractice);
+    const alienStimuli = this.generateStimuli(trialType, isTraining);
     const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
     const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
     const planetStimulus = this.getStimulusPath(alienStimuli.planetStimulus);
@@ -351,11 +398,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     let response: { key: string; rt: number } | null = null;
     let isAnimating = false;
     const trialType = trial.trialType || 'full';
-    const isPractice = trialType.startsWith('training-');
+    const isTraining = trialType.startsWith('training-');
     this.currentStage = trialType === 'training-alien' ? 'alien' : 'rocket';
 
     // Generate initial stimuli
-    let { leftStimulus, rightStimulus, planetStimulus } = this.generateStimuli(trialType, isPractice);
+    let { leftStimulus, rightStimulus, planetStimulus } = this.generateStimuli(trialType, isTraining);
     let rewardStimulus: string = this.getStimulusPath('nothing.png');
 
     // Update to use the actual stimuli paths
@@ -426,18 +473,18 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             const rocketChoice = isLeftChoice ? 1 : 2;
 
             // Training: left rocket → green planet, right rocket → yellow planet
-            const planet = rocketChoice === 1 ? 'tutgreenplanet.png' : 'tutyellowplanet.png';
-            const leftAlien = planet.includes('green') ? 'tutalien1_norm.png' : 'tutalien3_norm.png';
-            const rightAlien = planet.includes('green') ? 'tutalien2_norm.png' : 'tutalien4_norm.png';
+            const planet = rocketChoice === 1 ? 'green' : 'yellow';
+            const swapSides = planet === 'green' ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+            const alienStimuli = getAlienStimuli(planet, swapSides);
 
             // Update display to show planet with aliens
-            const planetStimulus = this.getStimulusPath(planet);
-            const leftStimulus = this.getStimulusPath(leftAlien);
-            const rightStimulus = this.getStimulusPath(rightAlien);
+            const planetStimulus = this.getStimulusPath(getPlanetStimulus(planet));
+            const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
+            const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
 
             displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialType);
 
-            this.setInstructions(displayElement, `You have arrived at the <b>${planet.includes('green') ? 'green' : 'yellow'}</b> planet!`);
+            this.setInstructions(displayElement, `You have arrived at the <b>${planet}</b> planet!`);
 
             // Wait for preview duration (same as reward display), then finish
             setTimeout(() => finishTrial(), config.timing.reward);
@@ -463,7 +510,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         if (this.currentStage === 'rocket') {
           // Rocket stage - transition to alien stage
           setTimeout(() => {
-            this.handleStageTransition(isLeftChoice, trialType, isPractice, displayElement);
+            this.handleStageTransition(isLeftChoice, trialType, isTraining, displayElement);
 
             // Reset animation state and add new keyboard listener
             isAnimating = false;
