@@ -15,55 +15,51 @@ The jsPsych version of the task was originally coded by the [Niv Lab](https://ni
 
 ## Major Changes
 
-- Complete refactor and rewrite of core experiment architecture
-- [Pavlovia](https://pavlovia.org/) integration was removed from all source code.
-
-Other changes include:
-
+- Complete refactor and rewrite of core experiment architecture using jsPsych v7.0
+- [Pavlovia](https://pavlovia.org/) integration was removed from all source code
 - Gorilla platform integration
   - Packaging of images, audio and CSV files
   - Integration of `Neurocog` library for integration with Gorilla
 - Rocket images and backgrounds updated
+- Comprehensive data collection
 
 ## Data Collection
 
 All raw data and analysis code has been moved into the _analysis_ directory. All analyses and results reported in the Nussenbaum et. al. (2020) manuscript can be reproduced by running the R scripts (for all data summary statistics and regression analyses) and MATLAB code (for the computational modeling of the two-step task data).
 
-The experiment collects comprehensive data for each trial:
+The experiment collects comprehensive data for each trial. The following table details all data points collected:
 
-### Trial Information
-
-- `isTraining`: Boolean indicating training vs. main trial
-
-### Stimuli
-
-- `leftStimulus`: Path to left choice stimulus
-- `rightStimulus`: Path to right choice stimulus
-- `planetStimulus`: Background planet image
-- `rewardStimulus`: Reward/no-reward indicator
-
-### Participant Response
-
-- `keyPress`: Key pressed ('f' or 'j')
-- `choice`: Numeric choice (1 = left, 2 = right)
-- `rt`: Reaction time in milliseconds
-
-### Transition & Reward Data
-
-- `transitionType`: Boolean (true = common, false = rare)
-- `transition`: String ('common' or 'rare')
-- `wasRewarded`: Boolean indicating if reward was received
-
-### Timing
-
-- `trialStartTime`: Timestamp when trial began
-- `trialEndTime`: Timestamp when trial ended
-
-### Counter-balancing Variables
-
-- `rocketSides`: Random rocket position assignment
-- `displayOrderRed/Purple/Green/Yellow`: Random alien order per planet
-- `redPlanetFirstRocket`: Random rocket-to-planet mapping
+| **Category** | **Variable** | **Type** | **Description** |
+|--------------|--------------|----------|-----------------|
+| **Trial Information** | `trialType` | `string` | Type of trial: 'training-rocket', 'training-alien', 'training-full', or 'full' |
+| | `leftKey` | `string` | Key mapping for left choice (default: 'f') |
+| | `rightKey` | `string` | Key mapping for right choice (default: 'j') |
+| | `rewardLikelihoods` | `number[]` | Array of 4 reward probabilities for each alien |
+| | `transitionLikelihood` | `number` | Probability of common vs rare transitions (0-1) |
+| | `responseWindow` | `number` | Maximum response time allowed in milliseconds |
+| **Participant Response** | `levelOneChoice` | `0\|1\|2` | Rocket choice: 0=timeout, 1=left, 2=right |
+| | `levelTwoChoice` | `0\|1\|2` | Alien choice: 0=timeout, 1=left, 2=right |
+| | `levelOneRT` | `number` | Reaction time for rocket choice in milliseconds |
+| | `levelTwoRT` | `number` | Reaction time for alien choice in milliseconds |
+| | `timeout` | `boolean` | Whether the trial timed out |
+| **Transition & Reward** | `transitionType` | `'none'\|'common'\|'rare'` | Type of transition that occurred |
+| | `wasRewarded` | `boolean` | Whether participant received a reward |
+| **Timing** | `trialStartTime` | `number` | Timestamp when trial began (Date.now()) |
+| | `trialEndTime` | `number` | Timestamp when trial ended (Date.now()) |
+| **Comprehension Questions** | `question.prompt` | `string` | The comprehension question text |
+| | `question.correct` | `string` | Correct answer ('true' or 'false') |
+| | `response` | `string` | Participant's answer ('true' or 'false') |
+| | `correctAnswer` | `string` | The correct answer for the question |
+| | `responseTime` | `number` | Time to answer comprehension question |
+| | `isCorrect` | `boolean` | Whether participant answered correctly |
+| **Fixation Trials** | `duration` | `number` | Duration of fixation display in milliseconds |
+| **Counterbalancing** | `counterbalancing.swapMainRockets` | `boolean` | Whether main rocket positions are swapped |
+| | `counterbalancing.swapTrainingRockets` | `boolean` | Whether training rocket positions are swapped |
+| | `counterbalancing.swapRedAliens` | `boolean` | Whether red planet alien positions are swapped |
+| | `counterbalancing.swapPurpleAliens` | `boolean` | Whether purple planet alien positions are swapped |
+| | `counterbalancing.swapGreenAliens` | `boolean` | Whether green planet alien positions are swapped |
+| | `counterbalancing.swapYellowAliens` | `boolean` | Whether yellow planet alien positions are swapped |
+| | `counterbalancing.swapRocketPreference` | `boolean` | Whether rocket-to-planet mapping is swapped |
 
 ## Configuration
 
@@ -72,20 +68,37 @@ Trial counts and parameters can be easily modified in `src/config.ts`:
 ```typescript
 export const config: ExperimentConfig = {
   trainingTrials: {
-    rocketToAlien: 4,    // Configurable
-    alienToReward: 4,    // Configurable
-    complete: 4,         // Configurable
+    rocket: 8,           // Number of rocket-only training trials
+    alien: 8,            // Number of alien-only training trials
+    full: 8,             // Number of complete training trials
   },
-  mainTrials: 4,         // Configurable
-
+  mainTrials: {
+    blockSize: 50,       // Trials per block
+    blockCount: 4,       // Number of blocks
+  },
   timing: {
-    fixation: 500,
-    choice: 3000,
-    reward: 1000,
-    transition: 90,
+    fixation: 1000,      // Fixation cross duration (ms)
+    choice: 3000,        // Response window duration (ms)
+    reward: 1000,       // Reward display duration (ms)
+    transition: 1500,   // Transition animation duration (ms)
   },
-
-  transitionProbability: 0.7,  // Common transition probability
+  controls: {
+    left: 'f',           // Left choice key
+    right: 'j',          // Right choice key
+  },
+  transitionLikelihood: 0.7,  // Probability of common transitions
+  name: 'Two-Step Task',
+  studyName: 'task_two_step',
+  contact: 'henry.burgess@wustl.edu',
+  counterbalancing: {
+    swapMainRockets: true,
+    swapTrainingRockets: false,
+    swapRedAliens: true,
+    swapPurpleAliens: false,
+    swapGreenAliens: false,
+    swapYellowAliens: false,
+    swapRocketPreference: false,
+  },
 };
 ```
 
