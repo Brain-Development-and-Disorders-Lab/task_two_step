@@ -18,10 +18,6 @@ class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
         type: ParameterType.INT,
         default: undefined,
       },
-      trialNumber: {
-        type: ParameterType.INT,
-        default: undefined,
-      },
     },
   } as const;
 
@@ -46,7 +42,6 @@ class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
 
     // Store trial data
     const trialData: FixationTrialData = {
-      trialNumber: trial.trialNumber,
       duration: trial.duration,
       trialStartTime: Date.now(),
       trialEndTime: Date.now(),

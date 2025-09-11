@@ -48,7 +48,6 @@ const jsPsych = initJsPsych({
  */
 function createTimeline(): any[] {
   const timeline: any[] = [];
-  let trialNumber = 0;
 
   // Initial instructions
   timeline.push({
@@ -142,7 +141,6 @@ function createTimeline(): any[] {
       stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
       text: '+',
       duration: config.timing.fixation,
-      trialNumber: trialNumber - 1,
       extensions: [{
         type: NeurocogExtension,
       }],
@@ -151,7 +149,6 @@ function createTimeline(): any[] {
     timeline.push({
       type: ChoicePlugin,
       trialType: 'training-rocket',
-      trialNumber: trialNumber++,
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
@@ -233,7 +230,6 @@ function createTimeline(): any[] {
     timeline.push({
       type: ChoicePlugin,
       trialType: 'training-alien',
-      trialNumber: trialNumber++,
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
@@ -250,7 +246,6 @@ function createTimeline(): any[] {
       stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
       text: '+',
       duration: config.timing.fixation,
-      trialNumber: trialNumber - 1,
       extensions: [{
         type: NeurocogExtension,
       }],
@@ -295,7 +290,6 @@ function createTimeline(): any[] {
     timeline.push({
       type: ChoicePlugin,
       trialType: 'training-full',
-      trialNumber: trialNumber++,
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
@@ -312,7 +306,6 @@ function createTimeline(): any[] {
       stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
       text: '+',
       duration: config.timing.fixation,
-      trialNumber: trialNumber - 1,
       extensions: [{
         type: NeurocogExtension,
       }],
@@ -430,16 +423,12 @@ function createTimeline(): any[] {
   // Main trials with block design
   for (let i = 0; i < config.mainTrials.blockCount; i++) {
     for (let j = 0; j < config.mainTrials.blockSize; j++) {
-      // Increment trial number
-      const currentTrialNumber = trialNumber++;
-
       // Add fixation trial
       timeline.push({
         type: FixationPlugin,
         stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
         text: '+',
         duration: config.timing.fixation,
-        trialNumber: currentTrialNumber,
         extensions: [{
           type: NeurocogExtension,
         }],
@@ -450,7 +439,6 @@ function createTimeline(): any[] {
       timeline.push({
         type: ChoicePlugin,
         trialType: 'full',
-        trialNumber: currentTrialNumber,
         leftKey: config.controls.left,
         rightKey: config.controls.right,
         rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],

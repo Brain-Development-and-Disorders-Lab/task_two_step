@@ -40,7 +40,6 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
 
   private createDefaultData(): ComprehensionTrialData {
     return {
-      trialNumber: 0,
       trialStartTime: 0,
       trialEndTime: 0,
       question: { prompt: '', correct: '' },

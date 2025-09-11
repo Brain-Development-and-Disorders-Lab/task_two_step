@@ -33,7 +33,6 @@ The experiment collects comprehensive data for each trial:
 
 ### Trial Information
 
-- `trialNumber`: Sequential trial number
 - `isPractice`: Boolean indicating practice vs. main trial
 
 ### Stimuli

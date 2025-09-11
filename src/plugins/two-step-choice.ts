@@ -19,10 +19,6 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         type: ParameterType.COMPLEX,
         default: 'full',
       },
-      trialNumber: {
-        type: ParameterType.INT,
-        default: undefined,
-      },
       leftKey: {
         type: ParameterType.KEY,
         default: 'f',
@@ -67,7 +63,6 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
   private createDefaultData(): ChoiceTrialData {
     return {
-      trialNumber: 0,
       trialStartTime: 0,
       trialEndTime: 0,
       trialType: 'full',
@@ -143,11 +138,20 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       // Set transition type for data logging
       this.data.transitionType = isCommonTransition ? 'common' : 'rare';
 
-      return {
-        leftStimulus: planet.includes('red') ? 'alien1_norm.png' : 'alien3_norm.png',
-        rightStimulus: planet.includes('red') ? 'alien2_norm.png' : 'alien4_norm.png',
-        planetStimulus: planet
-      };
+      // Use training stimuli for training-full trials, main stimuli for full trials
+      if (this.data.trialType === 'training-full') {
+        return {
+          leftStimulus: planet.includes('red') ? 'tutalien1_norm.png' : 'tutalien3_norm.png',
+          rightStimulus: planet.includes('red') ? 'tutalien2_norm.png' : 'tutalien4_norm.png',
+          planetStimulus: planet.includes('red') ? 'tutgreenplanet.png' : 'tutyellowplanet.png'
+        };
+      } else {
+        return {
+          leftStimulus: planet.includes('red') ? 'alien1_norm.png' : 'alien3_norm.png',
+          rightStimulus: planet.includes('red') ? 'alien2_norm.png' : 'alien4_norm.png',
+          planetStimulus: planet
+        };
+      }
     }
   }
 

@@ -7,7 +7,6 @@ export type TrialType = 'training-rocket' | 'training-alien' | 'training-full' |
 
 // Base trial data that all trials share
 export interface BaseTrialData {
-  trialNumber: number;
   trialStartTime: number;
   trialEndTime: number;
 }
@@ -20,7 +19,6 @@ export interface FixationTrialData extends BaseTrialData {
 // Choice trial data
 export interface ChoiceTrialData extends BaseTrialData {
   trialType: TrialType;
-  trialNumber: number;
   leftKey: string;
   rightKey: string;
   rewardLikelihoods: number[]; // Array of 4 floats representing reward probabilities
