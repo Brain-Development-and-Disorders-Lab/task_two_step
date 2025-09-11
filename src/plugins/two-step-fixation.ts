@@ -1,11 +1,18 @@
 /**
- * Fixation plugin for the Two-Step Task
- * Displays a fixation cross for a specified duration
+ * @fileoverview Fixation plugin for the Two-Step Task experiment
+ *
+ * This plugin displays a fixation cross for a specified duration,
+ * providing a visual anchor point between trials.
+ *
+ * @author Henry Burgess
  */
 
 import { FixationTrialData } from '../types';
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
+/**
+ * Fixation plugin class for displaying fixation crosses
+ */
 class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
   static info = {
     name: 'fixation' as const,
@@ -27,6 +34,12 @@ class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
     this.jsPsych = jsPsych;
   }
 
+  /**
+   * Execute the fixation trial
+   *
+   * @param displayElement - The HTML element to display content in
+   * @param trial - The trial parameters
+   */
   trial(displayElement: HTMLElement, trial: TrialType<typeof FixationPlugin.info>) {
     // Create the display
     const html = `

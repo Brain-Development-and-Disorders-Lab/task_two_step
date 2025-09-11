@@ -1,9 +1,18 @@
 /**
- * Stimuli mapping for the Two-Step Task
+ * @fileoverview Stimuli mapping for the Two-Step Task experiment
+ *
+ * This file contains the mapping of stimulus filenames to their actual file paths
+ * for all images used in the Two-Step Task experiment, including aliens, rockets,
+ * planets, and other visual elements.
+ *
+ * @author Henry Burgess
  */
 
 import { StimuliMap } from './types';
 
+/**
+ * Complete mapping of stimulus filenames to file paths
+ */
 export const stimuli: StimuliMap = {
   // Main aliens
   'alien1_a1.png': 'stimuli/alien1_a1.png',
@@ -81,7 +90,7 @@ export const stimuli: StimuliMap = {
   'tutrocket2_norm.png': 'stimuli/tutrocket2_norm.png',
   'tutrocket2_sp.png': 'stimuli/tutrocket2_sp.png',
 
-  // Backgrounds
+  // Backgrounds and planets
   'blackbackground.jpg': 'stimuli/blackbackground.jpg',
   'earth.png': 'stimuli/earth.png',
   'tutgreenplanet.png': 'stimuli/tutgreenplanet.png',
@@ -89,7 +98,7 @@ export const stimuli: StimuliMap = {
   'redplanet1.png': 'stimuli/redplanet1.png',
   'tutyellowplanet.png': 'stimuli/tutyellowplanet.png',
 
-  // Rewards and other
+  // Rewards and other elements
   'button.jpeg': 'stimuli/button.jpeg',
   'nothing.png': 'stimuli/nothing.png',
   't.png': 'stimuli/t.png',

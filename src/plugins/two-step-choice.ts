@@ -1,5 +1,11 @@
 /**
- * Choice plugin for the Two-Step Task
+ * @fileoverview Choice plugin for the Two-Step Task experiment
+ *
+ * This plugin handles the main choice trials in the Two-Step Task, including
+ * rocket selection, alien selection, and the two-stage decision process.
+ * It manages stimulus presentation, response collection, and reward calculation.
+ *
+ * @author Henry Burgess
  */
 
 // Custom types
@@ -8,7 +14,7 @@ import { ChoiceTrialData } from '../types';
 // Configuration
 import { config } from '../config';
 
-// Counterbalancing
+// Counterbalancing utilities
 import {
   getPlanetFromRocketChoice,
   getAlienStimuli,
@@ -19,6 +25,9 @@ import {
 // jsPsych
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
+/**
+ * Choice plugin class for handling rocket and alien selection trials
+ */
 class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   static info = {
     name: 'two-step-choice' as const,
@@ -69,6 +78,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.data = this.createDefaultData();
   }
 
+  /**
+   * Create default trial data structure
+   *
+   * @returns Default choice trial data
+   */
   private createDefaultData(): ChoiceTrialData {
     return {
       trialStartTime: 0,
@@ -89,12 +103,21 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     };
   }
 
+  /**
+   * Convert keyboard input to choice value
+   *
+   * @param key - The pressed key
+   * @returns Choice value (0 = timeout/invalid, 1 = left, 2 = right)
+   */
   private convertKeyToChoice(key: string): 0 | 1 | 2 {
     if (key === this.data.leftKey) return 1;
     if (key === this.data.rightKey) return 2;
     return 0; // timeout or invalid key
   }
 
+  /**
+   * Reset all level data (both rocket and alien choices)
+   */
   private resetAllLevelData(): void {
     this.data.levelOneChoice = 0;
     this.data.levelOneRT = 0;
@@ -102,6 +125,9 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.data.levelTwoRT = 0;
   }
 
+  /**
+   * Reset data for the current stage only
+   */
   private resetCurrentLevelData(): void {
     if (this.currentStage === 'rocket') {
       this.data.levelOneChoice = 0;
@@ -112,10 +138,22 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     }
   }
 
+  /**
+   * Get the full stimulus path for a filename
+   *
+   * @param filename - The stimulus filename
+   * @returns The full stimulus path
+   */
   private getStimulusPath(filename: string): string {
     return this.jsPsych.extensions.Neurocog.getStimulus(filename);
   }
 
+  /**
+   * Get rocket stimuli with counterbalancing applied
+   *
+   * @param isTraining - Whether to use training rocket stimuli
+   * @returns Object containing left and right rocket stimuli and planet stimulus
+   */
   private getRocketStimuli(isTraining: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
     const swapSides = isTraining ? config.counterbalancing.swapTrainingRockets : config.counterbalancing.swapMainRockets;
     const rocketStimuli = getRocketStimuli(isTraining, swapSides);
@@ -126,6 +164,13 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     };
   }
 
+  /**
+   * Get alien stimuli based on rocket choice and counterbalancing
+   *
+   * @param isTraining - Whether this is a training trial
+   * @param rocketChoice - Whether the left rocket was chosen
+   * @returns Object containing left and right alien stimuli and planet stimulus
+   */
   private getAlienStimuli(isTraining: boolean, rocketChoice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
     if (isTraining && !this.data.trialType.includes('full')) {
       // Only training-rocket and training-alien use deterministic transitions
@@ -186,6 +231,13 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     }
   }
 
+  /**
+   * Generate appropriate stimuli based on trial type and current stage
+   *
+   * @param trialType - The type of trial being run
+   * @param isTraining - Whether this is a training trial
+   * @returns Object containing left and right stimuli and planet stimulus
+   */
   private generateStimuli(trialType: string, isTraining: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
     if (trialType === 'training-rocket') {
       return this.getRocketStimuli(isTraining);
@@ -206,6 +258,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     return this.getRocketStimuli(false);
   }
 
+  /**
+   * Set instruction text in the display element
+   *
+   * @param displayElement - The display element containing instructions
+   * @param text - The instruction text to display
+   */
   private setInstructions(displayElement: HTMLElement, text: string): void {
     const instructionsElement = displayElement.querySelector('#instructions') as HTMLElement;
     if (instructionsElement) {
@@ -213,6 +271,16 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     }
   }
 
+  /**
+   * Create HTML for the trial display
+   *
+   * @param leftStimulus - Path to the left stimulus image
+   * @param rightStimulus - Path to the right stimulus image
+   * @param planetStimulus - Path to the planet background image
+   * @param rewardStimulus - Path to the reward symbol image
+   * @param trialType - The type of trial to determine reward display
+   * @returns HTML string for the trial display
+   */
   private createDisplayHTML(leftStimulus: string, rightStimulus: string, planetStimulus: string, rewardStimulus: string, trialType: string): string {
     const showRewardSymbol = trialType === 'training-alien' || trialType === 'training-full' || trialType === 'full';
 
@@ -257,6 +325,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     `;
   }
 
+  /**
+   * Calculate and display reward based on alien choice
+   *
+   * @param isLeftChoice - Whether the left alien was chosen
+   * @param rewardSymbolElement - The reward display element
+   */
   private calculateAndShowReward(isLeftChoice: boolean, rewardSymbolElement: HTMLElement | null): void {
     if (!rewardSymbolElement) return;
 
@@ -280,6 +354,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.data.wasRewarded = wasRewarded;
   }
 
+  /**
+   * Get the alien index for reward calculation based on choice and planet
+   *
+   * @param isLeftChoice - Whether the left alien was chosen
+   * @returns The alien index (0-3) for reward probability lookup
+   */
   private getAlienIndex(isLeftChoice: boolean): number {
     // Determine planet type based on rocket choice and transition
     const isCommonTransition = this.data.transitionType === 'common';
@@ -309,6 +389,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     return 0; // fallback
   }
 
+  /**
+   * Create and display timeout overlay when trial times out
+   *
+   * @param element - The element to add the timeout overlay to
+   */
   private createTimeoutOverlay(element: HTMLElement): void {
     const overlay = document.createElement('div');
     overlay.style.position = 'absolute';
@@ -324,6 +409,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     element.appendChild(overlay);
   }
 
+  /**
+   * Update trial data with parameters from the trial configuration
+   *
+   * @param trial - The trial configuration object
+   */
   private updateTrialData(trial: TrialType<typeof ChoicePlugin.info>): void {
     this.data.trialStartTime = Date.now();
     this.data.trialType = trial.trialType;
@@ -334,6 +424,14 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.data.responseWindow = trial.responseWindow || 3000;
   }
 
+  /**
+   * Handle transition from rocket stage to alien stage
+   *
+   * @param isLeftChoice - Whether the left rocket was chosen
+   * @param trialType - The type of trial being run
+   * @param isTraining - Whether this is a training trial
+   * @param displayElement - The display element to update
+   */
   private handleStageTransition(isLeftChoice: boolean, trialType: string, isTraining: boolean, displayElement: HTMLElement): void {
     this.currentStage = 'alien';
     // Note: levelOneChoice and levelOneRT are now set immediately when key is pressed
@@ -349,6 +447,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.levelTwoStartTime = Date.now();
   }
 
+  /**
+   * Finalize trial data based on response and trial type
+   *
+   * @param response - The participant's response (null if timeout)
+   * @param trialType - The type of trial being run
+   */
   private finalizeTrialData(response: { key: string; rt: number } | null, trialType: string): void {
     this.data.trialEndTime = Date.now();
 
@@ -388,6 +492,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     }
   }
 
+  /**
+   * Execute the choice trial
+   *
+   * @param displayElement - The HTML element to display content in
+   * @param trial - The trial parameters
+   */
   trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
     // Debugging information
     console.debug("---- Trial Information ----\nTrial Type:", trial.trialType, "\nProbability Data:", trial.rewardLikelihoods, "\nTransition Likelihood:", trial.transitionLikelihood);

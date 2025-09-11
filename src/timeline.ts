@@ -1,9 +1,14 @@
 /**
- * Simplified timeline implementation for the Two-Step Task
- * Creates trials iteratively without complex blocks
+ * @fileoverview Timeline implementation for the Two-Step Task experiment
+ *
+ * This file contains the main timeline creation logic for the Two-Step Task experiment,
+ * including training phases, main experiment trials, instructions, and comprehension
+ * questions. It creates trials iteratively without complex blocks.
+ *
+ * @author Henry Burgess
  */
 
-// jsPsych
+// jsPsych imports
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';
 import surveyHtmlForm from '@jspsych/plugin-survey-html-form';
@@ -14,7 +19,7 @@ import FixationPlugin from './plugins/two-step-fixation';
 import ChoicePlugin from './plugins/two-step-choice';
 import ComprehensionPlugin from './plugins/two-step-comprehension';
 
-// Counterbalancing
+// Counterbalancing utilities
 import { getRocketStimuli, getAlienStimuli } from './counterbalancing';
 
 // Configuration and data
@@ -22,7 +27,9 @@ import { config } from './config';
 import { stimuli } from './stimuli';
 import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
 
-// Initialize jsPsych instance
+/**
+ * Initialize jsPsych instance with plugins and extensions
+ */
 const jsPsych = initJsPsych({
   plugins: [FixationPlugin, ChoicePlugin, ComprehensionPlugin],
   extensions: [
@@ -53,6 +60,8 @@ const jsPsych = initJsPsych({
 
 /**
  * Create the experiment timeline
+ *
+ * @returns Array of timeline trials
  */
 function createTimeline(): any[] {
   const timeline: any[] = [];
@@ -553,5 +562,4 @@ function createTimeline(): any[] {
 
 // Start the experiment
 const timeline = createTimeline();
-
 jsPsych.run(timeline);

@@ -1,20 +1,31 @@
 /**
- * Configuration for the Two-Step Task experiment
+ * @fileoverview Configuration for the Two-Step Task experiment
+ *
+ * This file contains the main configuration interface and default settings
+ * for the Two-Step Task experiment, including trial counts, timing parameters,
+ * control mappings, and counterbalancing options.
+ *
+ * @author Henry Burgess
  */
 
+/**
+ * Main configuration interface for the Two-Step Task experiment
+ */
 export interface ExperimentConfig {
-  // Trial counts - configurable for easy adjustment
+  /** Trial counts - configurable for easy adjustment */
   trainingTrials: {
     rocket: number;
     alien: number;
     full: number;
   };
+
+  /** Main experiment trial configuration */
   mainTrials: {
     blockSize: number;
     blockCount: number;
   };
 
-  // Timing (in milliseconds)
+  /** Timing parameters in milliseconds */
   timing: {
     fixation: number;
     choice: number;
@@ -22,21 +33,21 @@ export interface ExperimentConfig {
     transition: number;
   };
 
-  // Controls
+  /** Keyboard control mappings */
   controls: {
     left: string;
     right: string;
   };
 
-  // Transition likelihood
+  /** Probability of common vs rare transitions */
   transitionLikelihood: number;
 
-  // Experiment metadata
+  /** Experiment metadata */
   name: string;
   studyName: string;
   contact: string;
 
-  // Counterbalancing configuration
+  /** Counterbalancing configuration for stimulus presentation */
   counterbalancing: {
     swapMainRockets: boolean;
     swapTrainingRockets: boolean;
@@ -48,6 +59,9 @@ export interface ExperimentConfig {
   };
 }
 
+/**
+ * Default experiment configuration with randomized counterbalancing
+ */
 export const config: ExperimentConfig = {
   trainingTrials: {
     rocket: 8,
@@ -58,26 +72,20 @@ export const config: ExperimentConfig = {
     blockSize: 50,
     blockCount: 4,
   },
-
   timing: {
     fixation: 1000,
     choice: 3000,
     reward: 1000,
     transition: 1500,
   },
-
   controls: {
     left: 'f',
     right: 'j',
   },
-
   transitionLikelihood: 0.7,
-
   name: 'Two-Step Task',
   studyName: 'task_two_step',
   contact: 'henry.burgess@wustl.edu',
-
-  // Counterbalancing stimuli presentation
   counterbalancing: {
     swapMainRockets: Math.random() < 0.5,
     swapTrainingRockets: Math.random() < 0.5,
@@ -88,4 +96,3 @@ export const config: ExperimentConfig = {
     swapRocketPreference: Math.random() < 0.5,
   },
 };
-

@@ -1,10 +1,19 @@
 /**
- * Simplified counterbalancing utility for the Two-Step Task
- * Uses simple swap flags instead of complex mapping
+ * @fileoverview Counterbalancing utilities for the Two-Step Task experiment
+ *
+ * This file provides simplified counterbalancing functions for stimulus presentation
+ * in the Two-Step Task. It uses simple swap flags instead of complex mapping
+ * to determine which stimuli appear on which sides and which rockets lead to which planets.
+ *
+ * @author Henry Burgess
  */
 
 /**
  * Get rocket stimuli with optional side swapping
+ *
+ * @param isTraining - Whether to use training rocket stimuli
+ * @param swapSides - Whether to swap left and right rocket positions
+ * @returns Object containing left and right stimulus filenames
  */
 export function getRocketStimuli(isTraining: boolean, swapSides: boolean): { leftStimulus: string; rightStimulus: string } {
   if (isTraining) {
@@ -20,6 +29,11 @@ export function getRocketStimuli(isTraining: boolean, swapSides: boolean): { lef
 
 /**
  * Get alien stimuli for a planet with optional side swapping
+ *
+ * @param planet - The planet type ('red', 'purple', 'green', 'yellow')
+ * @param swapSides - Whether to swap left and right alien positions
+ * @returns Object containing left and right stimulus filenames
+ * @throws Error if planet type is unknown
  */
 export function getAlienStimuli(planet: 'red' | 'purple' | 'green' | 'yellow', swapSides: boolean): { leftStimulus: string; rightStimulus: string } {
   if (planet === 'red') {
@@ -45,6 +59,11 @@ export function getAlienStimuli(planet: 'red' | 'purple' | 'green' | 'yellow', s
 
 /**
  * Determine which planet a rocket choice leads to
+ *
+ * @param rocketChoice - The rocket choice (1 = left, 2 = right)
+ * @param swapPreference - Whether rocket-to-planet mapping is swapped
+ * @param isTraining - Whether this is a training trial (uses green/yellow planets)
+ * @returns The destination planet
  */
 export function getPlanetFromRocketChoice(
   rocketChoice: 1 | 2,
@@ -66,6 +85,10 @@ export function getPlanetFromRocketChoice(
 
 /**
  * Get planet stimulus filename
+ *
+ * @param planet - The planet type
+ * @returns The planet stimulus filename
+ * @throws Error if planet type is unknown
  */
 export function getPlanetStimulus(planet: 'red' | 'purple' | 'green' | 'yellow'): string {
   switch (planet) {

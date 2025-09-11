@@ -1,11 +1,18 @@
 /**
- * Comprehension plugin for the Two-Step Task
- * Presents a single true/false question with immediate feedback
+ * @fileoverview Comprehension plugin for the Two-Step Task experiment
+ *
+ * This plugin presents a single true/false question with immediate feedback
+ * to test participant understanding of the task mechanics.
+ *
+ * @author Henry Burgess
  */
 
 import { ComprehensionTrialData } from '../types';
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
+/**
+ * Comprehension plugin class for quiz questions
+ */
 class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.info> {
   static info = {
     name: 'two-step-comprehension' as const,
@@ -38,6 +45,11 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     this.data = this.createDefaultData();
   }
 
+  /**
+   * Create default trial data structure
+   *
+   * @returns Default comprehension trial data
+   */
   private createDefaultData(): ComprehensionTrialData {
     return {
       trialStartTime: 0,
@@ -50,6 +62,14 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     };
   }
 
+  /**
+   * Create HTML for the question display
+   *
+   * @param question - The question object
+   * @param preamble - Text to display before the question
+   * @param buttonLabel - Label for the continue button
+   * @returns HTML string for the question display
+   */
   private createQuestionHTML(question: any, preamble: string, buttonLabel: string): string {
     return `
       <style>
@@ -186,6 +206,15 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     `;
   }
 
+  /**
+   * Show feedback to the participant
+   *
+   * @param isCorrect - Whether the answer was correct
+   * @param correctAnswer - The correct answer
+   * @param displayElement - The display element
+   * @param customFeedback - Custom feedback message
+   * @param participantAnswer - The participant's answer
+   */
   private showFeedback(isCorrect: boolean, correctAnswer: string, displayElement: HTMLElement, customFeedback: string, participantAnswer: string): void {
     const feedbackElement = displayElement.querySelector('#feedback') as HTMLElement;
     const continueButton = displayElement.querySelector('#continue-btn') as HTMLElement;
@@ -218,6 +247,13 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     }
   }
 
+  /**
+   * Handle participant response to the question
+   *
+   * @param answer - The participant's answer
+   * @param displayElement - The display element
+   * @param trial - The trial parameters
+   */
   private handleQuestionResponse(answer: string, displayElement: HTMLElement, trial: TrialType<typeof ComprehensionPlugin.info>): void {
     const question = trial.question;
     if (!question) return;
@@ -243,11 +279,20 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     continueButton.addEventListener('click', handleContinue);
   }
 
+  /**
+   * Finish the trial and return data
+   */
   private finishTrial(): void {
     this.data.trialEndTime = Date.now();
     this.jsPsych.finishTrial(this.data);
   }
 
+  /**
+   * Execute the comprehension trial
+   *
+   * @param displayElement - The HTML element to display content in
+   * @param trial - The trial parameters
+   */
   trial(displayElement: HTMLElement, trial: TrialType<typeof ComprehensionPlugin.info>) {
     // Initialize trial data
     this.data.trialStartTime = Date.now();

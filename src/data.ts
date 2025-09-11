@@ -1,11 +1,19 @@
 /**
- * Probability data integrated from CSV files
- * Data represents reward probabilities for each alien across trials
+ * @fileoverview Probability data for the Two-Step Task experiment
+ *
+ * This file contains the reward probability data integrated from CSV files,
+ * representing the likelihood of each alien providing rewards across trials.
+ * The data is organized into tutorial and full trial probability sets.
+ *
+ * @author Henry Burgess
  */
 
 import { ProbabilityData } from './types';
 
-// Tutorial trial probability data
+/**
+ * Tutorial trial probability data for training phases
+ * Contains reward probabilities for each alien across tutorial trials
+ */
 export const tutorialTrialProbabilities: ProbabilityData[] = [
   { alien1: 0.26052, alien2: 0.25313, alien3: 0.57306, alien4: 0.35323 },
   { alien1: 0.25295, alien2: 0.25009, alien3: 0.59966, alien4: 0.29263 },
@@ -60,7 +68,10 @@ export const tutorialTrialProbabilities: ProbabilityData[] = [
   { alien1: 0.49231, alien2: 0.38572, alien3: 0.41623, alien4: 0.3894 },
 ];
 
-// Full trial probability data
+/**
+ * Full trial probability data for main experiment phases
+ * Contains reward probabilities for each alien across main experiment trials
+ */
 export const fullTrialProbabilities: ProbabilityData[] = [
   { alien1: 0.74262, alien2: 0.27253, alien3: 0.71669, alien4: 0.47906 },
   { alien1: 0.71405, alien2: 0.28957, alien3: 0.71177, alien4: 0.45646 },
