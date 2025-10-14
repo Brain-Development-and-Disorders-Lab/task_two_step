@@ -108,18 +108,18 @@ function createTimeline(): any[] {
       'For the first set of training missions, you will select a rocket to fly from Earth.<br>' +
       'To select the left rocket, press the "F" key on your keyboard.<br>' +
       'To select the right rocket, press the "J" key on your keyboard.<br><br>' +
-      'After selecting a rocket, you will briefly see the planet you will fly to.<br><br>' +
+      'After selecting a rocket, you will briefly see the planet you have flown to.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'The green planet will look like this:<br><br>' +
+      'In the training missions, the <i>green planet</i> will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutgreenplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'The yellow planet will look like this:<br><br>' +
+      'In the training missions, the <i>yellow planet</i> will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutyellowplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
       'The planets in the <i>actual missions</i> will be different.<br><br>' +
       'Click "Continue >" to proceed.',
@@ -128,7 +128,7 @@ function createTimeline(): any[] {
       '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'The rockets can fly to either planet, but one rocket will fly mostly to the green planet,<br>' +
       'and the other rocket will fly mostly to the yellow planet.<br><br>' +
-      'The planet a spaceship flies to most often won\'t change during the game.<br><br>' +
+      'The planet a rocket flies to most often won\'t change during the game.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
@@ -202,13 +202,21 @@ function createTimeline(): any[] {
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'Each alien is responsible for their own mine that they use to mine for space<br>' +
-      'resources on the planet. If they have any space resources to share, an alien<br>' +
-      'will share them with you when asked.<br><br>' +
-      'If an alien has a good mine right now, they will have plenty of space resources<br>' +
-      'to share with you. At other times, an alien may not have a good mine, so they<br>' +
-      'have not found any space resources to share with you.<br><br>' +
-      'The quality of an alien\'s mine changes slowly across missions.<br><br>' +
+      'Each alien has their own mine that they use to mine for space<br>' +
+      'resources on the planet. When you ask an alien to share resources,<br>' +
+      'they will give you whatever they have found in their mine.<br><br>' +
+      'When an alien has a good mine currently, they will have plenty of space resources<br>' +
+      'to share with you. When an alien has a bad mine currently, they will have<br>' +
+      'no space resources to share with you.<br><br>' +
+      'Click "Continue >" to proceed.',
+
+      '<b>Instructions</b><br>' +
+      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
+      'The amount of resources an alien can share will change slowly over multiple missions.<br>' +
+      'An alien with a good mine in previous missions may dig in a part of their<br>' +
+      'mine that has no resources. Another alien with no resources in previous missions<br>' +
+      'may discover a lot of resources in the future.<br><br>' +
+      'It is best to focus on retrieving as many resources as possible.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
@@ -220,26 +228,16 @@ function createTimeline(): any[] {
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'If an alien shares space resources with you, a space resource will appear<br>' +
+      'If an alien shares space resources with you, a <i>space resource</i> will appear<br>' +
       'above them. A space resource will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('t.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'If an alien does not share space resources with you, an empty circle will<br>' +
+      'If an alien does not share space resources with you, an <i>empty circle</i> will<br>' +
       'appear above them. The empty circle will look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('nothing.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'The amount of resources an alien can share will change during the missions.<br>' +
-      'An alien with a good mine in previous missions may dig in a part of their<br>' +
-      'mine that has few resources. Another alien with few resources in previous missions<br>' +
-      'may discover a lot of resources.<br><br>' +
-      'Any changes in an alien\'s mine will happen slowly across multiple missions.<br>' +
-      'It is best to focus on retrieving as many resources as possible.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
@@ -289,13 +287,13 @@ function createTimeline(): any[] {
       'the last training missions will combine both of the previous training stages!<br><br>' +
       'You will start on Earth, choose a rocket, arrive at a planet, and then choose<br>' +
       'an alien to ask to share their space resources.<br><br>' +
-      'The space resource you receive during the training missions will not count<br>' +
+      'The space resources you receive during the training missions will not count<br>' +
       'towards your final score.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 3: Full Missions</i></b><br><br>' +
-      'During the last <i>training missions</i> and the <i>actual missions</i>, you will<br>' +
+      'In these <i>training missions</i> and the <i>actual missions</i>, you will<br>' +
       'have <b>3 seconds</b> to select a rocket and <b>3 seconds</b> to select an alien.<br>' +
       'If you do not make a choice within 3 seconds, the mission will fail. A red "X" will<br>' +
       'appear on the rockets or aliens briefly before the next mission commences.<br><br>' +
@@ -346,7 +344,7 @@ function createTimeline(): any[] {
       '<b>Instructions</b><br>' +
       '<b><i>Main Missions</i></b><br><br>' +
       'You have completed the training missions! In the main missions,<br>' +
-      'the planets, aliens, and rockets will be new colors, but the rules<br>' +
+      'the planets, aliens, and rockets will be different, but the rules<br>' +
       'will be the same.<br><br>' +
       'These missions are hard, so you will need to concentrate. Don\'t be<br>' +
       'afraid to trust your instincts!<br><br>' +
@@ -357,7 +355,7 @@ function createTimeline(): any[] {
       '<b><i>Main Missions: Hint 1</i></b><br><br>' +
       'Remember which aliens have space resources to share. An alien that<br>' +
       'has many space resources to share now will probably be able to share<br>' +
-      'more in the near future, since the quality of their mine changes slowly.<br><br>' +
+      'more in subsequent missions, since the quality of their mine changes slowly.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
@@ -393,12 +391,12 @@ function createTimeline(): any[] {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'Each spaceship always flies to the same planet.',
+      prompt: 'Each rocket always flies to the same planet.',
       correct: 'false'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'Incorrect. Spaceships may sometimes fly to the planet you don\'t expect.',
+    feedback: 'Incorrect. Rockets may sometimes fly to the planet you don\'t expect.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -407,12 +405,12 @@ function createTimeline(): any[] {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'If an alien has a lot of resources to share now, then they will probably have a lot of resources to share in the near future.',
+      prompt: 'If an alien shares a space resource in this mission, then they will probably have resources to share in subsequent missions.',
       correct: 'true'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'Incorrect. Some aliens have more resources than others.',
+    feedback: 'Incorrect. The amount of resources an alien can share will change slowly over multiple missions.',
     extensions: [{
       type: NeurocogExtension,
     }],
