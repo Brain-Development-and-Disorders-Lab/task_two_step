@@ -184,16 +184,16 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       };
     } else {
       // training-full and full trials use probabilistic transitions
-      const rocketChoiceNum = this.data.levelOneChoice === 1 ? 1 : 2;
+      const rocketChoice = this.data.levelOneChoice === 1 ? 1 : 2;
       const isCommonTransition = this.jsPsych.extensions.Neurocog.random() < this.data.transitionLikelihood;
 
       // Determine planet based on counterbalancing and transition
       let planet: 'red' | 'purple' | 'green' | 'yellow';
       if (isCommonTransition) {
-        planet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
+        planet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
       } else {
         // Rare transition: opposite planet
-        const commonPlanet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
+        const commonPlanet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
         planet = commonPlanet === 'red' ? 'purple' : 'red';
       }
 
@@ -202,9 +202,9 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
       // Debug transition computation
       console.debug("---- Transition Computation ----\n",
-        "Rocket Choice:", rocketChoiceNum === 1 ? "Left" : "Right", "\n",
+        "Rocket Choice:", rocketChoice === 1 ? "Left" : "Right", "\n",
         "Swap Preference:", config.counterbalancing.swapRocketPreference, "\n",
-        "Common Planet:", getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false), "\n",
+        "Common Planet:", getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false), "\n",
         "Transition Type:", this.data.transitionType, "\n",
         "Final Destination Planet:", planet);
 
@@ -363,15 +363,15 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   private getAlienIndex(isLeftChoice: boolean): number {
     // Determine planet type based on rocket choice and transition
     const isCommonTransition = this.data.transitionType === 'common';
-    const rocketChoiceNum = this.data.levelOneChoice === 1 ? 1 : 2;
+    const rocketChoice = this.data.levelOneChoice === 1 ? 1 : 2;
 
     // Get the actual planet based on counterbalancing and transition
     let planet: 'red' | 'purple' | 'green' | 'yellow';
     if (isCommonTransition) {
-      planet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
+      planet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
     } else {
       // Rare transition: opposite planet
-      const commonPlanet = getPlanetFromRocketChoice(rocketChoiceNum, config.counterbalancing.swapRocketPreference, false);
+      const commonPlanet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
       planet = commonPlanet === 'red' ? 'purple' : 'red';
     }
 

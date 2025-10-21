@@ -108,7 +108,8 @@ function createTimeline(): any[] {
       'For the first set of training missions, you will select a rocket to fly from Earth.<br>' +
       'To select the left rocket, press the "F" key on your keyboard.<br>' +
       'To select the right rocket, press the "J" key on your keyboard.<br><br>' +
-      'After selecting a rocket, you will briefly see the planet you have flown to.<br><br>' +
+      'After selecting a rocket, you will briefly see the planet you have flown to.<br>' +
+      'There are two planets that the rockets will fly to during missions.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
