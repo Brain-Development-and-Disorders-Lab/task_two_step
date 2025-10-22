@@ -1,135 +1,71 @@
 /**
- * The jsPsych version of the task was originally coded by the Niv Lab (https://nivlab.princeton.edu/)
- * at Princeton, adapted by the Hartley Lab (https://www.hartleylab.org/) at NYU for use online
- * with children, adolescents, and adults, and adapted here by the Brain Development and Disorders Lab
- * (https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
+ * @fileoverview Fixation plugin for the Two-Step Task experiment
  *
- * Plugin:
- * two-step-fixation
+ * This plugin displays a fixation cross for a specified duration,
+ * providing a visual anchor point between trials.
  *
- * Changelog:
- * ...
- * HB 01/2022
+ * @author Henry Burgess
  */
-// Logging library
-import consola from "consola";
 
-// d3.js imports
-import { select } from "d3";
+import { FixationTrialData } from '../types';
+import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
-// Display variables
-import { width, height, centerX, centerY, sizeFont } from "../variables";
-
-jsPsych.plugins["two-step-fixation"] = (() => {
-  const plugin = {
-    info: {},
-    trial: (displayElement: HTMLElement, trial: any) => {
-      consola.debug(`displayElement:`, displayElement);
-      consola.debug(`trial:`, trial);
-      consola.error(`Plugin trial not defined!`);
-    },
-  };
-
-  plugin.info = {
-    name: "two-step-fixation",
-    description: "Fixation cross for the task.",
+/**
+ * Fixation plugin class for displaying fixation crosses
+ */
+class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
+  static info = {
+    name: 'fixation' as const,
     parameters: {
       stimulus: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: "Stimulus",
+        type: ParameterType.STRING,
         default: undefined,
-        description: "The HTML string to be displayed",
       },
-      text: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: "Text",
-        default: null,
-        description: "Any content here will be displayed on the background.",
-      },
-      responseWindow: {
-        type: jsPsych.plugins.parameterType.INT,
-        pretty_name: "Trial duration",
-        default: null,
-        description: "How long to show trial before it ends.",
-      },
-      trialNumber: {
-        type: jsPsych.plugins.parameterType.INT,
-        pretty_name: "Trial number",
+      duration: {
+        type: ParameterType.INT,
         default: undefined,
-        description: "The trial ID associated with this fixation.",
       },
     },
-  };
+  } as const;
 
-  plugin.trial = (displayElement, trial) => {
-    // Debugging information
-    consola.debug(`Running trial:`, trial.type);
+  private jsPsych: JsPsych;
 
-    // Reset the displayElement contents
-    const html = `<div id='container' class='exp-container'></div>`;
+  constructor(jsPsych: JsPsych) {
+    this.jsPsych = jsPsych;
+  }
+
+  /**
+   * Execute the fixation trial
+   *
+   * @param displayElement - The HTML element to display content in
+   * @param trial - The trial parameters
+   */
+  trial(displayElement: HTMLElement, trial: TrialType<typeof FixationPlugin.info>) {
+    // Create the display
+    const html = `
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
+        <img src="${trial.stimulus}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+        <div style="position: relative; z-index: 10; font-size: 48px; color: white; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+          +
+        </div>
+      </div>
+    `;
+
     displayElement.innerHTML = html;
 
-    // Render all specified elements to the view
-    // SVG container
-    const svg = select("div#container")
-      .append("svg")
-      .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "0 0 " + width + " " + height)
-      .classed("svg-content", true);
-
-    // Append the stimulus image
-    if (trial.stimulus !== null) {
-      svg
-        .append("svg:image")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("preserveAspectRatio", "xMidYMid slice")
-        .attr("xlink:href", trial.stimulus);
-    }
-
-    // Append text to the center of the view
-    if (trial.text !== null) {
-      svg
-        .append("text")
-        .attr("x", centerX)
-        .attr("y", centerY)
-        .style("text-anchor", "middle")
-        .style("font-size", sizeFont + "px")
-        .style("font-family", "Arial")
-        .style("font-weight", "bold")
-        .style("letter-spacing", "0.2")
-        .style("fill", "white")
-        .text(trial.text);
-    }
-
-    /**
-     * End the 'two-step-instructions' trial
-     */
-    const endTrial = () => {
-      // Clear any existing 'setTimeout' instances
-      jsPsych.pluginAPI.clearAllTimeouts();
-
-      // Specify the data from the trial
-      const trialData = {
-        planetStimulus: trial.stimulus,
-        trialNumber: trial.trialNumber,
-        trialStage: "fixation",
-      };
-
-      // Clear the contents of 'displayElement'
-      displayElement.innerHTML = "";
-
-      // Notify jsPsych and pass the trial data
-      jsPsych.finishTrial(trialData);
+    // Store trial data
+    const trialData: FixationTrialData = {
+      duration: trial.duration,
+      trialStartTime: Date.now(),
+      trialEndTime: Date.now(),
     };
 
-    // Configure a trial timeout and limit the duration
-    if (trial.responseWindow !== null && trial.responseWindow > 0) {
-      jsPsych.pluginAPI.setTimeout(function () {
-        endTrial();
-      }, trial.responseWindow);
-    }
-  };
+    // End trial after duration
+    this.jsPsych.pluginAPI.setTimeout(() => {
+      trialData.trialEndTime = Date.now();
+      this.jsPsych.finishTrial(trialData);
+    }, trial.duration);
+  }
+}
 
-  return plugin;
-})();
+export default FixationPlugin;

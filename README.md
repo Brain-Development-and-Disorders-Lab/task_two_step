@@ -13,23 +13,94 @@ Participants make a series of sequential decisions to try to gain as much reward
 
 The jsPsych version of the task was originally coded by the [Niv Lab](https://nivlab.princeton.edu/) at Princeton, adapted by the [Hartley Lab](https://www.hartleylab.org/) at NYU for use online with children, adolescents, and adults, and adapted here by the [Brain Development and Disorders Lab](https://sites.wustl.edu/richardslab) at Washington University in St. Louis.
 
-## Data and analysis code
+## Major Changes
+
+- Complete refactor and rewrite of core experiment architecture using jsPsych v7.0
+- [Pavlovia](https://pavlovia.org/) integration was removed from all source code
+- Gorilla platform integration
+  - Packaging of images, audio and CSV files
+  - Integration of `Neurocog` library for integration with Gorilla
+- Rocket images and backgrounds updated
+- Comprehensive data collection
+
+## Data Collection
 
 All raw data and analysis code has been moved into the _analysis_ directory. All analyses and results reported in the Nussenbaum et. al. (2020) manuscript can be reproduced by running the R scripts (for all data summary statistics and regression analyses) and MATLAB code (for the computational modeling of the two-step task data).
 
-For questions about the task used by Nussenbaum et. al., please contact katenuss@nyu.edu. For questions about this specific adaptation, please contact henry.burgess@wustl.edu.
+The experiment collects comprehensive data for each trial. The following table details all data points collected:
 
-## Major Changes
+| **Category** | **Variable** | **Type** | **Description** |
+|--------------|--------------|----------|-----------------|
+| **Trial Information** | `trialType` | `string` | Type of trial: 'training-rocket', 'training-alien', 'training-full', or 'full' |
+| | `leftKey` | `string` | Key mapping for left choice (default: 'f') |
+| | `rightKey` | `string` | Key mapping for right choice (default: 'j') |
+| | `rewardLikelihoods` | `number[]` | Array of 4 reward probabilities for each alien |
+| | `transitionLikelihood` | `number` | Probability of common vs rare transitions (0-1) |
+| | `responseWindow` | `number` | Maximum response time allowed in milliseconds |
+| **Participant Response** | `levelOneChoice` | `0\|1\|2` | Rocket choice: 0=timeout, 1=left, 2=right |
+| | `levelTwoChoice` | `0\|1\|2` | Alien choice: 0=timeout, 1=left, 2=right |
+| | `levelOneRT` | `number` | Reaction time for rocket choice in milliseconds |
+| | `levelTwoRT` | `number` | Reaction time for alien choice in milliseconds |
+| | `timeout` | `boolean` | Whether the trial timed out |
+| **Transition & Reward** | `transitionType` | `'none'\|'common'\|'rare'` | Type of transition that occurred |
+| | `wasRewarded` | `boolean` | Whether participant received a reward |
+| **Timing** | `trialStartTime` | `number` | Timestamp when trial began (Date.now()) |
+| | `trialEndTime` | `number` | Timestamp when trial ended (Date.now()) |
+| **Comprehension Questions** | `question.prompt` | `string` | The comprehension question text |
+| | `question.correct` | `string` | Correct answer ('true' or 'false') |
+| | `response` | `string` | Participant's answer ('true' or 'false') |
+| | `correctAnswer` | `string` | The correct answer for the question |
+| | `responseTime` | `number` | Time to answer comprehension question |
+| | `isCorrect` | `boolean` | Whether participant answered correctly |
+| **Fixation Trials** | `duration` | `number` | Duration of fixation display in milliseconds |
+| **Counterbalancing** | `counterbalancing.swapMainRockets` | `boolean` | Whether main rocket positions are swapped |
+| | `counterbalancing.swapTrainingRockets` | `boolean` | Whether training rocket positions are swapped |
+| | `counterbalancing.swapRedAliens` | `boolean` | Whether red planet alien positions are swapped |
+| | `counterbalancing.swapPurpleAliens` | `boolean` | Whether purple planet alien positions are swapped |
+| | `counterbalancing.swapGreenAliens` | `boolean` | Whether green planet alien positions are swapped |
+| | `counterbalancing.swapYellowAliens` | `boolean` | Whether yellow planet alien positions are swapped |
+| | `counterbalancing.swapRocketPreference` | `boolean` | Whether rocket-to-planet mapping is swapped |
 
-[Pavlovia](https://pavlovia.org/) integration was removed from all source code. A general cleanup of JavaScript source code.
+## Configuration
 
-Other changes include:
+Trial counts and parameters can be easily modified in `src/config.ts`:
 
-- Gorilla platform integration
-  - Packaging of images, audio and CSV files
-  - Integration of `jspsych-wrapper` library
-- ESLint integration for code quality
-- Rocket images and backgrounds updated
+```typescript
+export const config: ExperimentConfig = {
+  trainingTrials: {
+    rocket: 8,           // Number of rocket-only training trials
+    alien: 8,            // Number of alien-only training trials
+    full: 8,             // Number of complete training trials
+  },
+  mainTrials: {
+    blockSize: 50,       // Trials per block
+    blockCount: 4,       // Number of blocks
+  },
+  timing: {
+    fixation: 1000,      // Fixation cross duration (ms)
+    choice: 3000,        // Response window duration (ms)
+    reward: 1000,       // Reward display duration (ms)
+    transition: 1500,   // Transition animation duration (ms)
+  },
+  controls: {
+    left: 'f',           // Left choice key
+    right: 'j',          // Right choice key
+  },
+  transitionLikelihood: 0.7,  // Probability of common transitions
+  name: 'Two-Step Task',
+  studyName: 'task_two_step',
+  contact: 'henry.burgess@wustl.edu',
+  counterbalancing: {
+    swapMainRockets: true,
+    swapTrainingRockets: false,
+    swapRedAliens: true,
+    swapPurpleAliens: false,
+    swapGreenAliens: false,
+    swapYellowAliens: false,
+    swapRocketPreference: false,
+  },
+};
+```
 
 ## License
 
