@@ -1,7 +1,7 @@
 {
   "name": "task_two_step",
-  "version": "1.0.0",
-  "description": "Two-step behavioral task paradigm - clean TypeScript implementation",
+  "version": "0.2.2",
+  "description": "Two-step behavioral task paradigm",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
