@@ -8,6 +8,7 @@
  * @author Henry Burgess
  */
 
+// Custom types
 import { StimuliMap } from './types';
 
 /**

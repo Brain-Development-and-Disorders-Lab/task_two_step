@@ -9,7 +9,7 @@
  */
 
 // Custom types
-import { ChoiceTrialData } from '../types';
+import { ChoiceTrialData, PlanetType } from '../types';
 
 // Configuration
 import { config } from '../config';
@@ -22,7 +22,7 @@ import {
   getPlanetStimulus
 } from '../counterbalancing';
 
-// jsPsych
+// jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
 /**
@@ -174,8 +174,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   private getAlienStimuli(isTraining: boolean, rocketChoice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
     if (isTraining && !this.data.trialType.includes('full')) {
       // Only training-rocket and training-alien use deterministic transitions
-      const planet = rocketChoice ? 'green' : 'yellow';
-      const swapSides = planet === 'green' ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+      const planet = rocketChoice ? PlanetType.GREEN : PlanetType.YELLOW;
+      const swapSides = planet === PlanetType.GREEN ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
       const alienStimuli = getAlienStimuli(planet, swapSides);
       return {
         leftStimulus: alienStimuli.leftStimulus,
@@ -188,13 +188,13 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       const isCommonTransition = this.jsPsych.extensions.Neurocog.random() < this.data.transitionLikelihood;
 
       // Determine planet based on counterbalancing and transition
-      let planet: 'red' | 'purple' | 'green' | 'yellow';
+      let planet: PlanetType;
       if (isCommonTransition) {
         planet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
       } else {
         // Rare transition: opposite planet
         const commonPlanet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
-        planet = commonPlanet === 'red' ? 'purple' : 'red';
+        planet = commonPlanet === PlanetType.RED ? PlanetType.PURPLE : PlanetType.RED;
       }
 
       // Set transition type for data logging
@@ -211,8 +211,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       // Use training stimuli for training-full trials, main stimuli for full trials
       if (this.data.trialType === 'training-full') {
         // Map main planets to training planets for training-full trials
-        const trainingPlanet = planet === 'red' ? 'green' : 'yellow';
-        const swapSides = trainingPlanet === 'green' ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+        const trainingPlanet = planet === PlanetType.RED ? PlanetType.GREEN : PlanetType.YELLOW;
+        const swapSides = trainingPlanet === PlanetType.GREEN ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
         const alienStimuli = getAlienStimuli(trainingPlanet, swapSides);
         return {
           leftStimulus: alienStimuli.leftStimulus,
@@ -220,7 +220,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
           planetStimulus: getPlanetStimulus(trainingPlanet)
         };
       } else {
-        const swapSides = planet === 'red' ? config.counterbalancing.swapRedAliens : config.counterbalancing.swapPurpleAliens;
+        const swapSides = planet === PlanetType.RED ? config.counterbalancing.swapRedAliens : config.counterbalancing.swapPurpleAliens;
         const alienStimuli = getAlienStimuli(planet, swapSides);
         return {
           leftStimulus: alienStimuli.leftStimulus,
@@ -242,11 +242,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     if (trialType === 'training-rocket') {
       return this.getRocketStimuli(isTraining);
     } else if (trialType === 'training-alien') {
-      const alienStimuli = getAlienStimuli('green', config.counterbalancing.swapGreenAliens);
+      const alienStimuli = getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens);
       return {
         leftStimulus: alienStimuli.leftStimulus,
         rightStimulus: alienStimuli.rightStimulus,
-        planetStimulus: getPlanetStimulus('green')
+        planetStimulus: getPlanetStimulus(PlanetType.GREEN)
       };
     } else if (trialType === 'training-full' || trialType === 'full') {
       if (this.currentStage === 'rocket') {
@@ -366,23 +366,23 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     const rocketChoice = this.data.levelOneChoice === 1 ? 1 : 2;
 
     // Get the actual planet based on counterbalancing and transition
-    let planet: 'red' | 'purple' | 'green' | 'yellow';
+    let planet: PlanetType;
     if (isCommonTransition) {
       planet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
     } else {
       // Rare transition: opposite planet
       const commonPlanet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
-      planet = commonPlanet === 'red' ? 'purple' : 'red';
+      planet = commonPlanet === PlanetType.RED ? PlanetType.PURPLE : PlanetType.RED;
     }
 
     // Map planet to alien index based on counterbalancing
-    if (planet === 'red') {
+    if (planet === PlanetType.RED) {
       return isLeftChoice ? 0 : 1;
-    } else if (planet === 'purple') {
+    } else if (planet === PlanetType.PURPLE) {
       return isLeftChoice ? 2 : 3;
-    } else if (planet === 'green') {
+    } else if (planet === PlanetType.GREEN) {
       return isLeftChoice ? 0 : 1; // Training planets map to same indices as red
-    } else if (planet === 'yellow') {
+    } else if (planet === PlanetType.YELLOW) {
       return isLeftChoice ? 2 : 3; // Training planets map to same indices as purple
     }
 
@@ -583,8 +583,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             const rocketChoice = isLeftChoice ? 1 : 2;
 
             // Training: left rocket → green planet, right rocket → yellow planet
-            const planet = rocketChoice === 1 ? 'green' : 'yellow';
-            const swapSides = planet === 'green' ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+            const planet = rocketChoice === 1 ? PlanetType.GREEN : PlanetType.YELLOW;
+            const swapSides = planet === PlanetType.GREEN ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
             const alienStimuli = getAlienStimuli(planet, swapSides);
 
             // Update display to show planet with aliens
