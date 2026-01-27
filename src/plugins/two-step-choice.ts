@@ -38,11 +38,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       },
       leftKey: {
         type: ParameterType.KEY,
-        default: 'f',
+        default: config.controls.left,
       },
       rightKey: {
         type: ParameterType.KEY,
-        default: 'j',
+        default: config.controls.right,
       },
       rewardLikelihoods: {
         type: ParameterType.COMPLEX,
@@ -88,8 +88,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       trialStartTime: 0,
       trialEndTime: 0,
       trialType: 'full',
-      leftKey: 'f',
-      rightKey: 'j',
+      leftKey: config.controls.left,
+      rightKey: config.controls.right,
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
       transitionLikelihood: 1.0,
       responseWindow: 3000,
@@ -417,8 +417,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   private updateTrialData(trial: TrialType<typeof ChoicePlugin.info>): void {
     this.data.trialStartTime = Date.now();
     this.data.trialType = trial.trialType;
-    this.data.leftKey = trial.leftKey || 'f';
-    this.data.rightKey = trial.rightKey || 'j';
+    this.data.leftKey = trial.leftKey || config.controls.left;
+    this.data.rightKey = trial.rightKey || config.controls.right;
     this.data.rewardLikelihoods = trial.rewardLikelihoods;
     this.data.transitionLikelihood = trial.transitionLikelihood || 1.0;
     this.data.responseWindow = trial.responseWindow || 3000;

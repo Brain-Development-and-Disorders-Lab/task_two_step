@@ -1,7 +1,7 @@
 /**
  * @fileoverview Probability data for the Two-Step Task experiment
  *
- * This file contains the reward probability data integrated from CSV files,
+ * This file contains the reward probability data embedded from CSV files,
  * representing the likelihood of each alien providing rewards across trials.
  * The data is organized into tutorial and full trial probability sets.
  *
