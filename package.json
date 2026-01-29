@@ -1,15 +1,16 @@
 {
   "name": "task_two_step",
   "version": "0.2.2",
-  "description": "Two-step behavioral task paradigm",
+  "description": "Two-Step behavior task adapted from the task described by Nussenbaum, K. (2020)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "webpack serve --mode development",
+    "start": "webpack serve --mode development",
     "build": "webpack --mode production",
     "clean": "rm -rf dist",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
+    "test": "jest",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -19,11 +20,14 @@
     "neurocog": "^1.1.1"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "css-loader": "^6.8.1",
     "eslint": "^8.57.0",
     "html-webpack-plugin": "^5.5.4",
+    "jest": "^29.7.0",
     "style-loader": "^3.3.3",
+    "ts-jest": "^29.4.6",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.89.0",
