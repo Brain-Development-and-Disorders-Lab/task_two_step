@@ -1,5 +1,5 @@
 // Functions to test
-import { getRocketStimuli, getAlienStimuli } from '../src/counterbalancing';
+import { getRocketStimuli, getAlienStimuli, getPlanetFromRocketChoice, getPlanetStimulus } from '../src/counterbalancing';
 
 // Custom types
 import { PlanetType } from '../src/types';
@@ -82,5 +82,50 @@ describe('alien stimuli, all planets', () => {
       leftStimulus: 'tutalien4_norm.png',
       rightStimulus: 'tutalien3_norm.png',
     });
+  });
+});
+
+describe('planet stimuli, all planets', () => {
+  test('red planet', () => {
+    expect(getPlanetStimulus(PlanetType.RED)).toBe('redplanet1.png');
+  });
+  
+  test('purple planet', () => {
+    expect(getPlanetStimulus(PlanetType.PURPLE)).toBe('purpleplanet.png');
+  });
+  
+  test('green planet', () => {
+    expect(getPlanetStimulus(PlanetType.GREEN)).toBe('tutgreenplanet.png');
+  });
+  
+  test('yellow planet', () => {
+    expect(getPlanetStimulus(PlanetType.YELLOW)).toBe('tutyellowplanet.png');
+  });
+  
+  test('invalid planet', () => {
+    expect(() => getPlanetStimulus('invalid' as PlanetType)).toThrow('Unknown \'PlanetType\': invalid');
+  });
+});
+
+describe('planet type, all choices', () => {
+  test('default selection behavior', () => {
+    expect(getPlanetFromRocketChoice(1, false)).toBe(PlanetType.RED);
+    expect(getPlanetFromRocketChoice(2, false)).toBe(PlanetType.PURPLE);
+  });
+  
+  test('default selection behavior, swapped', () => {
+    expect(getPlanetFromRocketChoice(1, true)).toBe(PlanetType.PURPLE);
+    expect(getPlanetFromRocketChoice(2, true)).toBe(PlanetType.RED);
+  });
+  
+  test('training selection behavior', () => {
+    expect(getPlanetFromRocketChoice(1, false, true)).toBe(PlanetType.GREEN);
+    expect(getPlanetFromRocketChoice(2, false, true)).toBe(PlanetType.YELLOW);
+  });
+  
+  test('training selection behavior, swapped', () => {
+    // Counterbalancing does not take place in training, so behavior should be the same
+    expect(getPlanetFromRocketChoice(1, true, true)).toBe(PlanetType.GREEN);
+    expect(getPlanetFromRocketChoice(2, true, true)).toBe(PlanetType.YELLOW);
   });
 });
