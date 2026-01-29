@@ -7,7 +7,10 @@
  * @author Henry Burgess
  */
 
+// Custom types
 import { FixationTrialData } from '../types';
+
+// jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
 
 /**

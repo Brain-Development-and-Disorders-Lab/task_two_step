@@ -8,56 +8,8 @@
  * @author Henry Burgess
  */
 
-/**
- * Main configuration interface for the Two-Step Task experiment
- */
-export interface ExperimentConfig {
-  /** Trial counts - configurable for easy adjustment */
-  trainingTrials: {
-    rocket: number;
-    alien: number;
-    full: number;
-  };
-
-  /** Main experiment trial configuration */
-  mainTrials: {
-    blockSize: number;
-    blockCount: number;
-  };
-
-  /** Timing parameters in milliseconds */
-  timing: {
-    fixation: number;
-    choice: number;
-    reward: number;
-    transition: number;
-  };
-
-  /** Keyboard control mappings */
-  controls: {
-    left: string;
-    right: string;
-  };
-
-  /** Probability of common vs rare transitions */
-  transitionLikelihood: number;
-
-  /** Experiment metadata */
-  name: string;
-  studyName: string;
-  contact: string;
-
-  /** Counterbalancing configuration for stimulus presentation */
-  counterbalancing: {
-    swapMainRockets: boolean;
-    swapTrainingRockets: boolean;
-    swapRedAliens: boolean;
-    swapPurpleAliens: boolean;
-    swapGreenAliens: boolean;
-    swapYellowAliens: boolean;
-    swapRocketPreference: boolean;
-  };
-}
+// Custom types
+import { ExperimentConfig } from "./types";
 
 /**
  * Default experiment configuration with randomized counterbalancing

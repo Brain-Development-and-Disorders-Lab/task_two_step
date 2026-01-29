@@ -27,6 +27,9 @@ import { config } from './config';
 import { stimuli } from './stimuli';
 import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
 
+// Custom types
+import { PlanetType } from './types';
+
 /**
  * Initialize jsPsych instance with plugins and extensions
  */
@@ -136,15 +139,15 @@ function createTimeline(): any[] {
       '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'At each planet, there will be two aliens.<br>' +
       'The aliens on the green planet in the <i>training missions</i> will look like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('green', config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('green', config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Instructions</b><br>' +
       '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
       'The aliens on the yellow planet in the <i>training missions</i> will look like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('yellow', config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli('yellow', config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'The aliens in the <i>actual missions</i> will look slightly different.<br><br>' +
       'Click "Continue >" to proceed.',
 
