@@ -10,5 +10,16 @@
     "browser": true,
     "es2020": true
   },
-  "ignorePatterns": ["dist/", "node_modules/"]
+  "ignorePatterns": ["dist/", "node_modules/"],
+  "overrides": [
+    {
+      "files": ["webpack.*.js"],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
 }
