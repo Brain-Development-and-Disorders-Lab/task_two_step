@@ -14,23 +14,20 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
-
   use: {
     baseURL: 'http://localhost:9999',
     headless: true,
     screenshot: 'only-on-failure',
     video: 'off',
   },
-
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-
   webServer: {
-    command: 'npx webpack serve --config webpack.test.config.js',
+    command: 'npx webpack serve --config webpack.dev.js',
     url: 'http://localhost:9999',
     reuseExistingServer: !process.env.CI,
     timeout: 60000,
