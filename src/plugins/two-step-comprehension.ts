@@ -4,11 +4,11 @@
  * This plugin presents a single true/false question with immediate feedback
  * to test participant understanding of the task mechanics.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 // Custom types
-import { ComprehensionTrialData } from '../types';
+import { ComprehensionTrialData } from '../../types';
 
 // jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
@@ -50,8 +50,7 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
 
   /**
    * Create default trial data structure
-   *
-   * @returns Default comprehension trial data
+   * @return {ComprehensionTrialData} Default comprehension trial data
    */
   private createDefaultData(): ComprehensionTrialData {
     return {
@@ -67,13 +66,12 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
 
   /**
    * Create HTML for the question display
-   *
-   * @param question - The question object
-   * @param preamble - Text to display before the question
-   * @param buttonLabel - Label for the continue button
-   * @returns HTML string for the question display
+   * @param {{ prompt: string, correct: string }} question The question object
+   * @param {string} preamble Text to display before the question
+   * @param {string} buttonLabel Label for the continue button
+   * @return {string} HTML string for the question display
    */
-  private createQuestionHTML(question: any, preamble: string, buttonLabel: string): string {
+  private createQuestionHTML(question: { prompt: string, correct: string }, preamble: string, buttonLabel: string): string {
     return `
       <style>
         .comprehension-container {
@@ -211,14 +209,12 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
 
   /**
    * Show feedback to the participant
-   *
-   * @param isCorrect - Whether the answer was correct
-   * @param correctAnswer - The correct answer
-   * @param displayElement - The display element
-   * @param customFeedback - Custom feedback message
-   * @param participantAnswer - The participant's answer
+   * @param {boolean} isCorrect Whether the answer was correct
+   * @param {HTMLElement} displayElement The display element
+   * @param {string} customFeedback Custom feedback message
+   * @param {string} participantAnswer The participant's answer
    */
-  private showFeedback(isCorrect: boolean, correctAnswer: string, displayElement: HTMLElement, customFeedback: string, participantAnswer: string): void {
+  private showFeedback(isCorrect: boolean, displayElement: HTMLElement, customFeedback: string, participantAnswer: string): void {
     const feedbackElement = displayElement.querySelector('#feedback') as HTMLElement;
     const continueButton = displayElement.querySelector('#continue-btn') as HTMLElement;
     const continueInstruction = displayElement.querySelector('#continue-instruction') as HTMLElement;
@@ -252,10 +248,9 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
 
   /**
    * Handle participant response to the question
-   *
-   * @param answer - The participant's answer
-   * @param displayElement - The display element
-   * @param trial - The trial parameters
+   * @param {string} answer The participant's answer
+   * @param {HTMLElement} displayElement The display element
+   * @param {TrialType} trial The trial parameters
    */
   private handleQuestionResponse(answer: string, displayElement: HTMLElement, trial: TrialType<typeof ComprehensionPlugin.info>): void {
     const question = trial.question;
@@ -271,7 +266,7 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     this.data.isCorrect = isCorrect;
 
     // Show feedback
-    this.showFeedback(isCorrect, question.correct, displayElement, trial.feedback || 'The correct answer is:', answer);
+    this.showFeedback(isCorrect, displayElement, trial.feedback || 'The correct answer is:', answer);
 
     // Set up continue button handler
     const continueButton = displayElement.querySelector('#continue-btn') as HTMLElement;
@@ -292,9 +287,8 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
 
   /**
    * Execute the comprehension trial
-   *
-   * @param displayElement - The HTML element to display content in
-   * @param trial - The trial parameters
+   * @param {HTMLElement} displayElement The HTML element to display content in
+   * @param {TrialType} trial The trial parameters
    */
   trial(displayElement: HTMLElement, trial: TrialType<typeof ComprehensionPlugin.info>) {
     // Initialize trial data

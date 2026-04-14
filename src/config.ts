@@ -5,23 +5,23 @@
  * for the Two-Step Task experiment, including trial counts, timing parameters,
  * control mappings, and counterbalancing options.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 // Custom types
-import { ExperimentConfig } from "./types";
+import { ExperimentConfig } from "../types";
 
 /**
  * Default experiment configuration with randomized counterbalancing
  */
 export const config: ExperimentConfig = {
   trainingTrials: {
-    rocket: 8,
-    alien: 8,
-    full: 8,
+    rocket: 4,
+    alien: 4,
+    full: 4,
   },
   mainTrials: {
-    blockSize: 50,
+    blockSize: 40,
     blockCount: 4,
   },
   timing: {

@@ -4,11 +4,11 @@
  * This plugin displays a fixation cross for a specified duration,
  * providing a visual anchor point between trials.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 // Custom types
-import { FixationTrialData } from '../types';
+import { FixationTrialData } from '../../types';
 
 // jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
@@ -39,9 +39,8 @@ class FixationPlugin implements JsPsychPlugin<typeof FixationPlugin.info> {
 
   /**
    * Execute the fixation trial
-   *
-   * @param displayElement - The HTML element to display content in
-   * @param trial - The trial parameters
+   * @param {HTMLElement} displayElement The HTML element to display content in
+   * @param {TrialType} trial The trial parameters
    */
   trial(displayElement: HTMLElement, trial: TrialType<typeof FixationPlugin.info>) {
     // Create the display

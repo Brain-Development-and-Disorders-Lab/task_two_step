@@ -5,14 +5,14 @@
  * throughout the Two-Step Task experiment, including trial data structures,
  * configuration types, and utility interfaces.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 /**
  * Main configuration interface for the Two-Step Task experiment
  */
 export interface ExperimentConfig {
-  /** Trial counts - configurable for easy adjustment */
+  /** Trial counts */
   trainingTrials: {
     rocket: number;
     alien: number;
@@ -60,7 +60,7 @@ export interface ExperimentConfig {
 }
 
 /** Trial type enumeration */
-export type TrialType = 'training-rocket' | 'training-alien' | 'training-full' | 'full';
+export type TrialLayout = 'training-rocket' | 'training-alien' | 'training-full' | 'full';
 
 /** Planet type enumeration */
 export enum PlanetType {
@@ -89,7 +89,7 @@ export interface FixationTrialData extends BaseTrialData {
  * Choice trial data interface for rocket and alien selection trials
  */
 export interface ChoiceTrialData extends BaseTrialData {
-  trialType: TrialType;
+  trialLayout: TrialLayout;
   leftKey: string;
   rightKey: string;
   rewardLikelihoods: number[]; // Array of 4 floats representing reward probabilities

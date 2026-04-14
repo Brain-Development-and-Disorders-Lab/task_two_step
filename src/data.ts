@@ -5,11 +5,11 @@
  * representing the likelihood of each alien providing rewards across trials.
  * The data is organized into tutorial and full trial probability sets.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 // Custom types
-import { ProbabilityData } from './types';
+import { ProbabilityData } from '../types';
 
 /**
  * Tutorial trial probability data for training phases

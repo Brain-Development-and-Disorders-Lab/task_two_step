@@ -5,7 +5,7 @@
  * including training phases, main experiment trials, instructions, and comprehension
  * questions. It creates trials iteratively without complex blocks.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 // jsPsych imports
@@ -28,7 +28,7 @@ import { stimuli } from './stimuli';
 import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
 
 // Custom types
-import { PlanetType } from './types';
+import { PlanetType } from '../types';
 
 /**
  * Initialize jsPsych instance with plugins and extensions
@@ -66,8 +66,8 @@ const jsPsych = initJsPsych({
  *
  * @returns Array of timeline trials
  */
-function createTimeline(): any[] {
-  const timeline: any[] = [];
+function createTimeline(): unknown[] {
+  const timeline: unknown[] = [];
 
   // Debug counterbalancing state
   console.debug("---- Counterbalancing Configuration ----\n",

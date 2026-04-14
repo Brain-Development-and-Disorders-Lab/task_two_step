@@ -4,7 +4,7 @@
  * This file serves as the main entry point for the Two-Step Task experiment,
  * importing necessary CSS styles and initializing the experiment timeline.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 import 'jspsych/css/jspsych.css';

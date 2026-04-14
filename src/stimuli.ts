@@ -5,11 +5,11 @@
  * for all images used in the Two-Step Task experiment, including aliens, rockets,
  * planets, and other visual elements.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 // Custom types
-import { StimuliMap } from './types';
+import { StimuliMap } from '../types';
 
 /**
  * Complete mapping of stimulus filenames to file paths
