@@ -1,12 +1,7 @@
 /**
  * @fileoverview Playwright configuration for automated testing
  *
- * Runs end-to-end tests in `tests/automated/` against a dedicated test app
- * served by webpack-dev-server on port 9999. Tests execute in headless Chromium,
- * making them suitable for CI/CD pipelines.
- *
- * Before running tests, install Playwright browsers once with:
- *   npx playwright install --with-deps chromium
+ * Runs end-to-end tests in `tests/automated/` against a test experiment
  */
 
 import { defineConfig, devices } from '@playwright/test';

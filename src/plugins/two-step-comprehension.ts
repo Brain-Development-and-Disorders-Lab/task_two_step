@@ -73,7 +73,7 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
    * @param buttonLabel - Label for the continue button
    * @returns HTML string for the question display
    */
-  private createQuestionHTML(question: any, preamble: string, buttonLabel: string): string {
+  private createQuestionHTML(question: { prompt: string, correct: string }, preamble: string, buttonLabel: string): string {
     return `
       <style>
         .comprehension-container {

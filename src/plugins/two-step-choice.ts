@@ -420,7 +420,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     this.data.leftKey = trial.leftKey || config.controls.left;
     this.data.rightKey = trial.rightKey || config.controls.right;
     this.data.rewardLikelihoods = trial.rewardLikelihoods;
-    this.data.transitionLikelihood = trial.transitionLikelihood || 1.0;
+    this.data.transitionLikelihood = trial.transitionLikelihood ?? 1.0;
     this.data.responseWindow = trial.responseWindow || 3000;
   }
 
@@ -513,7 +513,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     // Generate initial stimuli
     let { leftStimulus, rightStimulus, planetStimulus } = this.generateStimuli(trialType, isTraining);
-    let rewardStimulus: string = this.getStimulusPath('nothing.png');
+    const rewardStimulus: string = this.getStimulusPath('nothing.png');
 
     // Update to use the actual stimuli paths
     leftStimulus = this.getStimulusPath(leftStimulus);
