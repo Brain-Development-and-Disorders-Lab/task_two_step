@@ -63,10 +63,9 @@ const jsPsych = initJsPsych({
 
 /**
  * Create the experiment timeline
- *
- * @returns Array of timeline trials
+ * @return {unknown[]} Array of timeline trials
  */
-function createTimeline(): unknown[] {
+const createTimeline = (): unknown[] => {
   const timeline: unknown[] = [];
 
   // Debug counterbalancing state
@@ -83,79 +82,46 @@ function createTimeline(): unknown[] {
   timeline.push({
     type: instructions,
     pages: [
-      '<b>Task Overview</b><br><br>' +
-      'Before commencing the task, please review these instructions carefully.<br><br>' +
-      'This task requires access to a keyboard and mouse.<br>' +
-      'Ensure you are in a quiet environment with no distractions.<br><br>' +
+      '<b>Welcome</b><br><br>' +
+      'This task requires a keyboard and mouse.<br>Please ensure you are in a quiet, distraction-free environment.<br><br>' +
+      'You are an astronaut completing space missions. On each mission, you will choose a rocket<br>' +
+      'to fly to a planet, then choose an alien to ask for <b>space resources</b>.<br><br>' +
+      'Training missions will help you learn the controls before the main missions begin.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Task Overview</b><br><br>' +
-      'Welcome Astronaut! You are in charge of space missions to explore planets<br>' +
-      'with aliens who may have valuable <b>space resources</b> to share.<br><br>' +
-      'There will be a series of <i>training missions</i> to help you become familiar with<br>' +
-      'the task and the controls.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'At the start of each mission, you will be on Earth and select a rocket to travel to a planet.<br>' +
-      'After selecting a rocket, that rocket will take you to a planet inhabited by two aliens.<br><br>' +
-      'In the <i>training missions</i>, the rockets will look like this:<br>' +
+      '<b>Training Stage 1: Rockets</b><br><br>' +
+      'In the first training missions, you will choose a rocket to fly to a planet.<br>' +
+      'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.<br><br>' +
+      'The training rockets look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).leftStimulus)}" alt="Rocket" style="width: 100px; height: 100px;">` +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br>` +
-      'The rockets in the <i>actual missions</i> will look slightly different.<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br><br>` +
+      'Each rocket tends to fly to one planet more often, but can fly to either.<br>The rockets in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'For the first set of training missions, you will select a rocket to fly from Earth.<br>' +
-      'To select the left rocket, press the "F" key on your keyboard.<br>' +
-      'To select the right rocket, press the "J" key on your keyboard.<br><br>' +
-      'After selecting a rocket, you will briefly see the planet you have flown to.<br>' +
-      'There are two planets that the rockets will fly to during missions.<br><br>' +
+      '<b>Training Stage 1: Planets</b><br><br>' +
+      'The training <i>green planet</i> looks like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutgreenplanet.png')}" alt="Planet" style="width: 300px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'In the training missions, the <i>green planet</i> will look like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutgreenplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
+      '<b>Training Stage 1: Planets</b><br><br>' +
+      'The training <i>yellow planet</i> looks like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutyellowplanet.png')}" alt="Planet" style="width: 300px;"><br><br>` +
+      'The planets in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'In the training missions, the <i>yellow planet</i> will look like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutyellowplanet.png')}" alt="Planet" style="width: 400px;"><br><br>` +
-      'The planets in the <i>actual missions</i> will be different.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'The rockets can fly to either planet, but one rocket will fly mostly to the green planet,<br>' +
-      'and the other rocket will fly mostly to the yellow planet.<br><br>' +
-      'The planet a rocket flies to most often won\'t change during the game.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'At each planet, there will be two aliens.<br>' +
-      'The aliens on the green planet in the <i>training missions</i> will look like this:<br><br>' +
+      '<b>Training Stage 1: Aliens</b><br><br>' +
+      'Each planet has two aliens. The training aliens on the <i>green planet</i> look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'The aliens on the yellow planet in the <i>training missions</i> will look like this:<br><br>' +
+      'The training aliens on the <i>yellow planet</i> look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
-      'The aliens in the <i>actual missions</i> will look slightly different.<br><br>' +
+      'The aliens in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 1: Rockets</i></b><br><br>' +
-      'You are about to begin the first set of training missions!<br>' +
-      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
-      'Click "Continue >" to begin the training missions.',
+      '<b>Training Stage 1</b><br><br>' +
+      'You are about to begin the first training missions.<br><br>' +
+      'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
@@ -179,7 +145,7 @@ function createTimeline(): unknown[] {
 
     timeline.push({
       type: ChoicePlugin,
-      trialType: 'training-rocket',
+      trialLayout: 'training-rocket',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
@@ -195,60 +161,23 @@ function createTimeline(): unknown[] {
   timeline.push({
     type: instructions,
     pages: [
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'Now that you know how to travel to planets, the next training missions focus<br>' +
-      'on the aliens. As mentioned at the start of these instructions, the aliens<br>' +
-      'may have valuable <b>space resources</b> to share.<br><br>' +
-      'For the second set of training missions, you will practice selecting an alien<br>' +
-      'to see if they have space resources to share.<br><br>' +
+      '<b>Training Stage 2: Aliens</b><br><br>' +
+      'In the next training missions, you will practice choosing an alien.<br>' +
+      'Each alien has a mine that may contain <b>space resources</b>.<br><br>' +
+      'The quality of each alien\'s mine changes slowly over time.<br>' +
+      'Press <b>"F"</b> to select the left alien, or <b>"J"</b> to select the right alien.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'Each alien has their own mine that they use to mine for space<br>' +
-      'resources on the planet. When you ask an alien to share resources,<br>' +
-      'they will give you whatever they have found in their mine.<br><br>' +
-      'When an alien has a good mine currently, they will have plenty of space resources<br>' +
-      'to share with you. When an alien has a bad mine currently, they will have<br>' +
-      'no space resources to share with you.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'The amount of resources an alien can share will change slowly over multiple missions.<br>' +
-      'An alien with a good mine in previous missions may dig in a part of their<br>' +
-      'mine that has no resources. Another alien with no resources in previous missions<br>' +
-      'may discover a lot of resources in the future.<br><br>' +
-      'It is best to focus on retrieving as many resources as possible.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'To select the left alien, press the "F" key on your keyboard.<br>' +
-      'To select the right alien, press the "J" key on your keyboard.<br><br>' +
-      'After selecting an alien, you will briefly see if they had space resources to share.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'If an alien shares space resources with you, a <i>space resource</i> will appear<br>' +
-      'above them. A space resource will look like this:<br><br>' +
+      '<b>Training Stage 2: Outcomes</b><br><br>' +
+      'If an alien shares resources, a space resource will appear above them:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('t.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'If an alien does not share space resources with you, an <i>empty circle</i> will<br>' +
-      'appear above them. The empty circle will look like this:<br><br>' +
+      'If an alien has no resources, an empty circle will appear:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('nothing.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 2: Aliens</i></b><br><br>' +
-      'You are about to begin the second set of training missions!<br>' +
-      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
-      'Click "Continue >" to begin the training missions.',
+      '<b>Training Stage 2</b><br><br>' +
+      'You are about to begin the second training missions.<br><br>' +
+      'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
@@ -258,7 +187,7 @@ function createTimeline(): unknown[] {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
       type: ChoicePlugin,
-      trialType: 'training-alien',
+      trialLayout: 'training-alien',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
@@ -285,30 +214,17 @@ function createTimeline(): unknown[] {
   timeline.push({
     type: instructions,
     pages: [
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 3: Full Missions</i></b><br><br>' +
-      'Now that you know how to travel to planets and how to ask aliens for space resources,<br>' +
-      'the last training missions will combine both of the previous training stages!<br><br>' +
-      'You will start on Earth, choose a rocket, arrive at a planet, and then choose<br>' +
-      'an alien to ask to share their space resources.<br><br>' +
-      'The space resources you receive during the training missions will not count<br>' +
-      'towards your final score.<br><br>' +
+      '<b>Training Stage 3: Full Missions</b><br><br>' +
+      'These training missions combine both previous stages:<br>' +
+      'choose a rocket to fly to a planet, then choose an alien to ask for resources.<br><br>' +
+      'You have <b>3 seconds</b> to make each choice. If no choice is made in time,<br>' +
+      'a red "X" will appear and the mission will end.<br>' +
+      'Resources collected during training do not count toward your final score.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 3: Full Missions</i></b><br><br>' +
-      'In these <i>training missions</i> and the <i>actual missions</i>, you will<br>' +
-      'have <b>3 seconds</b> to select a rocket and <b>3 seconds</b> to select an alien.<br>' +
-      'If you do not make a choice within 3 seconds, the mission will fail. A red "X" will<br>' +
-      'appear on the rockets or aliens briefly before the next mission commences.<br><br>' +
-      'Remember, you still want to find as many space resources as possible!<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Training Stage 3: Full Missions</i></b><br><br>' +
-      'You are about to begin the last set of training missions!<br>' +
-      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
-      'Click "Continue >" to begin the training missions.',
+      '<b>Training Stage 3</b><br><br>' +
+      'You are about to begin the final training missions.<br><br>' +
+      'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
@@ -318,7 +234,7 @@ function createTimeline(): unknown[] {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
       type: ChoicePlugin,
-      trialType: 'training-full',
+      trialLayout: 'training-full',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
@@ -345,47 +261,15 @@ function createTimeline(): unknown[] {
   timeline.push({
     type: instructions,
     pages: [
-      '<b>Instructions</b><br>' +
-      '<b><i>Main Missions</i></b><br><br>' +
-      'You have completed the training missions! In the main missions,<br>' +
-      'the planets, aliens, and rockets will be different, but the rules<br>' +
-      'will be the same.<br><br>' +
-      'These missions are hard, so you will need to concentrate. Don\'t be<br>' +
-      'afraid to trust your instincts!<br><br>' +
-      'Here are three hints as you complete the main missions.<br><br>' +
+      '<b>Main Missions</b><br><br>' +
+      'Training is complete! The main missions use different rockets, planets, and aliens,<br>' +
+      'but the rules are the same.<br><br>' +
+      'Resources collected in the main missions will count toward your final score.<br><br>' +
       'Click "Continue >" to proceed.',
 
-      '<b>Instructions</b><br>' +
-      '<b><i>Main Missions: Hint 1</i></b><br><br>' +
-      'Remember which aliens have space resources to share. An alien that<br>' +
-      'has many space resources to share now will probably be able to share<br>' +
-      'more in subsequent missions, since the quality of their mine changes slowly.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Main Missions: Hint 2</i></b><br><br>' +
-      'Remember that each alien has their own mine. Just because one alien currently<br>' +
-      'has a bad mine and can\'t share space resources often, doesn\'t mean that<br>' +
-      'another alien has a good mine.<br><br>' +
-      'The aliens are not trying to trick you! Your choices do not change the<br>' +
-      'quality of a mine, and the aliens do not hide space resources from you<br>' +
-      'if they have any to share.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Main Missions: Hint 3</i></b><br><br>' +
-      'The rocket you choose is important because often an alien on one planet<br>' +
-      'may have a better mine right now than the aliens on another planet.<br><br>' +
-      'You can find more resources by choosing the rocket that will take<br>' +
-      'you to the planet where an alien currently has a good mine.<br><br>' +
-      'Click "Continue >" to proceed.',
-
-      '<b>Instructions</b><br>' +
-      '<b><i>Main Missions</i></b><br><br>' +
-      'You will answer three questions before the main missions commence<br>' +
-      'to confirm that you understand how to play.<br><br>' +
-      'If you need to review the instructions, you can click the "< Previous" button to go back.<br><br>' +
-      'Click "Continue >" to answer the questions.',
+      '<b>Main Missions</b><br><br>' +
+      'You will answer three questions to confirm your understanding before starting.<br><br>' +
+      'Click "< Previous" to review the instructions, or "Continue >" to answer the questions.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
@@ -438,12 +322,9 @@ function createTimeline(): unknown[] {
   timeline.push({
     type: instructions,
     pages: [
-      '<b>Instructions</b><br>' +
-      '<b><i>Main Missions</i></b><br><br>' +
-      'You are about to commence the main missions!<br><br>' +
-      'The number of space resources you collect during these missions will be<br>' +
-      'counted and shown to you at the end of all the missions.<br><br>' +
-      'Click "Continue >" to commence the main missions.',
+      '<b>Main Missions</b><br><br>' +
+      'You are about to begin the main missions.<br>The number of space resources you collect will be shown at the end.<br><br>' +
+      'Click "Continue >" to begin.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
@@ -467,7 +348,7 @@ function createTimeline(): unknown[] {
       const probData = fullTrialProbabilities[i % fullTrialProbabilities.length];
       timeline.push({
         type: ChoicePlugin,
-        trialType: 'full',
+        trialLayout: 'full',
         leftKey: config.controls.left,
         rightKey: config.controls.right,
         rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
@@ -508,7 +389,7 @@ function createTimeline(): unknown[] {
         show_clickable_nav: true,
         button_label_next: 'Continue',
         on_load: () => {
-          const rewardCount = jsPsych.data.get().filter({trialType: 'full', wasRewarded: true}).values().length;
+          const rewardCount = jsPsych.data.get().filter({trialLayout: 'full', wasRewarded: true}).values().length;
           const countElement = document.getElementById('reward-count');
           if (countElement) {
             countElement.textContent = rewardCount.toString();
@@ -560,7 +441,7 @@ function createTimeline(): unknown[] {
   });
 
   return timeline;
-}
+};
 
 // Start the experiment
 const timeline = createTimeline();
