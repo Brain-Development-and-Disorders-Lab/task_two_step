@@ -214,7 +214,7 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
    * @param {string} customFeedback Custom feedback message
    * @param {string} participantAnswer The participant's answer
    */
-  private showFeedback(isCorrect: boolean, displayElement: HTMLElement, customFeedback: string, participantAnswer: string): void {
+  private showFeedback(isCorrect: boolean, displayElement: HTMLElement, customFeedback: string): void {
     const feedbackElement = displayElement.querySelector('#feedback') as HTMLElement;
     const continueButton = displayElement.querySelector('#continue-btn') as HTMLElement;
     const continueInstruction = displayElement.querySelector('#continue-instruction') as HTMLElement;
@@ -226,15 +226,12 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     });
 
     // Show feedback
-    const answerText = participantAnswer === 'true' ? 'True' : 'False';
     if (isCorrect) {
       feedbackElement.innerHTML = `
-        <div class="selection-indicator">You selected: <strong>${answerText}</strong></div>
         <div class="feedback-correct">Correct!</div>
       `;
     } else {
       feedbackElement.innerHTML = `
-        <div class="selection-indicator">You selected: <strong>${answerText}</strong></div>
         <div class="feedback-incorrect">${customFeedback}</div>
       `;
     }
@@ -266,7 +263,7 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     this.data.isCorrect = isCorrect;
 
     // Show feedback
-    this.showFeedback(isCorrect, displayElement, trial.feedback || 'The correct answer is:', answer);
+    this.showFeedback(isCorrect, displayElement, trial.feedback || 'The correct answer is:');
 
     // Set up continue button handler
     const continueButton = displayElement.querySelector('#continue-btn') as HTMLElement;

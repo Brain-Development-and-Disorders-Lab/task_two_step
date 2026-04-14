@@ -576,8 +576,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialLayout);
             this.setInstructions(displayElement, `You have arrived at the <b>${planet}</b> planet!`);
 
-            // Wait for preview duration (same as reward display), then finish
-            setTimeout(() => finishTrial(), config.timing.reward);
+            // Wait for preview duration (2x reward display), then finish
+            setTimeout(() => finishTrial(), config.timing.reward * 2);
           }, config.timing.reward);
         }, config.timing.reward);
       } else if (trialLayout === 'training-alien') {
@@ -590,8 +590,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             this.setInstructions(displayElement, 'The alien did not have space resources to share with you.');
           }
 
-          // Wait for reward display, then finish
-          setTimeout(() => finishTrial(), config.timing.reward);
+          // Wait for 2x reward display, then finish
+          setTimeout(() => finishTrial(), config.timing.reward * 2);
         }, config.timing.reward);
       } else if (trialLayout === 'training-full' || trialLayout === 'full') {
         // Two-stage trials
