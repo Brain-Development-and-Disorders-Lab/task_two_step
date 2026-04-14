@@ -16,12 +16,12 @@ import { ExperimentConfig } from "../types";
  */
 export const config: ExperimentConfig = {
   trainingTrials: {
-    rocket: 2,
-    alien: 2,
-    full: 2,
+    rocket: 4,
+    alien: 4,
+    full: 4,
   },
   mainTrials: {
-    blockSize: 8,
+    blockSize: 40,
     blockCount: 4,
   },
   timing: {
