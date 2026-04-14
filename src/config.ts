@@ -5,11 +5,11 @@
  * for the Two-Step Task experiment, including trial counts, timing parameters,
  * control mappings, and counterbalancing options.
  *
- * @author Henry Burgess
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 // Custom types
-import { ExperimentConfig } from "./types";
+import { ExperimentConfig } from "../types";
 
 /**
  * Default experiment configuration with randomized counterbalancing

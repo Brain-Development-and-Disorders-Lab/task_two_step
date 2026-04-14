@@ -4,12 +4,19 @@
  * Trial results are written to `window.__LAST_TRIAL_DATA__` and accumulated in
  * `window.__ALL_TRIAL_DATA__` so that Playwright tests can read them with
  * `page.evaluate()`
+ * 
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
+// jsPsych and required plugins
 import { initJsPsych } from 'jspsych';
 import ChoicePlugin from '../../src/plugins/two-step-choice';
+
+// Mocks
 import Neurocog from './setup/mocks';
-import { ChoiceTrialData } from '../../src/types';
+
+// Custom types
+import { ChoiceTrialData } from '../../types';
 
 // Setup interface for the test configuration
 export interface TestConfig {

@@ -31,7 +31,7 @@ The experiment collects comprehensive data for each trial. The following table d
 
 | **Category** | **Variable** | **Type** | **Description** |
 |--------------|--------------|----------|-----------------|
-| **Trial Information** | `trialType` | `string` | Type of trial: 'training-rocket', 'training-alien', 'training-full', or 'full' |
+| **Trial Layout** | `trialLayout` | `string` | Structure of trial: 'training-rocket', 'training-alien', 'training-full', or 'full' |
 | | `leftKey` | `string` | Key mapping for left choice (default: 'f') |
 | | `rightKey` | `string` | Key mapping for right choice (default: 'j') |
 | | `rewardLikelihoods` | `number[]` | Array of 4 reward probabilities for each alien |

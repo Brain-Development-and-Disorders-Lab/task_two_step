@@ -1,10 +1,12 @@
 /**
  * @fileoverview Trial interaction abstractions for automated testing
+ * 
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 import { Page } from '@playwright/test';
 import { TestConfig } from '..';
-import { ChoiceTrialData } from '../../../src/types';
+import { ChoiceTrialData } from '../../../types';
 
 /**
  * Inject `window.__TEST_CONFIG__` and navigate to the test app.

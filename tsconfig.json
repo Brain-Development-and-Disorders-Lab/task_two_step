@@ -25,7 +25,8 @@
   "include": [
     "src/**/*",
     "tests/**/*",
-    "*.config.ts"
+    "*.config.ts",
+    "types/index.d.ts" 
   ],
   "exclude": [
     "node_modules",

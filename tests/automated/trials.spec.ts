@@ -3,6 +3,8 @@
  *
  * Five test scenarios that exercise the ChoicePlugin with controlled
  * transition probabilities and reward likelihoods
+ * 
+ * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
 import { test, expect } from '@playwright/test';
@@ -51,7 +53,7 @@ test('default main trial: common transition, uniform 0.5 reward probabilities', 
 
   const data = await getLastTrialData(page);
 
-  expect(data.trialType).toBe('full');
+  expect(data.trialLayout).toBe('full');
   expect(data.transitionType).toBe('common');
   expect(data.timeout).toBe(false);
   expect(data.levelOneChoice).toBe(1); // left rocket ('f')
@@ -90,7 +92,7 @@ test('rare main trial: rare transition, uniform 0.5 reward probabilities', async
 
   const data = await getLastTrialData(page);
 
-  expect(data.trialType).toBe('full');
+  expect(data.trialLayout).toBe('full');
   expect(data.transitionType).toBe('rare');
   expect(data.timeout).toBe(false);
   expect(data.levelOneChoice).toBe(1);
@@ -138,14 +140,13 @@ test('extended block: observed common/rare transition counts match expected prob
   }
 
   const allData = await getAllTrialData(page);
-
   expect(allData).toHaveLength(NUM_TRIALS);
 
   // Every trial must be a complete full trial (no timeouts)
-  for (const d of allData) {
-    expect(d.trialType).toBe('full');
-    expect(d.timeout).toBe(false);
-    expect(d.transitionType).toMatch(/^(common|rare)$/);
+  for (const data of allData) {
+    expect(data.trialLayout).toBe('full');
+    expect(data.timeout).toBe(false);
+    expect(data.transitionType).toMatch(/^(common|rare)$/);
   }
 
   // Count common transitions and verify they are within the expected range

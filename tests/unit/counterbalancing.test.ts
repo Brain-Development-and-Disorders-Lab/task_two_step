@@ -7,7 +7,7 @@ import {
 } from '../../src/counterbalancing';
 
 // Custom types
-import { PlanetType } from '../../src/types';
+import { PlanetType } from '../../types';
 
 describe('rocket stimuli, training trials', () => {
   test('training trials should return tutorial rockets', () => {
