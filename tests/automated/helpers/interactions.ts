@@ -152,5 +152,5 @@ export const getTrialConfiguration = (
   rewardLikelihoods: TestConfig['rewardLikelihoods'],
   numTrials = 1
 ): TestConfig => {
-  return { trialType: 'full', transitionLikelihood, rewardLikelihoods, numTrials };
+  return { trialLayout: 'full', transitionLikelihood, rewardLikelihoods, numTrials };
 };

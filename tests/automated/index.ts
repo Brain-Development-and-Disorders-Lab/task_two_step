@@ -20,7 +20,7 @@ import { ChoiceTrialData } from '../../types';
 
 // Setup interface for the test configuration
 export interface TestConfig {
-  trialType: 'full' | 'training-full' | 'training-rocket' | 'training-alien';
+  trialLayout: 'full' | 'training-full' | 'training-rocket' | 'training-alien';
   transitionLikelihood: number;
   rewardLikelihoods: [number, number, number, number];
   numTrials: number;
@@ -39,7 +39,7 @@ window.__ALL_TRIAL_DATA__ = [];
 
 // Create a default test configuration
 const testConfig: TestConfig = window.__TEST_CONFIG__ ?? {
-  trialType: 'full',
+  trialLayout: 'full',
   transitionLikelihood: 1.0,
   rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
   numTrials: 1,
@@ -60,7 +60,7 @@ const timeline: unknown[] = [];
 for (let i = 0; i < testConfig.numTrials; i++) {
   timeline.push({
     type: ChoicePlugin,
-    trialType: testConfig.trialType,
+    trialLayout: testConfig.trialLayout,
     leftKey: 'f',
     rightKey: 'j',
     rewardLikelihoods: testConfig.rewardLikelihoods,
