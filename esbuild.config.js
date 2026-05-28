@@ -16,7 +16,8 @@ const baseConfig = {
 // Watch and serve with live reload via ESBuild's SSE endpoint
 async function dev() {
   fs.mkdirSync('dist', { recursive: true });
-  fs.cpSync('src/stimuli', 'dist/stimuli', { recursive: true });
+  fs.cpSync('src/stimuli', 'dist/stimuli', { recursive: true }); // Copy stimuli
+  fs.copyFileSync('node_modules/jspsych/css/jspsych.css', 'dist/jspsych.css'); // Copy jsPsych stylesheet
 
   // Inject the live-reload listener, all other tags are static in src/index.html
   const html = fs.readFileSync('src/index.html', 'utf-8').replace(
@@ -43,6 +44,7 @@ async function build() {
   fs.mkdirSync('dist/stimuli', { recursive: true });
   fs.cpSync('src/stimuli', 'dist/stimuli', { recursive: true });
   fs.copyFileSync('src/index.html', 'dist/index.html');
+  fs.copyFileSync('node_modules/jspsych/css/jspsych.css', 'dist/jspsych.css');
 
   await esbuild.build({
     ...baseConfig,
@@ -71,7 +73,6 @@ async function test() {
   const { port } = await ctx.serve({
     servedir: outdir,
     port: 9999,
-    headers: { 'Access-Control-Allow-Origin': '*' },
   });
   consola.info(`Test server: http://localhost:${port}`);
 }

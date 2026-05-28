@@ -10,9 +10,6 @@
  * @author Henry Burgess <henry.burgess@wustl.edu>
  */
 
-// Stylesheet
-import 'jspsych/css/jspsych.css';
-
 // jsPsych imports
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';

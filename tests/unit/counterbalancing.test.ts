@@ -4,7 +4,7 @@ import {
   getAlienStimuli,
   getPlanetFromRocketChoice,
   getPlanetStimulus
-} from '../../src/counterbalancing';
+} from '../../src/';
 
 // Custom types
 import { PlanetType } from '../../types';
@@ -13,25 +13,25 @@ describe('rocket stimuli, training trials', () => {
   test('training trials should return tutorial rockets', () => {
     // Validate the start of the file paths returned
     const responseDefault: { leftStimulus: string, rightStimulus: string } = getRocketStimuli(true, false);
-    expect(responseDefault.leftStimulus.startsWith('tut')).toBeTruthy();
-    expect(responseDefault.rightStimulus.startsWith('tut')).toBeTruthy();
+    expect(responseDefault.leftStimulus.startsWith('tutorial')).toBeTruthy();
+    expect(responseDefault.rightStimulus.startsWith('tutorial')).toBeTruthy();
 
     const responseSwapped: { leftStimulus: string, rightStimulus: string } = getRocketStimuli(true, true);
-    expect(responseSwapped.leftStimulus.startsWith('tut')).toBeTruthy();
-    expect(responseSwapped.rightStimulus.startsWith('tut')).toBeTruthy();
+    expect(responseSwapped.leftStimulus.startsWith('tutorial')).toBeTruthy();
+    expect(responseSwapped.rightStimulus.startsWith('tutorial')).toBeTruthy();
   });
   
   test('training trials without swapping should return correct tutorial rockets', () => {
     expect(getRocketStimuli(true, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutorial_rocket1.png',
-      rightStimulus: 'tutorial_rocket2.png',
+      leftStimulus: 'tutorial_rocket_1.png',
+      rightStimulus: 'tutorial_rocket_2.png',
     });
   });
   
   test('training trials with swapping should return correct tutorial rockets', () => {
     expect(getRocketStimuli(true, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutorial_rocket2.png',
-      rightStimulus: 'tutorial_rocket1.png',
+      leftStimulus: 'tutorial_rocket_2.png',
+      rightStimulus: 'tutorial_rocket_1.png',
     });
   });
 });
@@ -39,53 +39,53 @@ describe('rocket stimuli, training trials', () => {
 describe('alien stimuli, all planets', () => {
   test('red planet should return normal aliens 1 and 2', () => {
     expect(getAlienStimuli(PlanetType.RED, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'main_alien1.png',
-      rightStimulus: 'main_alien2.png',
+      leftStimulus: 'main_alien_1.png',
+      rightStimulus: 'main_alien_2.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.RED, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'main_alien2.png',
-      rightStimulus: 'main_alien1.png',
+      leftStimulus: 'main_alien_2.png',
+      rightStimulus: 'main_alien_1.png',
     });
   });
   
   test('purple planet should return normal aliens 3 and 4', () => {
     expect(getAlienStimuli(PlanetType.PURPLE, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'main_alien3.png',
-      rightStimulus: 'main_alien4.png',
+      leftStimulus: 'main_alien_3.png',
+      rightStimulus: 'main_alien_4.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.PURPLE, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'main_alien4.png',
-      rightStimulus: 'main_alien3.png',
+      leftStimulus: 'main_alien_4.png',
+      rightStimulus: 'main_alien_3.png',
     });
   });
   
   test('green planet should return tutorial aliens 1 and 2', () => {
     expect(getAlienStimuli(PlanetType.GREEN, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutorial_alien1.png',
-      rightStimulus: 'tutorial_alien2.png',
+      leftStimulus: 'tutorial_alien_1.png',
+      rightStimulus: 'tutorial_alien_2.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.GREEN, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutorial_alien2.png',
-      rightStimulus: 'tutorial_alien1.png',
+      leftStimulus: 'tutorial_alien_2.png',
+      rightStimulus: 'tutorial_alien_1.png',
     });
   });
   
   test('yellow planet should return tutorial aliens 3 and 4', () => {
     expect(getAlienStimuli(PlanetType.YELLOW, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutorial_alien3.png',
-      rightStimulus: 'tutorial_alien4.png',
+      leftStimulus: 'tutorial_alien_3.png',
+      rightStimulus: 'tutorial_alien_4.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.YELLOW, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutorial_alien4.png',
-      rightStimulus: 'tutorial_alien3.png',
+      leftStimulus: 'tutorial_alien_4.png',
+      rightStimulus: 'tutorial_alien_3.png',
     });
   });
 });
