@@ -23,15 +23,15 @@ describe('rocket stimuli, training trials', () => {
   
   test('training trials without swapping should return correct tutorial rockets', () => {
     expect(getRocketStimuli(true, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutrocket1_norm.png',
-      rightStimulus: 'tutrocket2_norm.png',
+      leftStimulus: 'tutorial_rocket1.png',
+      rightStimulus: 'tutorial_rocket2.png',
     });
   });
   
   test('training trials with swapping should return correct tutorial rockets', () => {
     expect(getRocketStimuli(true, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutrocket2_norm.png',
-      rightStimulus: 'tutrocket1_norm.png',
+      leftStimulus: 'tutorial_rocket2.png',
+      rightStimulus: 'tutorial_rocket1.png',
     });
   });
 });
@@ -39,72 +39,72 @@ describe('rocket stimuli, training trials', () => {
 describe('alien stimuli, all planets', () => {
   test('red planet should return normal aliens 1 and 2', () => {
     expect(getAlienStimuli(PlanetType.RED, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'alien1_norm.png',
-      rightStimulus: 'alien2_norm.png',
+      leftStimulus: 'main_alien1.png',
+      rightStimulus: 'main_alien2.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.RED, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'alien2_norm.png',
-      rightStimulus: 'alien1_norm.png',
+      leftStimulus: 'main_alien2.png',
+      rightStimulus: 'main_alien1.png',
     });
   });
   
   test('purple planet should return normal aliens 3 and 4', () => {
     expect(getAlienStimuli(PlanetType.PURPLE, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'alien3_norm.png',
-      rightStimulus: 'alien4_norm.png',
+      leftStimulus: 'main_alien3.png',
+      rightStimulus: 'main_alien4.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.PURPLE, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'alien4_norm.png',
-      rightStimulus: 'alien3_norm.png',
+      leftStimulus: 'main_alien4.png',
+      rightStimulus: 'main_alien3.png',
     });
   });
   
   test('green planet should return tutorial aliens 1 and 2', () => {
     expect(getAlienStimuli(PlanetType.GREEN, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutalien1_norm.png',
-      rightStimulus: 'tutalien2_norm.png',
+      leftStimulus: 'tutorial_alien1.png',
+      rightStimulus: 'tutorial_alien2.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.GREEN, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutalien2_norm.png',
-      rightStimulus: 'tutalien1_norm.png',
+      leftStimulus: 'tutorial_alien2.png',
+      rightStimulus: 'tutorial_alien1.png',
     });
   });
   
   test('yellow planet should return tutorial aliens 3 and 4', () => {
     expect(getAlienStimuli(PlanetType.YELLOW, false)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutalien3_norm.png',
-      rightStimulus: 'tutalien4_norm.png',
+      leftStimulus: 'tutorial_alien3.png',
+      rightStimulus: 'tutorial_alien4.png',
     });
 
     // Swap sides
     expect(getAlienStimuli(PlanetType.YELLOW, true)).toMatchObject<{ leftStimulus: string, rightStimulus: string }>({
-      leftStimulus: 'tutalien4_norm.png',
-      rightStimulus: 'tutalien3_norm.png',
+      leftStimulus: 'tutorial_alien4.png',
+      rightStimulus: 'tutorial_alien3.png',
     });
   });
 });
 
 describe('planet stimuli, all planets', () => {
   test('red planet', () => {
-    expect(getPlanetStimulus(PlanetType.RED)).toBe('redplanet1.png');
+    expect(getPlanetStimulus(PlanetType.RED)).toBe('main_planet_red.png');
   });
   
   test('purple planet', () => {
-    expect(getPlanetStimulus(PlanetType.PURPLE)).toBe('purpleplanet.png');
+    expect(getPlanetStimulus(PlanetType.PURPLE)).toBe('main_planet_purple.png');
   });
   
   test('green planet', () => {
-    expect(getPlanetStimulus(PlanetType.GREEN)).toBe('tutgreenplanet.png');
+    expect(getPlanetStimulus(PlanetType.GREEN)).toBe('tutorial_planet_green.png');
   });
   
   test('yellow planet', () => {
-    expect(getPlanetStimulus(PlanetType.YELLOW)).toBe('tutyellowplanet.png');
+    expect(getPlanetStimulus(PlanetType.YELLOW)).toBe('tutorial_planet_yellow.png');
   });
   
   test('invalid planet', () => {

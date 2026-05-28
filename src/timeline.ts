@@ -100,12 +100,12 @@ const createTimeline = (): unknown[] => {
 
       '<b>Training Stage 1: Planets</b><br><br>' +
       'The training <i>green planet</i> looks like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutgreenplanet.png')}" alt="Planet" style="width: 300px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_green.png')}" alt="Planet" style="width: 300px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
       'The training <i>yellow planet</i> looks like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutyellowplanet.png')}" alt="Planet" style="width: 300px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_yellow.png')}" alt="Planet" style="width: 300px;"><br><br>` +
       'The planets in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
@@ -170,9 +170,9 @@ const createTimeline = (): unknown[] => {
 
       '<b>Training Stage 2: Outcomes</b><br><br>' +
       'If an alien shares resources, a space resource will appear above them:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('t.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('reward.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
       'If an alien has no resources, an empty circle will appear:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('nothing.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('no_reward.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 2</b><br><br>' +

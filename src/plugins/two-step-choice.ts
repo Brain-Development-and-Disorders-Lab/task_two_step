@@ -334,7 +334,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     console.debug("---- Reward Calculation ----\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);
 
     const wasRewarded = randomNumber < probability;
-    const rewardStimulus = this.getStimulusPath(wasRewarded ? 't.png' : 'nothing.png');
+    const rewardStimulus = this.getStimulusPath(wasRewarded ? 'reward.png' : 'no_reward.png');
 
     // Show reward stimulus
     rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
@@ -426,7 +426,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
     const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
     const planetStimulus = this.getStimulusPath(alienStimuli.planetStimulus);
-    displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialLayout);
+    displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('no_reward.png'), trialLayout);
 
     // Set start time for level two (alien choice)
     this.levelTwoStartTime = Date.now();
@@ -498,7 +498,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     // Generate initial stimuli
     let { leftStimulus, rightStimulus, planetStimulus } = this.generateStimuli(trialLayout, isTraining);
-    const rewardStimulus: string = this.getStimulusPath('nothing.png');
+    const rewardStimulus: string = this.getStimulusPath('no_reward.png');
 
     // Update to use the actual stimuli paths
     leftStimulus = this.getStimulusPath(leftStimulus);
@@ -573,7 +573,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
             const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
 
-            displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialLayout);
+            displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('no_reward.png'), trialLayout);
             this.setInstructions(displayElement, `You have arrived at the <b>${planet}</b> planet!`);
 
             // Wait for preview duration (2x reward display), then finish

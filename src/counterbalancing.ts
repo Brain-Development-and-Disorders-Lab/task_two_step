@@ -20,12 +20,12 @@ import { PlanetType } from "../types";
 export const getRocketStimuli = (isTraining: boolean, swapSides: boolean): { leftStimulus: string; rightStimulus: string } => {
   if (isTraining) {
     return swapSides
-      ? { leftStimulus: 'tutrocket2_norm.png', rightStimulus: 'tutrocket1_norm.png' }
-      : { leftStimulus: 'tutrocket1_norm.png', rightStimulus: 'tutrocket2_norm.png' };
+      ? { leftStimulus: 'tutorial_rocket_2.png', rightStimulus: 'tutorial_rocket_1.png' }
+      : { leftStimulus: 'tutorial_rocket_1.png', rightStimulus: 'tutorial_rocket_2.png' };
   } else {
     return swapSides
-      ? { leftStimulus: 'rocket2_norm.png', rightStimulus: 'rocket1_norm.png' }
-      : { leftStimulus: 'rocket1_norm.png', rightStimulus: 'rocket2_norm.png' };
+      ? { leftStimulus: 'main_rocket_2.png', rightStimulus: 'main_rocket_1.png' }
+      : { leftStimulus: 'main_rocket_1.png', rightStimulus: 'main_rocket_2.png' };
   }
 };
 
@@ -39,20 +39,20 @@ export const getRocketStimuli = (isTraining: boolean, swapSides: boolean): { lef
 export const getAlienStimuli = (planet: PlanetType, swapSides: boolean): { leftStimulus: string; rightStimulus: string } => {
   if (planet === PlanetType.RED) {
     return swapSides
-      ? { leftStimulus: 'alien2_norm.png', rightStimulus: 'alien1_norm.png' }
-      : { leftStimulus: 'alien1_norm.png', rightStimulus: 'alien2_norm.png' };
+      ? { leftStimulus: 'main_alien_2.png', rightStimulus: 'main_alien_1.png' }
+      : { leftStimulus: 'main_alien_1.png', rightStimulus: 'main_alien_2.png' };
   } else if (planet === PlanetType.PURPLE) {
     return swapSides
-      ? { leftStimulus: 'alien4_norm.png', rightStimulus: 'alien3_norm.png' }
-      : { leftStimulus: 'alien3_norm.png', rightStimulus: 'alien4_norm.png' };
+      ? { leftStimulus: 'main_alien_4.png', rightStimulus: 'main_alien_3.png' }
+      : { leftStimulus: 'main_alien_3.png', rightStimulus: 'main_alien_4.png' };
   } else if (planet === PlanetType.GREEN) {
     return swapSides
-      ? { leftStimulus: 'tutalien2_norm.png', rightStimulus: 'tutalien1_norm.png' }
-      : { leftStimulus: 'tutalien1_norm.png', rightStimulus: 'tutalien2_norm.png' };
+      ? { leftStimulus: 'tutorial_alien_2.png', rightStimulus: 'tutorial_alien_1.png' }
+      : { leftStimulus: 'tutorial_alien_1.png', rightStimulus: 'tutorial_alien_2.png' };
   } else if (planet === PlanetType.YELLOW) {
     return swapSides
-      ? { leftStimulus: 'tutalien4_norm.png', rightStimulus: 'tutalien3_norm.png' }
-      : { leftStimulus: 'tutalien3_norm.png', rightStimulus: 'tutalien4_norm.png' };
+      ? { leftStimulus: 'tutorial_alien_4.png', rightStimulus: 'tutorial_alien_3.png' }
+      : { leftStimulus: 'tutorial_alien_3.png', rightStimulus: 'tutorial_alien_4.png' };
   }
 
   throw new Error(`Unknown 'PlanetType': ${planet}`);
@@ -91,10 +91,10 @@ export const getPlanetFromRocketChoice = (
  */
 export const getPlanetStimulus = (planet: PlanetType): string => {
   switch (planet) {
-    case PlanetType.RED: return 'redplanet1.png';
-    case PlanetType.PURPLE: return 'purpleplanet.png';
-    case PlanetType.GREEN: return 'tutgreenplanet.png';
-    case PlanetType.YELLOW: return 'tutyellowplanet.png';
+    case PlanetType.RED: return 'main_planet_red.png';
+    case PlanetType.PURPLE: return 'main_planet_purple.png';
+    case PlanetType.GREEN: return 'tutorial_planet_green.png';
+    case PlanetType.YELLOW: return 'tutorial_planet_yellow.png';
     default: throw new Error(`Unknown 'PlanetType': ${planet}`);
   }
 };
