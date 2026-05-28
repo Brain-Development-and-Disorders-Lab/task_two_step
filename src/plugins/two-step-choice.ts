@@ -486,6 +486,17 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {TrialType} trial The trial parameters
    */
   trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
+    // Generate and log trial count information
+    if (trial.trialLayout?.startsWith("training-")) {
+      const trainingTrialIndex = this.jsPsych.data.get().filterCustom((trial: TrialType<typeof ChoicePlugin.info>) => {
+        return trial.trialLayout?.startsWith("training-");
+      }).count() + 1;
+      logger.start(`Starting tutorial trial: ${trainingTrialIndex} / ${config.trainingTrials.rocket + config.trainingTrials.alien + config.trainingTrials.full}`);
+    } else {
+      const mainTrialIndex = this.jsPsych.data.get().filter({ trialLayout: 'full' }).count() + 1;
+      logger.start(`Starting main trial: ${mainTrialIndex} / ${config.mainTrials.blockCount * config.mainTrials.blockSize}`);
+    }
+    
     // Debugging information
     logger.debug("Trial Information\nTrial Layout:", trial.trialLayout, "\nProbability Data:", trial.rewardLikelihoods, "\nTransition Likelihood:", trial.transitionLikelihood);
 
