@@ -67,6 +67,9 @@ Trial counts and parameters can be easily modified in `src/config.ts`:
 
 ```typescript
 export const config: ExperimentConfig = {
+  debug: {
+    enableDebugLogging: true, // Show extra logging messages
+  },
   trainingTrials: {
     rocket: 8,           // Number of rocket-only training trials
     alien: 8,            // Number of alien-only training trials
