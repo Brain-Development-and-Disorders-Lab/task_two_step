@@ -285,7 +285,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         .stimulus-container { transition: all 0.5s ease-in-out; }
         .stimulus-container.glide-left { left: 50% !important; top: 35% !important; transform: translate(-50%, -50%) !important; }
         .stimulus-container.glide-right { right: 50% !important; top: 35% !important; transform: translate(50%, -50%) !important; }
-        .fade-out { opacity: 0.3; }
+        .deactivated { filter: brightness(0.5); }
         img {
           user-select: none;
           -webkit-user-select: none;
@@ -384,6 +384,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {HTMLElement} element The element to add the timeout overlay to
    */
   private createTimeoutOverlay(element: HTMLElement): void {
+    // Create red "X" element
     const overlay = document.createElement('div');
     overlay.style.position = 'absolute';
     overlay.style.top = '50%';
@@ -392,10 +393,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     overlay.style.fontSize = '80px';
     overlay.style.color = 'red';
     overlay.style.fontWeight = 'bold';
-    overlay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
     overlay.style.zIndex = '1000';
     overlay.innerHTML = '✕';
     element.appendChild(overlay);
+    
+    // Mark the underlying stimulus as deactivated
+    element.querySelector('img')?.classList.add('deactivated');
   }
 
   /**
@@ -541,14 +544,14 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
       if (isLeftChoice) {
         if (rightStimulusElement) {
-          rightStimulusElement.classList.add('fade-out');
+          rightStimulusElement.classList.add('deactivated');
         }
         if (leftStimulusElement) {
           leftStimulusElement.classList.add('glide-left');
         }
       } else {
         if (leftStimulusElement) {
-          leftStimulusElement.classList.add('fade-out');
+          leftStimulusElement.classList.add('deactivated');
         }
         if (rightStimulusElement) {
           rightStimulusElement.classList.add('glide-right');
