@@ -27,7 +27,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npx webpack serve --config webpack.dev.js',
+    command: 'node esbuild.config.js test',
     url: 'http://localhost:9999',
     reuseExistingServer: !process.env.CI,
     timeout: 60000,
