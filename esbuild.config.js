@@ -1,6 +1,7 @@
 'use strict';
 
 const esbuild = require('esbuild');
+const consola = require('consola');
 const fs = require('fs');
 
 const [, , mode] = process.argv;
@@ -32,8 +33,8 @@ async function dev() {
   });
 
   await ctx.watch();
-  const { port } = await ctx.serve({ servedir: 'dist', port: 8080, headers: { 'Cache-Control': 'no-cache' } });
-  console.log(`Dev server: http://localhost:${port}`);
+  const { port } = await ctx.serve({ servedir: 'dist', port: 8080 });
+  consola.info(`Development server: http://localhost:${port}`);
 }
 
 // Minified production build into dist/
@@ -50,7 +51,7 @@ async function build() {
     minify: true,
   });
 
-  console.log('Build complete');
+  consola.success('Build complete');
 }
 
 // Dev server for Playwright automated tests on port 9999
@@ -72,17 +73,17 @@ async function test() {
     port: 9999,
     headers: { 'Access-Control-Allow-Origin': '*' },
   });
-  console.log(`Test server: http://localhost:${port}`);
+  consola.info(`Test server: http://localhost:${port}`);
 }
 
 const modes = { dev, build, test };
 const run = modes[mode];
 if (!run) {
-  console.error(`Unknown mode: ${mode}. Use: dev | build | test`);
+  consola.error(`Unknown mode: ${mode}. Use: dev | build | test`);
   process.exit(1);
 }
 
 run().catch(err => {
-  console.error(err);
+  consola.error(err);
   process.exit(1);
 });

@@ -12,6 +12,11 @@
  * Main configuration interface for the Two-Step Task experiment
  */
 export interface ExperimentConfig {
+  /** Debugging functionality */
+  debug: {
+    enableDebugLogging: boolean,
+  };
+  
   /** Trial counts */
   trainingTrials: {
     rocket: number;
@@ -57,6 +62,11 @@ export interface ExperimentConfig {
     swapYellowAliens: boolean;
     swapRocketPreference: boolean;
   };
+  
+  /** Stimuli map */
+  stimuli: {
+    [key: string]: string;
+  },
 }
 
 /** Trial type enumeration */
@@ -133,13 +143,6 @@ export interface ProbabilityData {
   alien2: number;
   alien3: number;
   alien4: number;
-}
-
-/**
- * Stimuli mapping interface for image file paths
- */
-export interface StimuliMap {
-  [key: string]: string;
 }
 
 /**

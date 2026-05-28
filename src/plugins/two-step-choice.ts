@@ -14,13 +14,14 @@ import { ChoiceTrialData, PlanetType, TrialLayout } from '../../types';
 // Configuration
 import { config } from '../config';
 
-// Counterbalancing utilities
+// Utilities
 import {
   getPlanetFromRocketChoice,
   getAlienStimuli,
   getRocketStimuli,
-  getPlanetStimulus
-} from '../counterbalancing';
+  getPlanetStimulus,
+  logger,
+} from '../';
 
 // jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
@@ -196,7 +197,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       this.data.transitionType = isCommonTransition ? 'common' : 'rare';
 
       // Debug transition computation
-      console.debug("---- Transition Computation ----\n",
+      logger.debug("Transition Computation\n",
         "Rocket Choice:", rocketChoice === 1 ? "Left" : "Right", "\n",
         "Swap Preference:", config.counterbalancing.swapRocketPreference, "\n",
         "Common Planet:", getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false), "\n",
@@ -331,7 +332,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     const randomNumber = this.jsPsych.extensions.Neurocog.random();
 
     // Include debugging information
-    console.debug("---- Reward Calculation ----\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);
+    logger.debug("Reward Calculation\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);
 
     const wasRewarded = randomNumber < probability;
     const rewardStimulus = this.getStimulusPath(wasRewarded ? 'reward.png' : 'no_reward.png');
@@ -486,7 +487,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    */
   trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
     // Debugging information
-    console.debug("---- Trial Information ----\nTrial Layout:", trial.trialLayout, "\nProbability Data:", trial.rewardLikelihoods, "\nTransition Likelihood:", trial.transitionLikelihood);
+    logger.debug("Trial Information\nTrial Layout:", trial.trialLayout, "\nProbability Data:", trial.rewardLikelihoods, "\nTransition Likelihood:", trial.transitionLikelihood);
 
     if (trial.onStart) {
       trial.onStart()
