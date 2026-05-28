@@ -14,13 +14,14 @@ import { ChoiceTrialData, PlanetType, TrialLayout } from '../../types';
 // Configuration
 import { config } from '../config';
 
-// Counterbalancing utilities
+// Utilities
 import {
   getPlanetFromRocketChoice,
   getAlienStimuli,
   getRocketStimuli,
-  getPlanetStimulus
-} from '../counterbalancing';
+  getPlanetStimulus,
+  logger,
+} from '../';
 
 // jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
@@ -196,7 +197,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       this.data.transitionType = isCommonTransition ? 'common' : 'rare';
 
       // Debug transition computation
-      console.debug("---- Transition Computation ----\n",
+      logger.debug("Transition Computation\n",
         "Rocket Choice:", rocketChoice === 1 ? "Left" : "Right", "\n",
         "Swap Preference:", config.counterbalancing.swapRocketPreference, "\n",
         "Common Planet:", getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false), "\n",
@@ -285,7 +286,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         .stimulus-container { transition: all 0.5s ease-in-out; }
         .stimulus-container.glide-left { left: 50% !important; top: 35% !important; transform: translate(-50%, -50%) !important; }
         .stimulus-container.glide-right { right: 50% !important; top: 35% !important; transform: translate(50%, -50%) !important; }
-        .fade-out { opacity: 0.3; }
+        .deactivated { filter: brightness(0.5); }
         img {
           user-select: none;
           -webkit-user-select: none;
@@ -331,10 +332,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     const randomNumber = this.jsPsych.extensions.Neurocog.random();
 
     // Include debugging information
-    console.debug("---- Reward Calculation ----\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);
+    logger.debug("Reward Calculation\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);
 
     const wasRewarded = randomNumber < probability;
-    const rewardStimulus = this.getStimulusPath(wasRewarded ? 't.png' : 'nothing.png');
+    const rewardStimulus = this.getStimulusPath(wasRewarded ? 'reward.png' : 'no_reward.png');
 
     // Show reward stimulus
     rewardSymbolElement.querySelector('img')!.src = rewardStimulus;
@@ -384,6 +385,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {HTMLElement} element The element to add the timeout overlay to
    */
   private createTimeoutOverlay(element: HTMLElement): void {
+    // Create red "X" element
     const overlay = document.createElement('div');
     overlay.style.position = 'absolute';
     overlay.style.top = '50%';
@@ -392,10 +394,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     overlay.style.fontSize = '80px';
     overlay.style.color = 'red';
     overlay.style.fontWeight = 'bold';
-    overlay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
     overlay.style.zIndex = '1000';
     overlay.innerHTML = '✕';
     element.appendChild(overlay);
+    
+    // Mark the underlying stimulus as deactivated
+    element.querySelector('img')?.classList.add('deactivated');
   }
 
   /**
@@ -426,7 +430,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
     const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
     const planetStimulus = this.getStimulusPath(alienStimuli.planetStimulus);
-    displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialLayout);
+    displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('no_reward.png'), trialLayout);
 
     // Set start time for level two (alien choice)
     this.levelTwoStartTime = Date.now();
@@ -482,8 +486,19 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {TrialType} trial The trial parameters
    */
   trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
+    // Generate and log trial count information
+    if (trial.trialLayout?.startsWith("training-")) {
+      const trainingTrialIndex = this.jsPsych.data.get().filterCustom((trial: TrialType<typeof ChoicePlugin.info>) => {
+        return trial.trialLayout?.startsWith("training-");
+      }).count() + 1;
+      logger.start(`Starting tutorial trial: ${trainingTrialIndex} / ${config.trainingTrials.rocket + config.trainingTrials.alien + config.trainingTrials.full}`);
+    } else {
+      const mainTrialIndex = this.jsPsych.data.get().filter({ trialLayout: 'full' }).count() + 1;
+      logger.start(`Starting main trial: ${mainTrialIndex} / ${config.mainTrials.blockCount * config.mainTrials.blockSize}`);
+    }
+    
     // Debugging information
-    console.debug("---- Trial Information ----\nTrial Layout:", trial.trialLayout, "\nProbability Data:", trial.rewardLikelihoods, "\nTransition Likelihood:", trial.transitionLikelihood);
+    logger.debug("Trial Information\nTrial Layout:", trial.trialLayout, "\nProbability Data:", trial.rewardLikelihoods, "\nTransition Likelihood:", trial.transitionLikelihood);
 
     if (trial.onStart) {
       trial.onStart()
@@ -498,7 +513,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     // Generate initial stimuli
     let { leftStimulus, rightStimulus, planetStimulus } = this.generateStimuli(trialLayout, isTraining);
-    const rewardStimulus: string = this.getStimulusPath('nothing.png');
+    const rewardStimulus: string = this.getStimulusPath('no_reward.png');
 
     // Update to use the actual stimuli paths
     leftStimulus = this.getStimulusPath(leftStimulus);
@@ -541,14 +556,14 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
       if (isLeftChoice) {
         if (rightStimulusElement) {
-          rightStimulusElement.classList.add('fade-out');
+          rightStimulusElement.classList.add('deactivated');
         }
         if (leftStimulusElement) {
           leftStimulusElement.classList.add('glide-left');
         }
       } else {
         if (leftStimulusElement) {
-          leftStimulusElement.classList.add('fade-out');
+          leftStimulusElement.classList.add('deactivated');
         }
         if (rightStimulusElement) {
           rightStimulusElement.classList.add('glide-right');
@@ -573,11 +588,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
             const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
 
-            displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('nothing.png'), trialLayout);
+            displayElement.innerHTML = this.createDisplayHTML(leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('no_reward.png'), trialLayout);
             this.setInstructions(displayElement, `You have arrived at the <b>${planet}</b> planet!`);
 
-            // Wait for preview duration (same as reward display), then finish
-            setTimeout(() => finishTrial(), config.timing.reward);
+            // Wait for preview duration (2x reward display), then finish
+            setTimeout(() => finishTrial(), config.timing.reward * 2);
           }, config.timing.reward);
         }, config.timing.reward);
       } else if (trialLayout === 'training-alien') {
@@ -590,8 +605,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             this.setInstructions(displayElement, 'The alien did not have space resources to share with you.');
           }
 
-          // Wait for reward display, then finish
-          setTimeout(() => finishTrial(), config.timing.reward);
+          // Wait for 2x reward display, then finish
+          setTimeout(() => finishTrial(), config.timing.reward * 2);
         }, config.timing.reward);
       } else if (trialLayout === 'training-full' || trialLayout === 'full') {
         // Two-stage trials

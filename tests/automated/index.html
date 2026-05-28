@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Two-Step Task — Automated Test Runner</title>
+    <title>Two-Step Task - Automated Testing</title>
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body { background: #000; overflow: hidden; }
     </style>
   </head>
   <body>
-    <!-- jsPsych renders directly into <body>. window.__TEST_CONFIG__ is
-         injected by Playwright's addInitScript before this document runs. -->
+    <!-- Inject source code bundle for testing -->
+    <script src="test-bundle.js"></script>
   </body>
 </html>

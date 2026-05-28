@@ -15,6 +15,9 @@ import { ExperimentConfig } from "../types";
  * Default experiment configuration with randomized counterbalancing
  */
 export const config: ExperimentConfig = {
+  debug: {
+    enableDebugLogging: false,
+  },
   trainingTrials: {
     rocket: 4,
     alien: 4,
@@ -47,4 +50,36 @@ export const config: ExperimentConfig = {
     swapYellowAliens: Math.random() < 0.5,
     swapRocketPreference: Math.random() < 0.5,
   },
+  stimuli: {
+    // Main aliens
+    'main_alien_1.png': 'stimuli/main_alien_1.png',
+    'main_alien_2.png': 'stimuli/main_alien_2.png',
+    'main_alien_3.png': 'stimuli/main_alien_3.png',
+    'main_alien_4.png': 'stimuli/main_alien_4.png',
+
+    // Tutorial aliens
+    'tutorial_alien_1.png': 'stimuli/tutorial_alien_1.png',
+    'tutorial_alien_2.png': 'stimuli/tutorial_alien_2.png',
+    'tutorial_alien_3.png': 'stimuli/tutorial_alien_3.png',
+    'tutorial_alien_4.png': 'stimuli/tutorial_alien_4.png',
+
+    // Main rockets
+    'main_rocket_1.png': 'stimuli/main_rocket_1.png',
+    'main_rocket_2.png': 'stimuli/main_rocket_2.png',
+
+    // Tutorial rockets
+    'tutorial_rocket_1.png': 'stimuli/tutorial_rocket_1.png',
+    'tutorial_rocket_2.png': 'stimuli/tutorial_rocket_2.png',
+
+    // Backgrounds and planets
+    'earth.png': 'stimuli/earth.png',
+    'tutorial_planet_green.png': 'stimuli/tutorial_planet_green.png',
+    'tutorial_planet_yellow.png': 'stimuli/tutorial_planet_yellow.png',
+    'main_planet_red.png': 'stimuli/main_planet_red.png',
+    'main_planet_purple.png': 'stimuli/main_planet_purple.png',
+
+    // Rewards and other elements
+    'no_reward.png': 'stimuli/no_reward.png',
+    'reward.png': 'stimuli/reward.png',
+  }
 };
