@@ -16,7 +16,7 @@ import { ExperimentConfig } from "../types";
  */
 export const config: ExperimentConfig = {
   debug: {
-    enableDebugLogging: true,
+    enableDebugLogging: false,
   },
   trainingTrials: {
     rocket: 4,

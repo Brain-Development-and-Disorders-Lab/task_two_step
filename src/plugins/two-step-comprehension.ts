@@ -228,11 +228,11 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     // Show feedback
     if (isCorrect) {
       feedbackElement.innerHTML = `
-        <div class="feedback-correct">Correct!</div>
+        <div class="feedback-correct">Correct! ${customFeedback}</div>
       `;
     } else {
       feedbackElement.innerHTML = `
-        <div class="feedback-incorrect">${customFeedback}</div>
+        <div class="feedback-incorrect">Incorrect. ${customFeedback}</div>
       `;
     }
 

@@ -187,11 +187,13 @@ const createTimeline = (): unknown[] => {
 
       '<b>Training Stage 1: Rockets</b><br><br>' +
       'In the first training missions, you will choose a rocket to fly to a planet.<br>' +
+      'There are two rockets and two planets.<br>' +
       'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.<br><br>' +
       'The training rockets look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).leftStimulus)}" alt="Rocket" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br><br>` +
-      'Each rocket tends to fly to one planet more often, but can fly to either.<br>The rockets in the main missions will look different.<br><br>' +
+      'The rockets in the main missions will look different.<br><br>' +
+      'Each rocket flies to its favorite planet, but sometimes it will fly to the other planet.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
@@ -259,8 +261,10 @@ const createTimeline = (): unknown[] => {
     pages: [
       '<b>Training Stage 2: Aliens</b><br><br>' +
       'In the next training missions, you will practice choosing an alien.<br>' +
-      'Each alien has a mine that may contain <b>space resources</b>.<br><br>' +
+      'Each alien operates a mine that might contain <b>space resources</b>.<br><br>' +
       'The quality of each alien\'s mine changes slowly over time.<br>' +
+      'This means that aliens will share space resources on some missions,<br>' +
+      'but other missions they may not.<br>' +
       'Press <b>"F"</b> to select the left alien, or <b>"J"</b> to select the right alien.<br><br>' +
       'Click "Continue >" to proceed.',
 
@@ -380,7 +384,7 @@ const createTimeline = (): unknown[] => {
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'Incorrect. Rockets may sometimes fly to the planet you don\'t expect.',
+    feedback: 'Rockets may sometimes fly to the planet you don\'t expect.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -389,12 +393,12 @@ const createTimeline = (): unknown[] => {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'If an alien shares a space resource in this mission, then they will probably have resources to share in subsequent missions.',
+      prompt: 'If an alien shares a space resource in this mission, then they will probably have resources to share in the next few missions.',
       correct: 'true'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'Incorrect. The amount of resources an alien can share will change slowly over multiple missions.',
+    feedback: 'The amount of resources an alien can share will change slowly over multiple missions.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -408,7 +412,7 @@ const createTimeline = (): unknown[] => {
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'Incorrect. You will have 3 seconds to make each choice.',
+    feedback: 'You will have 3 seconds to make each choice.',
     extensions: [{
       type: NeurocogExtension,
     }],
