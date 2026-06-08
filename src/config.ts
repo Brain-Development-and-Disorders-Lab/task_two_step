@@ -41,6 +41,7 @@ export const config: ExperimentConfig = {
   name: 'Two-Step Task',
   studyName: 'task_two_step',
   contact: 'henry.burgess@wustl.edu',
+  requireID: true,
   counterbalancing: {
     swapMainRockets: Math.random() < 0.5,
     swapTrainingRockets: Math.random() < 0.5,
