@@ -164,6 +164,15 @@ const jsPsych = initJsPsych({
 const createTimeline = (): unknown[] => {
   const timeline: unknown[] = [];
 
+  // Request participant LUID
+  if (config.requireID) {
+    timeline.push({
+      type: surveyHtmlForm,
+      preamble: `<p>Please enter the 8 digit participant LUID.</p>`,
+      html: `<input name="participantID" type="text" required/></br></br>`,
+    });
+  }
+
   // Debug counterbalancing state
   logger.debug("Counterbalancing Configuration\n",
     "Swap Main Rockets:", config.counterbalancing.swapMainRockets, "\n",
