@@ -51,6 +51,7 @@ export interface ExperimentConfig {
   name: string;
   studyName: string;
   contact: string;
+  requireID: boolean;
 
   /** Counterbalancing configuration for stimulus presentation */
   counterbalancing: {
