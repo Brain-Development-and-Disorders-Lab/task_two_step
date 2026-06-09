@@ -11,6 +11,10 @@
 // Custom types
 import { ExperimentConfig } from "../types";
 
+// Configure random number generator with initial seed
+import Prando from "prando";
+export const random = new Prando("two-step-2026");
+
 /**
  * Default experiment configuration with randomized counterbalancing
  */
@@ -43,13 +47,13 @@ export const config: ExperimentConfig = {
   contact: 'henry.burgess@wustl.edu',
   requireID: false, // Require participant LUID prior to experiment start
   counterbalancing: {
-    swapMainRockets: Math.random() < 0.5,
-    swapTrainingRockets: Math.random() < 0.5,
-    swapRedAliens: Math.random() < 0.5,
-    swapPurpleAliens: Math.random() < 0.5,
-    swapGreenAliens: Math.random() < 0.5,
-    swapYellowAliens: Math.random() < 0.5,
-    swapRocketPreference: Math.random() < 0.5,
+    swapMainRockets: random.next() < 0.5,
+    swapTrainingRockets: random.next() < 0.5,
+    swapRedAliens: random.next() < 0.5,
+    swapPurpleAliens: random.next() < 0.5,
+    swapGreenAliens: random.next() < 0.5,
+    swapYellowAliens: random.next() < 0.5,
+    swapRocketPreference: random.next() < 0.5,
   },
   stimuli: {
     // Main aliens

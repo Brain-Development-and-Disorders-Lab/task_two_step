@@ -22,7 +22,8 @@
     "@jspsych/plugin-survey-html-form": "^2.1.0",
     "consola": "^3.4.2",
     "jspsych": "^7.3.4",
-    "neurocog": "^1.1.1"
+    "neurocog": "^1.1.1",
+    "prando": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
