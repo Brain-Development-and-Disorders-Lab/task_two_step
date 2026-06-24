@@ -45,7 +45,8 @@ export const config: ExperimentConfig = {
   name: 'Two-Step Task',
   studyName: 'task_two_step',
   contact: 'henry.burgess@wustl.edu',
-  requireID: false, // Require participant LUID prior to experiment start
+  requireID: true, // Require participant LUID prior to experiment start
+  fullscreen: true, // Run the experiment in fullscreen mode
   counterbalancing: {
     swapMainRockets: random.next() < 0.5,
     swapTrainingRockets: random.next() < 0.5,

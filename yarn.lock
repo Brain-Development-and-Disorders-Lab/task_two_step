@@ -873,6 +873,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@jspsych/plugin-fullscreen@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@jspsych/plugin-fullscreen/-/plugin-fullscreen-2.1.0.tgz#4910cb04d3392b1b0d9798550120dda797a3290a"
+  integrity sha512-mPS3393R66Hm144LumXB2I8zHvXbUmF6e1+gZzdYm4nE5o5k0rLZZmuPRtEQl5+JFyEmk+tyH/CwL+KNGOD8cw==
+
 "@jspsych/plugin-instructions@^1.1.4":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@jspsych/plugin-instructions/-/plugin-instructions-1.1.4.tgz#c8b7d0b8ad30ddc180a5e9424249b209903f6970"

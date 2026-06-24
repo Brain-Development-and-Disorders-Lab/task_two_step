@@ -51,7 +51,10 @@ export interface ExperimentConfig {
   name: string;
   studyName: string;
   contact: string;
+  
+  /** Experiment options */
   requireID: boolean;
+  fullscreen: boolean;
 
   /** Counterbalancing configuration for stimulus presentation */
   counterbalancing: {

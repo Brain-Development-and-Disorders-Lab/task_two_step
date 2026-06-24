@@ -18,6 +18,7 @@
     "test:automated": "playwright test"
   },
   "dependencies": {
+    "@jspsych/plugin-fullscreen": "^2.1.0",
     "@jspsych/plugin-instructions": "^1.1.4",
     "@jspsych/plugin-survey-html-form": "^2.1.0",
     "consola": "^3.4.2",

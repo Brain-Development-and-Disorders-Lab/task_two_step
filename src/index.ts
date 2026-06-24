@@ -13,6 +13,7 @@
 // jsPsych imports
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';
+import fullscreen from '@jspsych/plugin-fullscreen';
 import surveyHtmlForm from '@jspsych/plugin-survey-html-form';
 
 // Custom plugins and extensions
@@ -170,6 +171,15 @@ const createTimeline = (): unknown[] => {
       type: surveyHtmlForm,
       preamble: `<p>Please enter the 8 digit participant LUID.</p>`,
       html: `<input name="participantID" type="text" required/></br></br>`,
+    });
+  }
+  
+  // Run the experiment in fullscreen
+  if (config.fullscreen) {
+    timeline.push({
+      type: fullscreen,
+      message: `<p>Click 'Continue' to enter fullscreen mode.</p>`,
+      fullscreen_mode: true,
     });
   }
 
