@@ -883,6 +883,11 @@
   resolved "https://registry.yarnpkg.com/@jspsych/plugin-instructions/-/plugin-instructions-1.1.4.tgz#c8b7d0b8ad30ddc180a5e9424249b209903f6970"
   integrity sha512-e8WVXShcOeWyGnD/KwMTt+Nxo63DYmfG4qKVNt3Kuyh1ryZEbHJ6clEr2IppX4Ri9jHm/5SAqWPX/vuB8Rq2OA==
 
+"@jspsych/plugin-preload@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@jspsych/plugin-preload/-/plugin-preload-2.1.0.tgz#d4568b5b97bb9c25bf3a6829fa110c81bfa4b023"
+  integrity sha512-tQUViQQNK5RXc+sYjNyV1NKl8gt9Wl+sZ55kpW1eEn9I84WCSBtjPDthr7WxGMZeK+E/ybYucWMVcIwlncaHAg==
+
 "@jspsych/plugin-survey-html-form@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@jspsych/plugin-survey-html-form/-/plugin-survey-html-form-2.1.0.tgz#95930df020de1e9c78b675aa00d03f2f73d89214"

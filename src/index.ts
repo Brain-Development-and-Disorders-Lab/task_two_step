@@ -14,6 +14,7 @@
 import { initJsPsych } from 'jspsych';
 import instructions from '@jspsych/plugin-instructions';
 import fullscreen from '@jspsych/plugin-fullscreen';
+import preload from '@jspsych/plugin-preload';
 import surveyHtmlForm from '@jspsych/plugin-survey-html-form';
 
 // Custom plugins and extensions
@@ -164,6 +165,12 @@ const jsPsych = initJsPsych({
  */
 const createTimeline = (): unknown[] => {
   const timeline: unknown[] = [];
+  
+  // Preload images
+  timeline.push({
+    type: preload,
+    images: Object.keys(config.stimuli).map((source) => jsPsych.extensions.Neurocog.getStimulus(source)),
+  });
 
   // Request participant LUID
   if (config.requireID) {
