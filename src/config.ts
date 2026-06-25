@@ -47,6 +47,8 @@ export const config: ExperimentConfig = {
   contact: 'henry.burgess@wustl.edu',
   requireID: true, // Require participant LUID prior to experiment start
   fullscreen: true, // Run the experiment in fullscreen mode
+  enableLocalStorage: true, // Allow the experiment to cache data in `localStorage`
+  enablePreviousExperimentPrompt: true, // Prompt the user if the previous experiment did not finish
   counterbalancing: {
     swapMainRockets: random.next() < 0.5,
     swapTrainingRockets: random.next() < 0.5,

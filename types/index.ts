@@ -55,6 +55,8 @@ export interface ExperimentConfig {
   /** Experiment options */
   requireID: boolean;
   fullscreen: boolean;
+  enableLocalStorage: boolean;
+  enablePreviousExperimentPrompt: boolean;
 
   /** Counterbalancing configuration for stimulus presentation */
   counterbalancing: {
@@ -156,4 +158,12 @@ export interface ExperimentState {
   practiceReward: number;
   realReward: number;
   currentTrial: number;
+}
+
+// Backup storage object
+export type BackupStorage = {
+  experimentID: string;
+  timestamp: number;
+  completed: boolean;
+  data: any[];
 }

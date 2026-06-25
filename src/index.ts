@@ -24,11 +24,15 @@ import ChoicePlugin from './plugins/two-step-choice';
 import ComprehensionPlugin from './plugins/two-step-comprehension';
 
 // Custom types
-import { PlanetType } from '../types';
+import { BackupStorage, PlanetType } from '../types';
 
 // Configuration and data
 import { config } from './config';
 import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
+
+// Utility libraries
+import FileSaver from "file-saver";
+import { v4 as uuidv4 } from "uuid";
 
 // Configure logging
 import { createConsola } from "consola";
@@ -129,6 +133,121 @@ export const getPlanetStimulus = (planet: PlanetType): string => {
 };
 
 /**
+ * Retrieve the task data from local storage
+ * @return {BackupStorage[]} the data associated with the experiment
+ */
+export const getLocalStorage = (): BackupStorage[] => {
+  const data = localStorage.getItem(config.studyName);
+  if (!data) {
+    logger.warn("No data has been stored for this experiment");
+    return [];
+  }
+  return JSON.parse(data);
+};
+
+/**
+ * Initialize the local storage for a new experiment
+ * @param {string} id the experiment ID
+ */
+export const initializeLocalStorage = (id: string): void => {
+  // Get the list of existing experiments
+  const stored: BackupStorage[] = getLocalStorage();
+  if (stored.length > 0) {
+    logger.info("Existing experiments:", stored);
+    
+    // Get the most recent stored experiment
+    const lastStored = stored[stored.length - 1];
+    if (lastStored !== undefined) {
+      // Run a check to see if the most recent experiment has already been completed
+      if (stored.length > 0 && !lastStored.completed) {
+        logger.warn("Previous experiment was not completed");
+
+        // If the user has not disabled the prompt, show it
+        if (config.enablePreviousExperimentPrompt) {
+          const confirm = window.confirm(
+            "The previous experiment was not completed. Click OK to download the data from the previous experiment, or click Cancel to discard the data and continue."
+          );
+          if (confirm) {
+            FileSaver.saveAs(
+              new Blob([JSON.stringify(lastStored, null, "  ")], {
+                type: "application/json",
+              }),
+              `${lastStored.experimentID}_data.json`
+            );
+          } else {
+            logger.warn("Discarding previous experiment data");
+          }
+        }
+      }
+    } else {
+      logger.error("Error while accessing the last stored experiment ID:", id);
+    }
+  }
+
+  // Add the new experiment to the list and store
+  const experiment: BackupStorage = {
+    experimentID: id,
+    timestamp: Date.now(),
+    completed: false,
+    data: [],
+  };
+  stored.push(experiment);
+  localStorage.setItem(config.studyName, JSON.stringify(stored));
+  logger.info(`Backup initialized for experiment ID: ${experiment.experimentID}`);
+};
+
+/**
+ * Save data to the experiment's backup storage
+ * @param {string} id the experiment ID
+ * @param {any} data the jsPsych data object to store
+ */
+export const saveToLocalStorage = (id: string, data: any): void => {
+  const stored = getLocalStorage();
+  if (stored.length === 0) {
+    logger.error(`No backup storage found for experiment: ${id}`);
+    return;
+  }
+
+  // Iterate through the list of experiments
+  for (const experiment of stored) {
+    if (experiment.experimentID === id) {
+      // Update the data for the experiment
+      experiment.data.push(data);
+      localStorage.setItem(config.studyName, JSON.stringify(stored));
+      logger.success(`Data saved to local storage for experiment ID: ${id}`);
+      return;
+    }
+  }
+  logger.error(`Unable to save data to backup storage for experiment ID: ${id}`);
+};
+
+/**
+ * Toggle the completed flag in local storage
+ * @param {string} id the experiment ID
+ * @param {boolean} state the new state of the completed flag
+ */
+export const setCompleted = (id: string, state: boolean): void => {
+  const stored = getLocalStorage();
+  if (stored.length === 0) {
+    logger.error(`No backup storage found for experiment: ${id}`);
+    return;
+  }
+
+  // Iterate through the list of experiments
+  for (const experiment of stored) {
+    if (experiment.experimentID === id) {
+      // Update the completed flag
+      experiment.completed = state;
+      localStorage.setItem(config.studyName, JSON.stringify(stored));
+      logger.success(`Completed flag set for experiment ID: ${id}, ${state}`);
+      return;
+    }
+  }
+  logger.error(`Unable to set completed flag for experiment ID: ${id}`);
+};
+
+
+/**
  * Initialize jsPsych instance with plugins and extensions
  */
 const jsPsych = initJsPsych({
@@ -145,7 +264,7 @@ const jsPsych = initJsPsych({
         resources: {},
         stimuli: config.stimuli,
         seed: 0.2846,
-      }
+      },
     },
   ],
   on_finish: () => {
@@ -156,6 +275,9 @@ const jsPsych = initJsPsych({
 
     // For testing purposes
     jsPsych.data.get().localSave('csv',`${config.studyName}_data.csv`);
+    
+    // Toggle the completed flag in the local storage object
+    setCompleted(jsPsych.extensions.Neurocog.getState("experimentID"), true);
   }
 });
 
@@ -568,6 +690,12 @@ const createTimeline = (): unknown[] => {
 
   return timeline;
 };
+
+
+// Generate a unique identifier for this experiment run
+const experimentID = `${config.studyName}-${uuidv4()}`;
+jsPsych.extensions.Neurocog.setState("experimentID", experimentID);
+initializeLocalStorage(experimentID);
 
 // Start the experiment
 const timeline = createTimeline();
