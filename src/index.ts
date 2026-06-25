@@ -273,8 +273,10 @@ const jsPsych = initJsPsych({
       counterbalancing: config.counterbalancing
     });
 
-    // For testing purposes
-    jsPsych.data.get().localSave('csv',`${config.studyName}_data.csv`);
+    if (jsPsych.extensions.Neurocog._useAPI !== true) {
+      // For testing purposes or running locally
+      jsPsych.data.get().localSave('csv',`${config.studyName}_data.csv`);
+    }
     
     // Toggle the completed flag in the local storage object
     setCompleted(jsPsych.extensions.Neurocog.getState("experimentID"), true);
