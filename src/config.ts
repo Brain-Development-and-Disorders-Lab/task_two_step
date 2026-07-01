@@ -41,7 +41,8 @@ export const config: ExperimentConfig = {
     left: 'f',
     right: 'j',
   },
-  transitionLikelihood: 0.7,
+  commonTransitionLikelihood: 0.7, // Proportion of trials with `commonTransition` set to `true`
+  commonTransition: true,
   name: 'Two-Step Task',
   studyName: 'task_two_step',
   contact: 'henry.burgess@wustl.edu',

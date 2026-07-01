@@ -25,6 +25,7 @@
     "consola": "^3.4.2",
     "file-saver": "^2.0.5",
     "jspsych": "^7.3.4",
+    "lodash": "^4.18.1",
     "neurocog": "^1.1.1",
     "prando": "^6.0.1",
     "uuid": "^14.0.1"

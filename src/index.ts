@@ -33,6 +33,7 @@ import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
 // Utility libraries
 import FileSaver from "file-saver";
 import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
 
 // Configure logging
 import { createConsola } from "consola";
@@ -201,6 +202,7 @@ export const initializeLocalStorage = (id: string): void => {
  * @param {string} id the experiment ID
  * @param {any} data the jsPsych data object to store
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const saveToLocalStorage = (id: string, data: any): void => {
   const stored = getLocalStorage();
   if (stored.length === 0) {
@@ -285,10 +287,12 @@ const jsPsych = initJsPsych({
 
 /**
  * Create the experiment timeline
- * @return {unknown[]} Array of timeline trials
+ * @return {any[]} Array of timeline trials
  */
-const createTimeline = (): unknown[] => {
-  const timeline: unknown[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createTimeline = (): any[] => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const timeline: any[] = [];
   
   // Preload images
   timeline.push({
@@ -396,8 +400,8 @@ const createTimeline = (): unknown[] => {
       trialLayout: 'training-rocket',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
+      commonTransition: true, // Fixed common transitions
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
-      transitionLikelihood: 1.0,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,
@@ -440,8 +444,8 @@ const createTimeline = (): unknown[] => {
       trialLayout: 'training-alien',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
+      commonTransition: true, // Fixed common transitions
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: 1.0,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,
@@ -480,6 +484,13 @@ const createTimeline = (): unknown[] => {
     button_label_next: 'Continue',
   });
 
+  // Generate array of transition behaviors to ensure ordering of `rewardLikelihoods` is preserved
+  const numCommonTransitionsTrainingTrials = Math.round(config.commonTransitionLikelihood * config.trainingTrials.full);
+  const numRareTransitionsTrainingTrials = config.trainingTrials.full - numCommonTransitionsTrainingTrials;
+  let trainingTrialsTransitions = new Array(numCommonTransitionsTrainingTrials).fill(true); // Create with common trials
+  trainingTrialsTransitions.push(...new Array(numRareTransitionsTrainingTrials).fill(false)); // Append rare trials
+  trainingTrialsTransitions = _.shuffle(trainingTrialsTransitions);
+  
   for (let i = 0; i < config.trainingTrials.full; i++) {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
@@ -487,8 +498,8 @@ const createTimeline = (): unknown[] => {
       trialLayout: 'training-full',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
+      commonTransition: trainingTrialsTransitions[i], // Use value from shuffled `trainingTrialsTransitions` array
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: 0.7,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,
@@ -581,7 +592,14 @@ const createTimeline = (): unknown[] => {
   });
 
   // Main trials with block design
-  for (let i = 0; i < config.mainTrials.blockCount; i++) {
+for (let i = 0; i < config.mainTrials.blockCount; i++) {
+    // Generate array of transition behaviors to ensure ordering of `rewardLikelihoods` is preserved
+    const numCommonTransitionsMainTrials = Math.round(config.mainTrials.blockSize * config.commonTransitionLikelihood);
+    const numRareTransitionsMainTrials = config.mainTrials.blockSize - numCommonTransitionsMainTrials;
+    let mainTrialsTransitions = new Array(numCommonTransitionsMainTrials).fill(true); // Create with common trials
+    mainTrialsTransitions.push(...new Array(numRareTransitionsMainTrials).fill(false)); // Append rare trials
+    mainTrialsTransitions = _.shuffle(mainTrialsTransitions);
+    
     for (let j = 0; j < config.mainTrials.blockSize; j++) {
       // Add fixation trial
       timeline.push({
@@ -601,8 +619,8 @@ const createTimeline = (): unknown[] => {
         trialLayout: 'full',
         leftKey: config.controls.left,
         rightKey: config.controls.right,
+        commonTransition: mainTrialsTransitions[j], // Use value from shuffled `trainingTrialsTransitions` array
         rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-        transitionLikelihood: config.transitionLikelihood,
         responseWindow: config.timing.choice,
         extensions: [{
           type: NeurocogExtension,
@@ -693,12 +711,14 @@ const createTimeline = (): unknown[] => {
   return timeline;
 };
 
-
 // Generate a unique identifier for this experiment run
 const experimentID = `${config.studyName}-${uuidv4()}`;
 jsPsych.extensions.Neurocog.setState("experimentID", experimentID);
 initializeLocalStorage(experimentID);
 
+// Create and validate the experiment timeline
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const timeline: any[] = createTimeline();
+
 // Start the experiment
-const timeline = createTimeline();
 jsPsych.run(timeline);
