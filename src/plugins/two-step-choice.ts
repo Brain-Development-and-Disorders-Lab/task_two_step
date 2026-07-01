@@ -21,6 +21,7 @@ import {
   getRocketStimuli,
   getPlanetStimulus,
   logger,
+  saveToLocalStorage,
 } from '../';
 
 // jsPsych imports
@@ -699,8 +700,14 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     const finishTrial = () => {
       this.finalizeTrialData(response, trialLayout);
+
+      // Save the dataframe to local storage
+      saveToLocalStorage(this.jsPsych.extensions.Neurocog.getState("experimentID"), this.data);
+
+      // Run `onFinish` handler if specified, and clear display
       if (trial.onFinish) trial.onFinish(this.data);
       displayElement.innerHTML = '';
+
       this.jsPsych.finishTrial(this.data);
     };
   }

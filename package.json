@@ -20,15 +20,19 @@
   "dependencies": {
     "@jspsych/plugin-fullscreen": "^2.1.0",
     "@jspsych/plugin-instructions": "^1.1.4",
+    "@jspsych/plugin-preload": "^2.1.0",
     "@jspsych/plugin-survey-html-form": "^2.1.0",
     "consola": "^3.4.2",
+    "file-saver": "^2.0.5",
     "jspsych": "^7.3.4",
     "neurocog": "^1.1.1",
-    "prando": "^6.0.1"
+    "prando": "^6.0.1",
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.58.2",
+    "@types/file-saver": "^2.0.7",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "esbuild": "^0.28.0",
