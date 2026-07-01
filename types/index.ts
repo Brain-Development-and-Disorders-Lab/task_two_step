@@ -44,8 +44,9 @@ export interface ExperimentConfig {
     right: string;
   };
 
-  /** Probability of common vs rare transitions */
-  transitionLikelihood: number;
+  /** Participant experiences a common (`true`) or rare (`false`) transition */
+  commonTransitionLikelihood: number;
+  commonTransition: boolean;
 
   /** Experiment metadata */
   name: string;
@@ -108,8 +109,8 @@ export interface ChoiceTrialData extends BaseTrialData {
   trialLayout: TrialLayout;
   leftKey: string;
   rightKey: string;
+  commonTransition: boolean; // `true` if common transition, `false` if rare transition
   rewardLikelihoods: number[]; // Array of 4 floats representing reward probabilities
-  transitionLikelihood: number; // Probability of common vs rare transitions
   responseWindow: number;
 
   // Response data
@@ -165,5 +166,6 @@ export type BackupStorage = {
   experimentID: string;
   timestamp: number;
   completed: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
 }
