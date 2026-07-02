@@ -19,12 +19,12 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
     "rootDir": ".",
-    "types": ["node", "jest"],
+    "types": ["node", "vitest/globals"],
     "resolveJsonModule": true
   },
   "include": [
     "src/**/*",
-    "tests/**/*",
+    "test/**/*",
     "*.config.ts",
     "types/index.ts" 
   ],
