@@ -38,7 +38,7 @@ import _ from "lodash";
 // Configure logging
 import { createConsola } from "consola";
 export const logger = createConsola({
-  level: config.debug.enableDebugLogging ? 4 : -999, // -999 is silent
+  level: config.debug.enableDebugLogging ? 4 : 3, // 3 is informational logs
   formatOptions: {
     colors: true,
     date: true,
@@ -711,6 +711,36 @@ for (let i = 0; i < config.mainTrials.blockCount; i++) {
   return timeline;
 };
 
+/**
+ * Validate the generated experiment timeline, checking the length and the distribution of various probabilities
+ * @param timeline Generated experiment timeline
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const validateTimeline = (timeline: any[]) => {
+  const expectedTrainingTrialsLength =
+    config.trainingTrials.rocket +
+    config.trainingTrials.alien +
+    config.trainingTrials.full +
+    (config.mainTrials.blockCount * config.mainTrials.blockSize);
+  
+  // Filter the timeline to only the `ChoicePlugin` trials
+  let filteredTimeline = timeline.filter((trial) => trial.type === ChoicePlugin);
+  if (filteredTimeline.length !== expectedTrainingTrialsLength) {
+    logger.warn(`Timeline is not the expected length of ${expectedTrainingTrialsLength}! Actual: ${filteredTimeline.length}`);
+  } else {
+    logger.success(`Timeline is expected length: ${expectedTrainingTrialsLength} trials`);
+  }
+  
+  // Filter the timeline to only `full` `TrialLayout` to check transition probabilities
+  filteredTimeline = filteredTimeline.filter((trial) => trial.trialLayout === "full" && trial.commonTransition === true);
+  const expectedCommonTransitionMainTrials = Math.round(config.mainTrials.blockCount * config.mainTrials.blockSize * config.commonTransitionLikelihood);
+  if (filteredTimeline.length !== expectedCommonTransitionMainTrials) {
+    logger.warn(`Timeline does not include expected number of common transition trials (${expectedCommonTransitionMainTrials})! Actual: ${filteredTimeline.length}`);
+  } else {
+    logger.success(`Timeline includes expected number of common transition trials: ${expectedCommonTransitionMainTrials} trials`);
+  }
+};
+
 // Generate a unique identifier for this experiment run
 const experimentID = `${config.studyName}-${uuidv4()}`;
 jsPsych.extensions.Neurocog.setState("experimentID", experimentID);
@@ -719,6 +749,7 @@ initializeLocalStorage(experimentID);
 // Create and validate the experiment timeline
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const timeline: any[] = createTimeline();
+validateTimeline(timeline);
 
 // Start the experiment
 jsPsych.run(timeline);
