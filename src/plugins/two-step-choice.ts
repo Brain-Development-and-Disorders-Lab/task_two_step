@@ -639,6 +639,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
     // Keyboard event handler
     const keyboardListener = (event: KeyboardEvent) => {
+      // Ignore keys that are held down
+      if (event.repeat) return;
+
+      // Extract the key being pressed
       const key = event.key.toLowerCase();
 
       if (key === trial.leftKey || key === trial.rightKey) {
