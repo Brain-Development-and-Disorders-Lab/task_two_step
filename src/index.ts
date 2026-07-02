@@ -619,7 +619,7 @@ for (let i = 0; i < config.mainTrials.blockCount; i++) {
         trialLayout: 'full',
         leftKey: config.controls.left,
         rightKey: config.controls.right,
-        commonTransition: mainTrialsTransitions[j], // Use value from shuffled `trainingTrialsTransitions` array
+        commonTransition: mainTrialsTransitions[j], // Use value from shuffled `mainTrialsTransitions` array
         rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
         responseWindow: config.timing.choice,
         extensions: [{
