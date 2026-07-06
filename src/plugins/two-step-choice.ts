@@ -14,6 +14,9 @@ import { ChoiceTrialData, PlanetType, TrialLayout } from '../../types';
 // Configuration
 import { config } from '../config';
 
+// Random number generation
+import { random } from '../data';
+
 // Utilities
 import {
   getPlanetFromRocketChoice,
@@ -331,7 +334,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     // Determine which alien was selected based on planet and choice
     const alienIndex = this.getAlienIndex(isLeftChoice);
     const probability = this.data.rewardLikelihoods[alienIndex] || 0.5;
-    const randomNumber = this.jsPsych.extensions.Neurocog.random();
+    const randomNumber = random.next();
 
     // Include debugging information
     logger.debug("Reward Calculation\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);

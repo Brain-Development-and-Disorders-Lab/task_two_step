@@ -11,6 +11,14 @@
 // Custom types
 import { ProbabilityData } from '../types';
 
+// Random number generator
+import Prando from 'prando';
+
+/**
+ * Enable seeded random number generation across all files and modules
+*/
+export const random = new Prando(`two-step-${Date.now()}`);
+
 /**
  * Tutorial trial probability data for training phases
  * Contains reward probabilities for each alien across tutorial trials
