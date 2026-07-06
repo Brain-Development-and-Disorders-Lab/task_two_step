@@ -302,7 +302,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
           user-drag: none;
         }
       </style>
-      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff;">
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff; cursor: none;">
         <img src="${planetStimulus}" draggable="false" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
         <div id="left-stimulus" class="stimulus-container" style="position: absolute; left: 25%; top: 60%; transform: translate(-50%, -50%);">
           <img src="${leftStimulus}" draggable="false" style="width: 173px; height: 173px; object-fit: contain;" />
