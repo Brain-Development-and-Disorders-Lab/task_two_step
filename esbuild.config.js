@@ -56,31 +56,10 @@ async function build() {
   consola.success('Build complete');
 }
 
-// Dev server for Playwright automated tests on port 9999
-async function test() {
-  const outdir = 'tests/automated/dist';
-  fs.mkdirSync(outdir, { recursive: true });
-  fs.copyFileSync('tests/automated/index.html', `${outdir}/index.html`);
-
-  const ctx = await esbuild.context({
-    ...baseConfig,
-    entryPoints: ['tests/automated/index.ts'],
-    outfile: `${outdir}/test-bundle.js`,
-    sourcemap: 'inline',
-  });
-
-  await ctx.watch();
-  const { port } = await ctx.serve({
-    servedir: outdir,
-    port: 9999,
-  });
-  consola.info(`Test server: http://localhost:${port}`);
-}
-
-const modes = { dev, build, test };
+const modes = { dev, build };
 const run = modes[mode];
 if (!run) {
-  consola.error(`Unknown mode: ${mode}. Use: dev | build | test`);
+  consola.error(`Unknown mode: ${mode}. Use: dev | build`);
   process.exit(1);
 }
 

@@ -33,11 +33,12 @@ import { tutorialTrialProbabilities, fullTrialProbabilities } from './data';
 // Utility libraries
 import FileSaver from "file-saver";
 import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
 
 // Configure logging
 import { createConsola } from "consola";
 export const logger = createConsola({
-  level: config.debug.enableDebugLogging ? 4 : -999, // -999 is silent
+  level: config.debug.enableDebugLogging ? 4 : 3, // 3 is informational logs
   formatOptions: {
     colors: true,
     date: true,
@@ -201,6 +202,7 @@ export const initializeLocalStorage = (id: string): void => {
  * @param {string} id the experiment ID
  * @param {any} data the jsPsych data object to store
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const saveToLocalStorage = (id: string, data: any): void => {
   const stored = getLocalStorage();
   if (stored.length === 0) {
@@ -285,10 +287,12 @@ const jsPsych = initJsPsych({
 
 /**
  * Create the experiment timeline
- * @return {unknown[]} Array of timeline trials
+ * @return {any[]} Array of timeline trials
  */
-const createTimeline = (): unknown[] => {
-  const timeline: unknown[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createTimeline = (): any[] => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const timeline: any[] = [];
   
   // Preload images
   timeline.push({
@@ -336,10 +340,10 @@ const createTimeline = (): unknown[] => {
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Rockets</b><br><br>' +
-      'In the first training missions, you will choose a rocket to fly to a planet.<br>' +
+      'In the first set of training missions, you will choose a rocket to fly to a planet.<br>' +
       'There are two rockets and two planets.<br>' +
       'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.<br><br>' +
-      'The training rockets look like this:<br><br>' +
+      'In the training missions, the rockets look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).leftStimulus)}" alt="Rocket" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br><br>` +
       'The rockets in the main missions will look different.<br><br>' +
@@ -347,28 +351,29 @@ const createTimeline = (): unknown[] => {
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
-      'The training <i>green planet</i> looks like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_green.png')}" alt="Planet" style="width: 300px;"><br><br>` +
+      'In the training missions, the <i>green planet</i> looks like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_green.png')}" alt="Planet" style="width: 360px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
-      'The training <i>yellow planet</i> looks like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_yellow.png')}" alt="Planet" style="width: 300px;"><br><br>` +
+      'In the training missions, the <i>yellow planet</i> looks like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_yellow.png')}" alt="Planet" style="width: 360px;"><br><br>` +
       'The planets in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Aliens</b><br><br>' +
-      'Each planet has two aliens. The training aliens on the <i>green planet</i> look like this:<br><br>' +
+      'Each planet has two aliens.<br>' +
+      'In the training missions, the aliens on the <i>green planet</i> look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
-      'The training aliens on the <i>yellow planet</i> look like this:<br><br>' +
+      'In the training missions, the aliens on the <i>yellow planet</i> look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'The aliens in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1</b><br><br>' +
-      'You are about to begin the first training missions.<br><br>' +
+      'You are about to begin the first set of training missions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
@@ -396,8 +401,8 @@ const createTimeline = (): unknown[] => {
       trialLayout: 'training-rocket',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
+      commonTransition: true, // Fixed common transitions
       rewardLikelihoods: [0.5, 0.5, 0.5, 0.5],
-      transitionLikelihood: 1.0,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,
@@ -410,23 +415,23 @@ const createTimeline = (): unknown[] => {
     type: instructions,
     pages: [
       '<b>Training Stage 2: Aliens</b><br><br>' +
-      'In the next training missions, you will practice choosing an alien.<br>' +
+      'In the next set of training missions, you will practice choosing an alien.<br>' +
       'Each alien operates a mine that might contain <b>space resources</b>.<br><br>' +
       'The quality of each alien\'s mine changes slowly over time.<br>' +
       'This means that aliens will share space resources on some missions,<br>' +
-      'but other missions they may not.<br>' +
+      'but other missions they may not.<br><br>' +
       'Press <b>"F"</b> to select the left alien, or <b>"J"</b> to select the right alien.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 2: Outcomes</b><br><br>' +
-      'If an alien shares resources, a space resource will appear above them:<br><br>' +
+      'If an alien shares space resources, a space resource will appear above them:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('reward.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
-      'If an alien has no resources, an empty circle will appear:<br><br>' +
+      'If an alien has no space resources, an empty circle will appear:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('no_reward.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 2</b><br><br>' +
-      'You are about to begin the second training missions.<br><br>' +
+      'You are about to begin the second set of training missions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
@@ -440,8 +445,8 @@ const createTimeline = (): unknown[] => {
       trialLayout: 'training-alien',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
+      commonTransition: true, // Fixed common transitions
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: 1.0,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,
@@ -465,21 +470,28 @@ const createTimeline = (): unknown[] => {
     type: instructions,
     pages: [
       '<b>Training Stage 3: Full Missions</b><br><br>' +
-      'These training missions combine both previous stages:<br>' +
-      'choose a rocket to fly to a planet, then choose an alien to ask for resources.<br><br>' +
-      'You have <b>3 seconds</b> to make each choice. If no choice is made in time,<br>' +
+      'The last set of training missions combine the previous training missions:<br>' +
+      'choose a rocket to fly to a planet, then choose an alien to ask for space resources.<br><br>' +
+      'You have <b>3 seconds</b> to make each choice. If you do not choose in time,<br>' +
       'a red "X" will appear and the mission will end.<br>' +
-      'Resources collected during training do not count toward your final score.<br><br>' +
+      'Space resources collected during training do not count toward your final score.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 3</b><br><br>' +
-      'You are about to begin the final training missions.<br><br>' +
+      'You are about to begin the final set of training missions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
   });
 
+  // Generate array of transition behaviors to ensure ordering of `rewardLikelihoods` is preserved
+  const numCommonTransitionsTrainingTrials = Math.round(config.commonTransitionLikelihood * config.trainingTrials.full);
+  const numRareTransitionsTrainingTrials = config.trainingTrials.full - numCommonTransitionsTrainingTrials;
+  let trainingTrialsTransitions = new Array(numCommonTransitionsTrainingTrials).fill(true); // Create with common trials
+  trainingTrialsTransitions.push(...new Array(numRareTransitionsTrainingTrials).fill(false)); // Append rare trials
+  trainingTrialsTransitions = _.shuffle(trainingTrialsTransitions);
+  
   for (let i = 0; i < config.trainingTrials.full; i++) {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
@@ -487,8 +499,8 @@ const createTimeline = (): unknown[] => {
       trialLayout: 'training-full',
       leftKey: config.controls.left,
       rightKey: config.controls.right,
+      commonTransition: trainingTrialsTransitions[i], // Use value from shuffled `trainingTrialsTransitions` array
       rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-      transitionLikelihood: 0.7,
       responseWindow: config.timing.choice,
       extensions: [{
         type: NeurocogExtension,
@@ -512,13 +524,13 @@ const createTimeline = (): unknown[] => {
     type: instructions,
     pages: [
       '<b>Main Missions</b><br><br>' +
-      'Training is complete! The main missions use different rockets, planets, and aliens,<br>' +
-      'but the rules are the same.<br><br>' +
-      'Resources collected in the main missions will count toward your final score.<br><br>' +
+      'You have completed all the training missions! The main missions use different<br>' +
+      'rockets, planets, and aliens, but the rules are the same.<br><br>' +
+      'Space resources collected in these missions <b>will</b> count toward your final score.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Main Missions</b><br><br>' +
-      'You will answer three questions to confirm your understanding before starting.<br><br>' +
+      'Before you begin, please answer three questions to confirm you understand the instructions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to answer the questions.',
     ],
     show_clickable_nav: true,
@@ -529,12 +541,12 @@ const createTimeline = (): unknown[] => {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'Each rocket always flies to the same planet.',
+      prompt: 'Each rocket <b>always</b> flies to the same planet.',
       correct: 'false'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'Rockets may sometimes fly to the planet you don\'t expect.',
+    feedback: 'Rockets have a favorite planet, but rockets may sometimes fly to the planet you don\'t expect.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -543,12 +555,12 @@ const createTimeline = (): unknown[] => {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'If an alien shares a space resource in this mission, then they will probably have resources to share in the next few missions.',
+      prompt: 'If an alien shares a space resource in this mission,<br>then they will probably have space resources to share in the next few missions.',
       correct: 'true'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'The amount of resources an alien can share will change slowly over multiple missions.',
+    feedback: 'The amount of resources an alien can share changes slowly over multiple missions,<br>so they will probably have space resources to share in the next few missions.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -557,12 +569,12 @@ const createTimeline = (): unknown[] => {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'You will have as much time as you want to make each choice.',
+      prompt: 'You have as much time as you want to make each choice.',
       correct: 'false'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'You will have 3 seconds to make each choice.',
+    feedback: 'You have 3 seconds to make each choice, otherwise the mission will end.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -573,15 +585,23 @@ const createTimeline = (): unknown[] => {
     type: instructions,
     pages: [
       '<b>Main Missions</b><br><br>' +
-      'You are about to begin the main missions.<br>The number of space resources you collect will be shown at the end.<br><br>' +
-      'Click "Continue >" to begin.',
+      'You are about to begin the main missions.<br>' +
+      'The number of space resources you collect will be shown at the of all the missions.<br><br>' +
+      'Click "Continue >" to begin!',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
   });
 
   // Main trials with block design
-  for (let i = 0; i < config.mainTrials.blockCount; i++) {
+for (let i = 0; i < config.mainTrials.blockCount; i++) {
+    // Generate array of transition behaviors to ensure ordering of `rewardLikelihoods` is preserved
+    const numCommonTransitionsMainTrials = Math.round(config.mainTrials.blockSize * config.commonTransitionLikelihood);
+    const numRareTransitionsMainTrials = config.mainTrials.blockSize - numCommonTransitionsMainTrials;
+    let mainTrialsTransitions = new Array(numCommonTransitionsMainTrials).fill(true); // Create with common trials
+    mainTrialsTransitions.push(...new Array(numRareTransitionsMainTrials).fill(false)); // Append rare trials
+    mainTrialsTransitions = _.shuffle(mainTrialsTransitions);
+    
     for (let j = 0; j < config.mainTrials.blockSize; j++) {
       // Add fixation trial
       timeline.push({
@@ -601,8 +621,8 @@ const createTimeline = (): unknown[] => {
         trialLayout: 'full',
         leftKey: config.controls.left,
         rightKey: config.controls.right,
+        commonTransition: mainTrialsTransitions[j], // Use value from shuffled `mainTrialsTransitions` array
         rewardLikelihoods: [probData?.alien1 || 0.5, probData?.alien2 || 0.5, probData?.alien3 || 0.5, probData?.alien4 || 0.5],
-        transitionLikelihood: config.transitionLikelihood,
         responseWindow: config.timing.choice,
         extensions: [{
           type: NeurocogExtension,
@@ -693,12 +713,45 @@ const createTimeline = (): unknown[] => {
   return timeline;
 };
 
+/**
+ * Validate the generated experiment timeline, checking the length and the distribution of various probabilities
+ * @param timeline Generated experiment timeline
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const validateTimeline = (timeline: any[]) => {
+  const expectedTrainingTrialsLength =
+    config.trainingTrials.rocket +
+    config.trainingTrials.alien +
+    config.trainingTrials.full +
+    (config.mainTrials.blockCount * config.mainTrials.blockSize);
+  
+  // Filter the timeline to only the `ChoicePlugin` trials
+  let filteredTimeline = timeline.filter((trial) => trial.type === ChoicePlugin);
+  if (filteredTimeline.length !== expectedTrainingTrialsLength) {
+    logger.warn(`Timeline is not the expected length of ${expectedTrainingTrialsLength}! Actual: ${filteredTimeline.length}`);
+  } else {
+    logger.success(`Timeline is expected length: ${expectedTrainingTrialsLength} trials`);
+  }
+  
+  // Filter the timeline to only `full` `TrialLayout` to check transition probabilities
+  filteredTimeline = filteredTimeline.filter((trial) => trial.trialLayout === "full" && trial.commonTransition === true);
+  const expectedCommonTransitionMainTrials = Math.round(config.mainTrials.blockCount * config.mainTrials.blockSize * config.commonTransitionLikelihood);
+  if (filteredTimeline.length !== expectedCommonTransitionMainTrials) {
+    logger.warn(`Timeline does not include expected number of common transition trials (${expectedCommonTransitionMainTrials})! Actual: ${filteredTimeline.length}`);
+  } else {
+    logger.success(`Timeline includes expected number of common transition trials: ${expectedCommonTransitionMainTrials} trials`);
+  }
+};
 
 // Generate a unique identifier for this experiment run
 const experimentID = `${config.studyName}-${uuidv4()}`;
 jsPsych.extensions.Neurocog.setState("experimentID", experimentID);
 initializeLocalStorage(experimentID);
 
+// Create and validate the experiment timeline
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const timeline: any[] = createTimeline();
+validateTimeline(timeline);
+
 // Start the experiment
-const timeline = createTimeline();
 jsPsych.run(timeline);

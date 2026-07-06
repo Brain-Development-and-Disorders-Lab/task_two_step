@@ -34,8 +34,8 @@ The experiment collects comprehensive data for each trial. The following table d
 | **Trial Layout** | `trialLayout` | `string` | Structure of trial: 'training-rocket', 'training-alien', 'training-full', or 'full' |
 | | `leftKey` | `string` | Key mapping for left choice (default: 'f') |
 | | `rightKey` | `string` | Key mapping for right choice (default: 'j') |
+| | `commonTransition` | `boolean` | Participant experiences a common ('true') or rare ('false') transition ('true' or 'false') |
 | | `rewardLikelihoods` | `number[]` | Array of 4 reward probabilities for each alien |
-| | `transitionLikelihood` | `number` | Probability of common vs rare transitions (0-1) |
 | | `responseWindow` | `number` | Maximum response time allowed in milliseconds |
 | **Participant Response** | `levelOneChoice` | `0\|1\|2` | Rocket choice: 0=timeout, 1=left, 2=right |
 | | `levelTwoChoice` | `0\|1\|2` | Alien choice: 0=timeout, 1=left, 2=right |
@@ -89,7 +89,7 @@ export const config: ExperimentConfig = {
     left: 'f',           // Left choice key
     right: 'j',          // Right choice key
   },
-  transitionLikelihood: 0.7,  // Probability of common transitions
+  commonTransition: true,  // Participant experiences a common transition
   name: 'Two-Step Task',
   studyName: 'task_two_step',
   contact: 'henry.burgess@wustl.edu',

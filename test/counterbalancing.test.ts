@@ -4,10 +4,10 @@ import {
   getAlienStimuli,
   getPlanetFromRocketChoice,
   getPlanetStimulus
-} from '../../src/';
+} from '../src/';
 
 // Custom types
-import { PlanetType } from '../../types';
+import { PlanetType } from '../types';
 
 describe('rocket stimuli, training trials', () => {
   test('training trials should return tutorial rockets', () => {
