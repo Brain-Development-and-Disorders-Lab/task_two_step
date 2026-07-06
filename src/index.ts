@@ -340,10 +340,10 @@ const createTimeline = (): any[] => {
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Rockets</b><br><br>' +
-      'In the first training missions, you will choose a rocket to fly to a planet.<br>' +
+      'In the first set of training missions, you will choose a rocket to fly to a planet.<br>' +
       'There are two rockets and two planets.<br>' +
       'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.<br><br>' +
-      'The training rockets look like this:<br><br>' +
+      'In the training missions, the rockets look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).leftStimulus)}" alt="Rocket" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br><br>` +
       'The rockets in the main missions will look different.<br><br>' +
@@ -351,28 +351,29 @@ const createTimeline = (): any[] => {
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
-      'The training <i>green planet</i> looks like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_green.png')}" alt="Planet" style="width: 300px;"><br><br>` +
+      'In the training missions, the <i>green planet</i> looks like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_green.png')}" alt="Planet" style="width: 360px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
-      'The training <i>yellow planet</i> looks like this:<br><br>' +
-      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_yellow.png')}" alt="Planet" style="width: 300px;"><br><br>` +
+      'In the training missions, the <i>yellow planet</i> looks like this:<br><br>' +
+      `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_yellow.png')}" alt="Planet" style="width: 360px;"><br><br>` +
       'The planets in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Aliens</b><br><br>' +
-      'Each planet has two aliens. The training aliens on the <i>green planet</i> look like this:<br><br>' +
+      'Each planet has two aliens.<br>' +
+      'In the training missions, the aliens on the <i>green planet</i> look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
-      'The training aliens on the <i>yellow planet</i> look like this:<br><br>' +
+      'In the training missions, the aliens on the <i>yellow planet</i> look like this:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
       'The aliens in the main missions will look different.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1</b><br><br>' +
-      'You are about to begin the first training missions.<br><br>' +
+      'You are about to begin the first set of training missions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
@@ -414,23 +415,23 @@ const createTimeline = (): any[] => {
     type: instructions,
     pages: [
       '<b>Training Stage 2: Aliens</b><br><br>' +
-      'In the next training missions, you will practice choosing an alien.<br>' +
+      'In the next set of training missions, you will practice choosing an alien.<br>' +
       'Each alien operates a mine that might contain <b>space resources</b>.<br><br>' +
       'The quality of each alien\'s mine changes slowly over time.<br>' +
       'This means that aliens will share space resources on some missions,<br>' +
-      'but other missions they may not.<br>' +
+      'but other missions they may not.<br><br>' +
       'Press <b>"F"</b> to select the left alien, or <b>"J"</b> to select the right alien.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 2: Outcomes</b><br><br>' +
-      'If an alien shares resources, a space resource will appear above them:<br><br>' +
+      'If an alien shares space resources, a space resource will appear above them:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('reward.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
-      'If an alien has no resources, an empty circle will appear:<br><br>' +
+      'If an alien has no space resources, an empty circle will appear:<br><br>' +
       `<img src="${jsPsych.extensions.Neurocog.getStimulus('no_reward.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 2</b><br><br>' +
-      'You are about to begin the second training missions.<br><br>' +
+      'You are about to begin the second set of training missions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
@@ -469,15 +470,15 @@ const createTimeline = (): any[] => {
     type: instructions,
     pages: [
       '<b>Training Stage 3: Full Missions</b><br><br>' +
-      'These training missions combine both previous stages:<br>' +
-      'choose a rocket to fly to a planet, then choose an alien to ask for resources.<br><br>' +
-      'You have <b>3 seconds</b> to make each choice. If no choice is made in time,<br>' +
+      'The last set of training missions combine the previous training missions:<br>' +
+      'choose a rocket to fly to a planet, then choose an alien to ask for space resources.<br><br>' +
+      'You have <b>3 seconds</b> to make each choice. If you do not choose in time,<br>' +
       'a red "X" will appear and the mission will end.<br>' +
-      'Resources collected during training do not count toward your final score.<br><br>' +
+      'Space resources collected during training do not count toward your final score.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Training Stage 3</b><br><br>' +
-      'You are about to begin the final training missions.<br><br>' +
+      'You are about to begin the final set of training missions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to proceed.',
     ],
     show_clickable_nav: true,
@@ -523,13 +524,13 @@ const createTimeline = (): any[] => {
     type: instructions,
     pages: [
       '<b>Main Missions</b><br><br>' +
-      'Training is complete! The main missions use different rockets, planets, and aliens,<br>' +
-      'but the rules are the same.<br><br>' +
-      'Resources collected in the main missions will count toward your final score.<br><br>' +
+      'You have completed all the training missions! The main missions use different<br>' +
+      'rockets, planets, and aliens, but the rules are the same.<br><br>' +
+      'Space resources collected in these missions <b>will</b> count toward your final score.<br><br>' +
       'Click "Continue >" to proceed.',
 
       '<b>Main Missions</b><br><br>' +
-      'You will answer three questions to confirm your understanding before starting.<br><br>' +
+      'Before you begin, please answer three questions to confirm you understand the instructions.<br><br>' +
       'Click "< Previous" to review the instructions, or "Continue >" to answer the questions.',
     ],
     show_clickable_nav: true,
@@ -540,12 +541,12 @@ const createTimeline = (): any[] => {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'Each rocket always flies to the same planet.',
+      prompt: 'Each rocket <b>always</b> flies to the same planet.',
       correct: 'false'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'Rockets may sometimes fly to the planet you don\'t expect.',
+    feedback: 'Rockets have a favorite planet, but rockets may sometimes fly to the planet you don\'t expect.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -554,12 +555,12 @@ const createTimeline = (): any[] => {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'If an alien shares a space resource in this mission, then they will probably have resources to share in the next few missions.',
+      prompt: 'If an alien shares a space resource in this mission,<br>then they will probably have space resources to share in the next few missions.',
       correct: 'true'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'The amount of resources an alien can share will change slowly over multiple missions.',
+    feedback: 'The amount of resources an alien can share changes slowly over multiple missions,<br>so they will probably have space resources to share in the next few missions.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -568,12 +569,12 @@ const createTimeline = (): any[] => {
   timeline.push({
     type: ComprehensionPlugin,
     question: {
-      prompt: 'You will have as much time as you want to make each choice.',
+      prompt: 'You have as much time as you want to make each choice.',
       correct: 'false'
     },
     preamble: 'Please answer the following question:',
     button_label: 'Continue',
-    feedback: 'You will have 3 seconds to make each choice.',
+    feedback: 'You have 3 seconds to make each choice, otherwise the mission will end.',
     extensions: [{
       type: NeurocogExtension,
     }],
@@ -584,8 +585,9 @@ const createTimeline = (): any[] => {
     type: instructions,
     pages: [
       '<b>Main Missions</b><br><br>' +
-      'You are about to begin the main missions.<br>The number of space resources you collect will be shown at the end.<br><br>' +
-      'Click "Continue >" to begin.',
+      'You are about to begin the main missions.<br>' +
+      'The number of space resources you collect will be shown at the of all the missions.<br><br>' +
+      'Click "Continue >" to begin!',
     ],
     show_clickable_nav: true,
     button_label_next: 'Continue',
