@@ -14,9 +14,9 @@
 export interface ExperimentConfig {
   /** Debugging functionality */
   debug: {
-    enableDebugLogging: boolean,
+    enableDebugLogging: boolean;
   };
-  
+
   /** Trial counts */
   trainingTrials: {
     rocket: number;
@@ -52,7 +52,7 @@ export interface ExperimentConfig {
   name: string;
   studyName: string;
   contact: string;
-  
+
   /** Experiment options */
   requireID: boolean;
   fullscreen: boolean;
@@ -69,11 +69,11 @@ export interface ExperimentConfig {
     swapYellowAliens: boolean;
     swapRocketPreference: boolean;
   };
-  
+
   /** Stimuli map */
   stimuli: {
     [key: string]: string;
-  },
+  };
 }
 
 /** Trial type enumeration */
@@ -168,4 +168,4 @@ export type BackupStorage = {
   completed: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any[];
-}
+};

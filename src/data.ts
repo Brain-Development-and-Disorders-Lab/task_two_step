@@ -16,7 +16,7 @@ import Prando from 'prando';
 
 /**
  * Enable seeded random number generation across all files and modules
-*/
+ */
 export const random = new Prando(`two-step-${Date.now()}`);
 
 /**

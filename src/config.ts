@@ -89,5 +89,5 @@ export const config: ExperimentConfig = {
     // Rewards and other elements
     'no_reward.png': 'stimuli/no_reward.png',
     'reward.png': 'stimuli/reward.png',
-  }
+  },
 };
