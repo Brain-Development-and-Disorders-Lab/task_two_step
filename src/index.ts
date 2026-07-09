@@ -37,13 +37,45 @@ import _ from 'lodash';
 
 // Configure logging
 import { createConsola } from 'consola';
-export const logger = createConsola({
-  level: config.debug.enableDebugLogging ? 4 : 3, // 3 is informational logs
-  formatOptions: {
-    colors: true,
-    date: true,
+
+/**
+ * Initialize jsPsych instance with plugins and extensions
+ */
+const jsPsych = initJsPsych({
+  plugins: [FixationPlugin, ChoicePlugin, ComprehensionPlugin],
+  extensions: [
+    {
+      type: NeurocogExtension,
+      params: {
+        name: config.name,
+        studyName: config.studyName,
+        contact: config.contact,
+        allowParticipantContact: false,
+        manipulations: {},
+        resources: {},
+        stimuli: config.stimuli,
+        seed: 0.2846,
+      },
+    },
+  ],
+  on_finish: () => {
+    // Store counterbalancing configuration in jsPsych data
+    jsPsych.data.addProperties({
+      counterbalancing: config.counterbalancing,
+    });
+
+    if (jsPsych.extensions.Neurocog._useAPI !== true) {
+      // For testing purposes or running locally
+      jsPsych.data.get().localSave('csv', `${config.studyName}_data.csv`);
+    }
+
+    // Toggle the completed flag in the local storage object
+    setCompleted(jsPsych.extensions.Neurocog.getState('experimentID'), true);
   },
 });
+
+// Create alias for 'Neurocog' extension
+export const Neurocog: NeurocogExtension = jsPsych.extensions.Neurocog;
 
 /**
  * Get rocket stimuli with optional side swapping
@@ -260,42 +292,6 @@ export const setCompleted = (id: string, state: boolean): void => {
 };
 
 /**
- * Initialize jsPsych instance with plugins and extensions
- */
-const jsPsych = initJsPsych({
-  plugins: [FixationPlugin, ChoicePlugin, ComprehensionPlugin],
-  extensions: [
-    {
-      type: NeurocogExtension,
-      params: {
-        name: config.name,
-        studyName: config.studyName,
-        contact: config.contact,
-        allowParticipantContact: false,
-        manipulations: {},
-        resources: {},
-        stimuli: config.stimuli,
-        seed: 0.2846,
-      },
-    },
-  ],
-  on_finish: () => {
-    // Store counterbalancing configuration in jsPsych data
-    jsPsych.data.addProperties({
-      counterbalancing: config.counterbalancing,
-    });
-
-    if (jsPsych.extensions.Neurocog._useAPI !== true) {
-      // For testing purposes or running locally
-      jsPsych.data.get().localSave('csv', `${config.studyName}_data.csv`);
-    }
-
-    // Toggle the completed flag in the local storage object
-    setCompleted(jsPsych.extensions.Neurocog.getState('experimentID'), true);
-  },
-});
-
-/**
  * Create the experiment timeline
  * @return {any[]} Array of timeline trials
  */
@@ -307,11 +303,11 @@ const createTimeline = (): any[] => {
   // Preload images
   timeline.push({
     type: preload,
-    images: Object.keys(config.stimuli).map((source) => jsPsych.extensions.Neurocog.getStimulus(source)),
+    images: Object.keys(config.stimuli).map((source) => Neurocog.getStimulus(source)),
   });
 
   // Request participant LUID
-  if (config.requireID) {
+  if (Neurocog.getManipulation('requireID', config.requireID)) {
     timeline.push({
       type: surveyHtmlForm,
       preamble: `<p>Please enter the 8 digit participant LUID.</p>`,
@@ -320,7 +316,7 @@ const createTimeline = (): any[] => {
   }
 
   // Run the experiment in fullscreen
-  if (config.fullscreen) {
+  if (Neurocog.getManipulation('fullscreen', config.fullscreen)) {
     timeline.push({
       type: fullscreen,
       message: `<p>Click 'Continue' to enter fullscreen mode.</p>`,
@@ -356,31 +352,31 @@ const createTimeline = (): any[] => {
         'There are two rockets and two planets.<br>' +
         'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.<br><br>' +
         'In the training missions, the rockets look like this:<br><br>' +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).leftStimulus)}" alt="Rocket" style="width: 100px; height: 100px;">` +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br><br>` +
+        `<img src="${Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).leftStimulus)}" alt="Rocket" style="width: 100px; height: 100px;">` +
+        `<img src="${Neurocog.getStimulus(getRocketStimuli(true, config.counterbalancing.swapTrainingRockets).rightStimulus)}" alt="Rocket" style="width: 100px; height: 100px;"><br><br>` +
         'The rockets in the main missions will look different.<br><br>' +
         'Each rocket flies to its favorite planet, but sometimes it will fly to the other planet.<br><br>' +
         'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
         'In the training missions, the <i>green planet</i> looks like this:<br><br>' +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_green.png')}" alt="Planet" style="width: 360px;"><br><br>` +
+        `<img src="${Neurocog.getStimulus('tutorial_planet_green.png')}" alt="Planet" style="width: 360px;"><br><br>` +
         'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Planets</b><br><br>' +
         'In the training missions, the <i>yellow planet</i> looks like this:<br><br>' +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus('tutorial_planet_yellow.png')}" alt="Planet" style="width: 360px;"><br><br>` +
+        `<img src="${Neurocog.getStimulus('tutorial_planet_yellow.png')}" alt="Planet" style="width: 360px;"><br><br>` +
         'The planets in the main missions will look different.<br><br>' +
         'Click "Continue >" to proceed.',
 
       '<b>Training Stage 1: Aliens</b><br><br>' +
         'Each planet has two aliens.<br>' +
         'In the training missions, the aliens on the <i>green planet</i> look like this:<br><br>' +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+        `<img src="${Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
+        `<img src="${Neurocog.getStimulus(getAlienStimuli(PlanetType.GREEN, config.counterbalancing.swapGreenAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
         'In the training missions, the aliens on the <i>yellow planet</i> look like this:<br><br>' +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
+        `<img src="${Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).leftStimulus)}" alt="Alien" style="width: 100px; height: 100px;">` +
+        `<img src="${Neurocog.getStimulus(getAlienStimuli(PlanetType.YELLOW, config.counterbalancing.swapYellowAliens).rightStimulus)}" alt="Alien" style="width: 100px; height: 100px;"><br><br>` +
         'The aliens in the main missions will look different.<br><br>' +
         'Click "Continue >" to proceed.',
 
@@ -398,11 +394,11 @@ const createTimeline = (): any[] => {
   });
 
   // Training Phase 1: Select a rocket and preview the planet
-  for (let i = 0; i < config.trainingTrials.rocket; i++) {
+  for (let i = 0; i < Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.rocket); i++) {
     // Fixation before each trial
     timeline.push({
       type: FixationPlugin,
-      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      stimulus: Neurocog.getStimulus('earth.png'),
       text: '+',
       duration: config.timing.fixation,
       extensions: [
@@ -443,9 +439,9 @@ const createTimeline = (): any[] => {
 
       '<b>Training Stage 2: Outcomes</b><br><br>' +
         'If an alien shares space resources, a space resource will appear above them:<br><br>' +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus('reward.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
+        `<img src="${Neurocog.getStimulus('reward.png')}" alt="Space Resource" style="width: 60px; height: 60px;"><br><br>` +
         'If an alien has no space resources, an empty circle will appear:<br><br>' +
-        `<img src="${jsPsych.extensions.Neurocog.getStimulus('no_reward.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
+        `<img src="${Neurocog.getStimulus('no_reward.png')}" alt="Empty Circle" style="width: 60px; height: 60px;"><br><br>` +
         'Click "Continue >" to proceed.',
 
       '<b>Training Stage 2</b><br><br>' +
@@ -456,7 +452,7 @@ const createTimeline = (): any[] => {
     button_label_next: 'Continue',
   });
 
-  for (let i = 0; i < config.trainingTrials.alien; i++) {
+  for (let i = 0; i < Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.alien); i++) {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
       type: ChoicePlugin,
@@ -481,7 +477,7 @@ const createTimeline = (): any[] => {
     // Fixation after each trial
     timeline.push({
       type: FixationPlugin,
-      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      stimulus: Neurocog.getStimulus('earth.png'),
       text: '+',
       duration: config.timing.fixation,
       extensions: [
@@ -513,13 +509,16 @@ const createTimeline = (): any[] => {
   });
 
   // Generate array of transition behaviors to ensure ordering of `rewardLikelihoods` is preserved
-  const numCommonTransitionsTrainingTrials = Math.round(config.commonTransitionLikelihood * config.trainingTrials.full);
-  const numRareTransitionsTrainingTrials = config.trainingTrials.full - numCommonTransitionsTrainingTrials;
+  const numCommonTransitionsTrainingTrials = Math.round(
+    Neurocog.getManipulation('commonTransitionLikelihood', config.commonTransitionLikelihood) *
+    Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.full)
+  );
+  const numRareTransitionsTrainingTrials = Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.full) - numCommonTransitionsTrainingTrials;
   let trainingTrialsTransitions = new Array(numCommonTransitionsTrainingTrials).fill(true); // Create with common trials
   trainingTrialsTransitions.push(...new Array(numRareTransitionsTrainingTrials).fill(false)); // Append rare trials
   trainingTrialsTransitions = _.shuffle(trainingTrialsTransitions);
 
-  for (let i = 0; i < config.trainingTrials.full; i++) {
+  for (let i = 0; i < Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.full); i++) {
     const probData = tutorialTrialProbabilities[i % tutorialTrialProbabilities.length];
     timeline.push({
       type: ChoicePlugin,
@@ -544,7 +543,7 @@ const createTimeline = (): any[] => {
     // Fixation after each trial
     timeline.push({
       type: FixationPlugin,
-      stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+      stimulus: Neurocog.getStimulus('earth.png'),
       text: '+',
       duration: config.timing.fixation,
       extensions: [
@@ -638,19 +637,21 @@ const createTimeline = (): any[] => {
   });
 
   // Main trials with block design
-  for (let i = 0; i < config.mainTrials.blockCount; i++) {
+  for (let i = 0; i < Neurocog.getManipulation('mainTrialsBlockCount', config.mainTrials.blockCount); i++) {
     // Generate array of transition behaviors to ensure ordering of `rewardLikelihoods` is preserved
-    const numCommonTransitionsMainTrials = Math.round(config.mainTrials.blockSize * config.commonTransitionLikelihood);
-    const numRareTransitionsMainTrials = config.mainTrials.blockSize - numCommonTransitionsMainTrials;
+    const numCommonTransitionsMainTrials = Math.round(
+      Neurocog.getManipulation('mainTrialsBlockSize', config.mainTrials.blockSize) * Neurocog.getManipulation('commonTransitionLikelihood', config.commonTransitionLikelihood)
+    );
+    const numRareTransitionsMainTrials = Neurocog.getManipulation('mainTrialsBlockSize', config.mainTrials.blockSize) - numCommonTransitionsMainTrials;
     let mainTrialsTransitions = new Array(numCommonTransitionsMainTrials).fill(true); // Create with common trials
     mainTrialsTransitions.push(...new Array(numRareTransitionsMainTrials).fill(false)); // Append rare trials
     mainTrialsTransitions = _.shuffle(mainTrialsTransitions);
 
-    for (let j = 0; j < config.mainTrials.blockSize; j++) {
+    for (let j = 0; j < Neurocog.getManipulation('mainTrialsBlockSize', config.mainTrials.blockSize); j++) {
       // Add fixation trial
       timeline.push({
         type: FixationPlugin,
-        stimulus: jsPsych.extensions.Neurocog.getStimulus('earth.png'),
+        stimulus: Neurocog.getStimulus('earth.png'),
         text: '+',
         duration: config.timing.fixation,
         extensions: [
@@ -684,12 +685,12 @@ const createTimeline = (): any[] => {
     }
 
     // Add break screen at the end of all but the last block
-    if (i < config.mainTrials.blockCount - 1) {
+    if (i < Neurocog.getManipulation('mainTrialsBlockCount', config.mainTrials.blockCount) - 1) {
       timeline.push({
         type: instructions,
         pages: [
           '<b>Break</b><br>' +
-            'That is the end of block ' + (i + 1) + ' of ' + config.mainTrials.blockCount + '!<br>' +
+            'That is the end of block ' + (i + 1) + ' of ' + Neurocog.getManipulation('mainTrialsBlockCount', config.mainTrials.blockCount) + '!<br>' +
             (i === 1 ? 'You are halfway through the main missions!<br><br>' : '') +
             (i === 2 ? 'One last block to go!<br><br>' : '') +
             'Please take a break if you need to, and when you are ready,<br>' +
@@ -731,14 +732,14 @@ const createTimeline = (): any[] => {
       <div style="display: flex; justify-content: center; gap: 50px; margin: 20px 0;">
         <div style="text-align: center;">
           <label for="rocket1">
-            <img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(false, config.counterbalancing.swapMainRockets).leftStimulus)}" alt="Rocket 1" style="width: 150px; height: 150px;">
+            <img src="${Neurocog.getStimulus(getRocketStimuli(false, config.counterbalancing.swapMainRockets).leftStimulus)}" alt="Rocket 1" style="width: 150px; height: 150px;">
           </label>
           <br>
           <input type="radio" id="rocket1" name="rocket_choice" value="rocket1" required>
         </div>
         <div style="text-align: center;">
           <label for="rocket2">
-            <img src="${jsPsych.extensions.Neurocog.getStimulus(getRocketStimuli(false, config.counterbalancing.swapMainRockets).rightStimulus)}" alt="Rocket 2" style="width: 150px; height: 150px;">
+            <img src="${Neurocog.getStimulus(getRocketStimuli(false, config.counterbalancing.swapMainRockets).rightStimulus)}" alt="Rocket 2" style="width: 150px; height: 150px;">
           </label>
           <br>
           <input type="radio" id="rocket2" name="rocket_choice" value="rocket2" required>
@@ -775,10 +776,8 @@ const createTimeline = (): any[] => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const validateTimeline = (timeline: any[]) => {
   const expectedTrainingTrialsLength =
-    config.trainingTrials.rocket +
-    config.trainingTrials.alien +
-    config.trainingTrials.full +
-    config.mainTrials.blockCount * config.mainTrials.blockSize;
+    (Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.full) * 3) +
+    (Neurocog.getManipulation('mainTrialsBlockSize', config.mainTrials.blockSize) * Neurocog.getManipulation('mainTrialsBlockCount', config.mainTrials.blockCount));
 
   // Filter the timeline to only the `ChoicePlugin` trials
   let filteredTimeline = timeline.filter((trial) => trial.type === ChoicePlugin);
@@ -795,7 +794,7 @@ const validateTimeline = (timeline: any[]) => {
     (trial) => trial.trialLayout === 'full' && trial.commonTransition === true,
   );
   const expectedCommonTransitionMainTrials = Math.round(
-    config.mainTrials.blockCount * config.mainTrials.blockSize * config.commonTransitionLikelihood,
+    Neurocog.getManipulation('mainTrialsBlockSize', config.mainTrials.blockSize) * Neurocog.getManipulation('mainTrialsBlockCount', config.mainTrials.blockCount) * Neurocog.getManipulation('commonTransitionLikelihood', config.commonTransitionLikelihood),
   );
   if (filteredTimeline.length !== expectedCommonTransitionMainTrials) {
     logger.warn(
@@ -808,9 +807,19 @@ const validateTimeline = (timeline: any[]) => {
   }
 };
 
+// Setup logging levels
+export const logger = createConsola({
+  // 3 is informational logs
+  level: Neurocog.getManipulation('enableDebugLogging', config.debug.enableDebugLogging) ? 4 : 3, 
+  formatOptions: {
+    colors: true,
+    date: true,
+  },
+});
+
 // Generate a unique identifier for this experiment run
 const experimentID = `${config.studyName}-${uuidv4()}`;
-jsPsych.extensions.Neurocog.setState('experimentID', experimentID);
+Neurocog.setState('experimentID', experimentID);
 initializeLocalStorage(experimentID);
 
 // Create and validate the experiment timeline

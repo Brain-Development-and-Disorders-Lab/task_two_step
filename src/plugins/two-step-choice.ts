@@ -29,6 +29,7 @@ import {
 
 // jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
+import NeurocogExtension from 'neurocog';
 
 /**
  * Choice plugin class for handling rocket and alien selection trials
@@ -73,6 +74,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   } as const;
 
   private jsPsych: JsPsych;
+  private Neurocog: NeurocogExtension;
   private data: ChoiceTrialData;
   private currentStage: 'rocket' | 'alien' = 'rocket';
   private levelOneStartTime: number = 0;
@@ -80,6 +82,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
   constructor(jsPsych: JsPsych) {
     this.jsPsych = jsPsych;
+    this.Neurocog = jsPsych.extensions.Neurocog;
     this.data = this.createDefaultData();
   }
 
@@ -551,12 +554,12 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
           })
           .count() + 1;
       logger.start(
-        `Starting tutorial trial: ${trainingTrialIndex} / ${config.trainingTrials.rocket + config.trainingTrials.alien + config.trainingTrials.full}`,
+        `Starting tutorial trial: ${trainingTrialIndex} / ${this.Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.full) * 3}`,
       );
     } else {
       const mainTrialIndex = this.jsPsych.data.get().filter({ trialLayout: 'full' }).count() + 1;
       logger.start(
-        `Starting main trial: ${mainTrialIndex} / ${config.mainTrials.blockCount * config.mainTrials.blockSize}`,
+        `Starting main trial: ${mainTrialIndex} / ${this.Neurocog.getManipulation('mainTrialsBlockSize', config.mainTrials.blockSize) * this.Neurocog.getManipulation('mainTrialsBlockCount', config.mainTrials.blockCount)}`,
       );
     }
 
