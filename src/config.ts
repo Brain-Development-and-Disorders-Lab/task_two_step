@@ -9,11 +9,10 @@
  */
 
 // Custom types
-import { ExperimentConfig } from "../types";
+import { ExperimentConfig } from '../types';
 
-// Configure random number generator with initial seed
-import Prando from "prando";
-export const random = new Prando("two-step-2026");
+// Random number generation
+import { random } from './data';
 
 /**
  * Default experiment configuration with randomized counterbalancing
@@ -90,5 +89,5 @@ export const config: ExperimentConfig = {
     // Rewards and other elements
     'no_reward.png': 'stimuli/no_reward.png',
     'reward.png': 'stimuli/reward.png',
-  }
+  },
 };

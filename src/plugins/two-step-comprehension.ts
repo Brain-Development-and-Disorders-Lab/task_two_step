@@ -71,7 +71,11 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
    * @param {string} buttonLabel Label for the continue button
    * @return {string} HTML string for the question display
    */
-  private createQuestionHTML(question: { prompt: string, correct: string }, preamble: string, buttonLabel: string): string {
+  private createQuestionHTML(
+    question: { prompt: string; correct: string },
+    preamble: string,
+    buttonLabel: string,
+  ): string {
     return `
       <style>
         .comprehension-container {
@@ -221,7 +225,7 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     const optionButtons = displayElement.querySelectorAll('.option-button') as NodeListOf<HTMLButtonElement>;
 
     // Disable option buttons
-    optionButtons.forEach(button => {
+    optionButtons.forEach((button) => {
       button.disabled = true;
     });
 
@@ -249,7 +253,11 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
    * @param {HTMLElement} displayElement The display element
    * @param {TrialType} trial The trial parameters
    */
-  private handleQuestionResponse(answer: string, displayElement: HTMLElement, trial: TrialType<typeof ComprehensionPlugin.info>): void {
+  private handleQuestionResponse(
+    answer: string,
+    displayElement: HTMLElement,
+    trial: TrialType<typeof ComprehensionPlugin.info>,
+  ): void {
     const question = trial.question;
     if (!question) return;
 
@@ -294,11 +302,15 @@ class ComprehensionPlugin implements JsPsychPlugin<typeof ComprehensionPlugin.in
     this.questionStartTime = Date.now();
 
     // Create and display the question immediately
-    displayElement.innerHTML = this.createQuestionHTML(trial.question, trial.preamble || 'Please answer the following question:', trial.button_label || 'Continue');
+    displayElement.innerHTML = this.createQuestionHTML(
+      trial.question,
+      trial.preamble || 'Please answer the following question:',
+      trial.button_label || 'Continue',
+    );
 
     // Set up event listeners for the question
     const optionButtons = displayElement.querySelectorAll('.option-button') as NodeListOf<HTMLButtonElement>;
-    optionButtons.forEach(button => {
+    optionButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const answer = button.getAttribute('data-answer');
         if (answer) {

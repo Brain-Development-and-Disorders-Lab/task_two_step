@@ -14,6 +14,9 @@ import { ChoiceTrialData, PlanetType, TrialLayout } from '../../types';
 // Configuration
 import { config } from '../config';
 
+// Random number generation
+import { random } from '../data';
+
 // Utilities
 import {
   getPlanetFromRocketChoice,
@@ -26,6 +29,7 @@ import {
 
 // jsPsych imports
 import { JsPsych, JsPsychPlugin, ParameterType, TrialType } from 'jspsych';
+import NeurocogExtension from 'neurocog';
 
 /**
  * Choice plugin class for handling rocket and alien selection trials
@@ -70,6 +74,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
   } as const;
 
   private jsPsych: JsPsych;
+  private Neurocog: NeurocogExtension;
   private data: ChoiceTrialData;
   private currentStage: 'rocket' | 'alien' = 'rocket';
   private levelOneStartTime: number = 0;
@@ -77,6 +82,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
   constructor(jsPsych: JsPsych) {
     this.jsPsych = jsPsych;
+    this.Neurocog = jsPsych.extensions.Neurocog;
     this.data = this.createDefaultData();
   }
 
@@ -152,13 +158,19 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {boolean} isTraining Whether to use training rocket stimuli
    * @return {{ leftStimulus: string, rightStimulus: string, planetStimulus: string }} Object containing left and right rocket stimuli and planet stimulus
    */
-  private getRocketStimuli(isTraining: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
-    const swapSides = isTraining ? config.counterbalancing.swapTrainingRockets : config.counterbalancing.swapMainRockets;
+  private getRocketStimuli(isTraining: boolean): {
+    leftStimulus: string;
+    rightStimulus: string;
+    planetStimulus: string;
+  } {
+    const swapSides = isTraining
+      ? config.counterbalancing.swapTrainingRockets
+      : config.counterbalancing.swapMainRockets;
     const rocketStimuli = getRocketStimuli(isTraining, swapSides);
     return {
       leftStimulus: rocketStimuli.leftStimulus,
       rightStimulus: rocketStimuli.rightStimulus,
-      planetStimulus: 'earth.png'
+      planetStimulus: 'earth.png',
     };
   }
 
@@ -169,16 +181,23 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {boolean} rocketChoice Whether the left rocket was chosen
    * @return {{ leftStimulus: string, rightStimulus: string, planetStimulus: string }} Object containing left and right alien stimuli and planet stimulus
    */
-  private getAlienStimuli(trial: TrialType<typeof ChoicePlugin.info>, isTraining: boolean, rocketChoice: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+  private getAlienStimuli(
+    trial: TrialType<typeof ChoicePlugin.info>,
+    isTraining: boolean,
+    rocketChoice: boolean,
+  ): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
     if (isTraining && !this.data.trialLayout.includes('full')) {
       // Only training-rocket and training-alien use deterministic transitions
       const planet = rocketChoice ? PlanetType.GREEN : PlanetType.YELLOW;
-      const swapSides = planet === PlanetType.GREEN ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+      const swapSides =
+        planet === PlanetType.GREEN
+          ? config.counterbalancing.swapGreenAliens
+          : config.counterbalancing.swapYellowAliens;
       const alienStimuli = getAlienStimuli(planet, swapSides);
       return {
         leftStimulus: alienStimuli.leftStimulus,
         rightStimulus: alienStimuli.rightStimulus,
-        planetStimulus: getPlanetStimulus(planet)
+        planetStimulus: getPlanetStimulus(planet),
       };
     } else {
       // training-full and full trials use probabilistic transitions
@@ -191,7 +210,11 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         planet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
       } else {
         // Rare transition: opposite planet
-        const commonPlanet = getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false);
+        const commonPlanet = getPlanetFromRocketChoice(
+          rocketChoice,
+          config.counterbalancing.swapRocketPreference,
+          false,
+        );
         planet = commonPlanet === PlanetType.RED ? PlanetType.PURPLE : PlanetType.RED;
       }
 
@@ -199,31 +222,37 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       this.data.transitionType = trial.commonTransition ? 'common' : 'rare';
 
       // Debug transition computation
-      logger.debug("Transition Computation\n",
-        "Rocket Choice:", rocketChoice === 1 ? "Left" : "Right", "\n",
-        "Swap Preference:", config.counterbalancing.swapRocketPreference, "\n",
-        "Common Planet:", getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false), "\n",
-        "Transition Type:", this.data.transitionType, "\n",
-        "Final Destination Planet:", planet);
+      logger.debug(
+        'Transition Computation\n',
+        'Rocket Choice:', rocketChoice === 1 ? 'Left' : 'Right', '\n',
+        'Swap Preference:', config.counterbalancing.swapRocketPreference, '\n',
+        'Common Planet:', getPlanetFromRocketChoice(rocketChoice, config.counterbalancing.swapRocketPreference, false), '\n',
+        'Transition Type:', this.data.transitionType, '\n',
+        'Final Destination Planet:', planet,
+      );
 
       // Use training stimuli for training-full trials, main stimuli for full trials
       if (this.data.trialLayout === 'training-full') {
         // Map main planets to training planets for training-full trials
         const trainingPlanet = planet === PlanetType.RED ? PlanetType.GREEN : PlanetType.YELLOW;
-        const swapSides = trainingPlanet === PlanetType.GREEN ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+        const swapSides =
+          trainingPlanet === PlanetType.GREEN
+            ? config.counterbalancing.swapGreenAliens
+            : config.counterbalancing.swapYellowAliens;
         const alienStimuli = getAlienStimuli(trainingPlanet, swapSides);
         return {
           leftStimulus: alienStimuli.leftStimulus,
           rightStimulus: alienStimuli.rightStimulus,
-          planetStimulus: getPlanetStimulus(trainingPlanet)
+          planetStimulus: getPlanetStimulus(trainingPlanet),
         };
       } else {
-        const swapSides = planet === PlanetType.RED ? config.counterbalancing.swapRedAliens : config.counterbalancing.swapPurpleAliens;
+        const swapSides =
+          planet === PlanetType.RED ? config.counterbalancing.swapRedAliens : config.counterbalancing.swapPurpleAliens;
         const alienStimuli = getAlienStimuli(planet, swapSides);
         return {
           leftStimulus: alienStimuli.leftStimulus,
           rightStimulus: alienStimuli.rightStimulus,
-          planetStimulus: getPlanetStimulus(planet)
+          planetStimulus: getPlanetStimulus(planet),
         };
       }
     }
@@ -235,7 +264,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {boolean} isTraining Whether this is a training trial
    * @return {{ leftStimulus: string, rightStimulus: string, planetStimulus: string }} Object containing left and right stimuli and planet stimulus
    */
-  private generateStimuli(trial: TrialType<typeof ChoicePlugin.info>, isTraining: boolean): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
+  private generateStimuli(
+    trial: TrialType<typeof ChoicePlugin.info>,
+    isTraining: boolean,
+  ): { leftStimulus: string; rightStimulus: string; planetStimulus: string } {
     if (trial.trialLayout === 'training-rocket') {
       return this.getRocketStimuli(isTraining);
     } else if (trial.trialLayout === 'training-alien') {
@@ -243,7 +275,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       return {
         leftStimulus: alienStimuli.leftStimulus,
         rightStimulus: alienStimuli.rightStimulus,
-        planetStimulus: getPlanetStimulus(PlanetType.GREEN)
+        planetStimulus: getPlanetStimulus(PlanetType.GREEN),
       };
     } else if (trial.trialLayout === 'training-full' || trial.trialLayout === 'full') {
       if (this.currentStage === 'rocket') {
@@ -276,8 +308,15 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {string} rewardStimulus Path to the reward symbol image
    * @return {string} HTML string for the trial display
    */
-  private createDisplayHTML(trial: TrialType<typeof ChoicePlugin.info>, leftStimulus: string, rightStimulus: string, planetStimulus: string, rewardStimulus: string): string {
-    const showRewardSymbol = trial.trialLayout === 'training-alien' || trial.trialLayout === 'training-full' || trial.trialLayout === 'full';
+  private createDisplayHTML(
+    trial: TrialType<typeof ChoicePlugin.info>,
+    leftStimulus: string,
+    rightStimulus: string,
+    planetStimulus: string,
+    rewardStimulus: string,
+  ): string {
+    const showRewardSymbol =
+      trial.trialLayout === 'training-alien' || trial.trialLayout === 'training-full' || trial.trialLayout === 'full';
 
     return `
       <style>
@@ -314,7 +353,9 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
           <div id="reward-symbol" style="position: absolute; opacity: 0; transition: opacity 0.2s ease-in-out;">
             <img src="${rewardStimulus}" draggable="false" style="width: 72px; height: 72px; object-fit: contain;" />
           </div>
-        ` : ''}
+        `
+          : ''
+        }
         <div id="instructions" style="position: absolute; bottom: 15%; left: 50%; width: 100%; transform: translateX(-50%); color: #fff; font-size: 24px; text-align: center; font-weight: semibold;"></div>
       </div>
     `;
@@ -331,10 +372,15 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     // Determine which alien was selected based on planet and choice
     const alienIndex = this.getAlienIndex(isLeftChoice);
     const probability = this.data.rewardLikelihoods[alienIndex] || 0.5;
-    const randomNumber = this.jsPsych.extensions.Neurocog.random();
+    const randomNumber = random.next();
 
     // Include debugging information
-    logger.debug("Reward Calculation\nRandom Number:", randomNumber, "\nProbability:", probability, "\nwasRewarded:", randomNumber < probability);
+    logger.debug(
+      'Reward Calculation\n',
+      'Random Number:', randomNumber, '\n',
+      'Probability:', probability, '\n',
+      'wasRewarded:', randomNumber < probability,
+    );
 
     const wasRewarded = randomNumber < probability;
     const rewardStimulus = this.getStimulusPath(wasRewarded ? 'reward.png' : 'no_reward.png');
@@ -399,7 +445,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     overlay.style.zIndex = '1000';
     overlay.innerHTML = '✕';
     element.appendChild(overlay);
-    
+
     // Mark the underlying stimulus as deactivated
     element.querySelector('img')?.classList.add('deactivated');
   }
@@ -424,15 +470,25 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    * @param {boolean} isTraining Whether this is a training trial
    * @param {HTMLElement} displayElement The display element to update
    */
-  private handleStageTransition(trial: TrialType<typeof ChoicePlugin.info>, isTraining: boolean, displayElement: HTMLElement): void {
+  private handleStageTransition(
+    trial: TrialType<typeof ChoicePlugin.info>,
+    isTraining: boolean,
+    displayElement: HTMLElement,
+  ): void {
     this.currentStage = 'alien';
-    
+
     // Note: levelOneChoice and levelOneRT are now set immediately when key is pressed
     const alienStimuli = this.generateStimuli(trial, isTraining);
     const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
     const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
     const planetStimulus = this.getStimulusPath(alienStimuli.planetStimulus);
-    displayElement.innerHTML = this.createDisplayHTML(trial, leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('no_reward.png'));
+    displayElement.innerHTML = this.createDisplayHTML(
+      trial,
+      leftStimulus,
+      rightStimulus,
+      planetStimulus,
+      this.getStimulusPath('no_reward.png'),
+    );
 
     // Set start time for level two (alien choice)
     this.levelTwoStartTime = Date.now();
@@ -489,27 +545,40 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
    */
   trial(displayElement: HTMLElement, trial: TrialType<typeof ChoicePlugin.info>) {
     // Generate and log trial count information
-    if (trial.trialLayout?.startsWith("training-")) {
-      const trainingTrialIndex = this.jsPsych.data.get().filterCustom((trial: TrialType<typeof ChoicePlugin.info>) => {
-        return trial.trialLayout?.startsWith("training-");
-      }).count() + 1;
-      logger.start(`Starting tutorial trial: ${trainingTrialIndex} / ${config.trainingTrials.rocket + config.trainingTrials.alien + config.trainingTrials.full}`);
+    if (trial.trialLayout?.startsWith('training-')) {
+      const trainingTrialIndex =
+        this.jsPsych.data
+          .get()
+          .filterCustom((trial: TrialType<typeof ChoicePlugin.info>) => {
+            return trial.trialLayout?.startsWith('training-');
+          })
+          .count() + 1;
+      logger.start(
+        `Starting tutorial trial: ${trainingTrialIndex} / ${this.Neurocog.getManipulation('trainingTrialsLength', config.trainingTrials.full) * 3}`,
+      );
     } else {
       const mainTrialIndex = this.jsPsych.data.get().filter({ trialLayout: 'full' }).count() + 1;
-      logger.start(`Starting main trial: ${mainTrialIndex} / ${config.mainTrials.blockCount * config.mainTrials.blockSize}`);
+      logger.start(
+        `Starting main trial: ${mainTrialIndex} / ${this.Neurocog.getManipulation('mainTrialsBlockSize', config.mainTrials.blockSize) * this.Neurocog.getManipulation('mainTrialsBlockCount', config.mainTrials.blockCount)}`,
+      );
     }
-    
+
     // Debugging information
-    logger.debug("Trial Information\nTrial Layout:", trial.trialLayout, "\nProbability Data:", trial.rewardLikelihoods, "\nCommon Transition:", trial.commonTransition);
+    logger.debug(
+      'Trial Information\n', 
+      'Trial Layout:', trial.trialLayout, '\n',
+      'Probability Data:', trial.rewardLikelihoods, '\n',
+      'Common Transition:', trial.commonTransition,
+    );
 
     if (trial.onStart) {
-      trial.onStart()
+      trial.onStart();
     }
     this.updateTrialData(trial);
 
     let response: { key: string; rt: number } | null = null;
     let isAnimating = false;
-    const trialLayout: TrialLayout = trial.trialLayout as TrialLayout || 'full';
+    const trialLayout: TrialLayout = (trial.trialLayout as TrialLayout) || 'full';
     const isTraining = trialLayout.startsWith('training-');
     this.currentStage = trialLayout === 'training-alien' ? 'alien' : 'rocket';
 
@@ -523,14 +592,26 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
     planetStimulus = this.getStimulusPath(planetStimulus);
 
     // Render the initial display
-    displayElement.innerHTML = this.createDisplayHTML(trial, leftStimulus, rightStimulus, planetStimulus, rewardStimulus);
+    displayElement.innerHTML = this.createDisplayHTML(
+      trial,
+      leftStimulus,
+      rightStimulus,
+      planetStimulus,
+      rewardStimulus,
+    );
 
     // Set the initial instructions if applicable
     this.setInstructions(displayElement, ''); // Clear any previous instructions
     if (trialLayout === 'training-rocket') {
-      this.setInstructions(displayElement, 'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.');
+      this.setInstructions(
+        displayElement,
+        'Press <b>"F"</b> to select the left rocket, or <b>"J"</b> to select the right rocket.',
+      );
     } else if (trialLayout === 'training-alien') {
-      this.setInstructions(displayElement, 'Press <b>"F"</b> to select the left alien, or <b>"J"</b> to select the right alien.');
+      this.setInstructions(
+        displayElement,
+        'Press <b>"F"</b> to select the left alien, or <b>"J"</b> to select the right alien.',
+      );
     }
 
     // Set start time based on trial type
@@ -582,7 +663,10 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
 
             // Training: left rocket -> green planet, right rocket -> yellow planet
             const planet = rocketChoice === 1 ? PlanetType.GREEN : PlanetType.YELLOW;
-            const swapSides = planet === PlanetType.GREEN ? config.counterbalancing.swapGreenAliens : config.counterbalancing.swapYellowAliens;
+            const swapSides =
+              planet === PlanetType.GREEN
+                ? config.counterbalancing.swapGreenAliens
+                : config.counterbalancing.swapYellowAliens;
             const alienStimuli = getAlienStimuli(planet, swapSides);
 
             // Update display to show planet with aliens
@@ -590,7 +674,13 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
             const leftStimulus = this.getStimulusPath(alienStimuli.leftStimulus);
             const rightStimulus = this.getStimulusPath(alienStimuli.rightStimulus);
 
-            displayElement.innerHTML = this.createDisplayHTML(trial, leftStimulus, rightStimulus, planetStimulus, this.getStimulusPath('no_reward.png'));
+            displayElement.innerHTML = this.createDisplayHTML(
+              trial,
+              leftStimulus,
+              rightStimulus,
+              planetStimulus,
+              this.getStimulusPath('no_reward.png'),
+            );
             this.setInstructions(displayElement, `You have arrived at the <b>${planet}</b> planet!`);
 
             // Wait for preview duration (2x reward display), then finish
@@ -651,7 +741,8 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
         const calculatedRT = Date.now() - currentStartTime;
 
         // Check if response is within the response window (for full and training-full trials)
-        const isWithinResponseWindow = (trialLayout === 'full' || trialLayout === 'training-full') ? calculatedRT <= this.data.responseWindow : true;
+        const isWithinResponseWindow =
+          (trialLayout === 'full' || trialLayout === 'training-full') ? calculatedRT <= this.data.responseWindow : true;
         if (isWithinResponseWindow) {
           response = {
             key: key,
@@ -707,7 +798,7 @@ class ChoicePlugin implements JsPsychPlugin<typeof ChoicePlugin.info> {
       this.finalizeTrialData(response, trialLayout);
 
       // Save the dataframe to local storage
-      saveToLocalStorage(this.jsPsych.extensions.Neurocog.getState("experimentID"), this.data);
+      saveToLocalStorage(this.jsPsych.extensions.Neurocog.getState('experimentID'), this.data);
 
       // Run `onFinish` handler if specified, and clear display
       if (trial.onFinish) trial.onFinish(this.data);
